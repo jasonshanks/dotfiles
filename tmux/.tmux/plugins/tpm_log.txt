@@ -1,3 +1,0 @@
-Invoking /Users/jason/.tmux/plugins/tpm/bin/clean_plugins all ...
-Removing "tmux-sensible"
-  "tmux-sensible" clean success
