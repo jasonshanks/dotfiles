@@ -1,0 +1,25 @@
+# themes from https://github.com/alacritty/alacritty-theme
+
+#import = ["~/.config/alacritty/themes/solarized_osaka.toml"]
+import = ["~/.config/alacritty/themes/challenger_deep.toml"]
+
+[font]
+size = 20
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+
+[window]
+decorations = "none"
+opacity = 1
+blur = true
+
+[window.padding]
+x = 6
+y = 6
+
+
+# Shell and launch commands
+[shell]
+program = "/opt/homebrew/bin/fish"
+args = ["--login", "-c", "tmux a -t base || tmux new -s base"]
