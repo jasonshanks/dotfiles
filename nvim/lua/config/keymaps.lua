@@ -65,7 +65,14 @@ keymap.set("n", "<C-k>", ":TmuxNavigateUp<CR>")
 keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
 
 -- Open a new Tmux pane below in the same directory
-keymap.set("n", "<leader>t", ":silent !tmux split-window -c %:p:h<CR>", { silent = true })
+-- @NOTE: this is nice but doesn't inherit the current neovim directory so currently preferring ToggleTerm for quick term access within a project
+-- keymap.set("n", "<leader>t", ":silent !tmux split-window -c %:p:h<CR>", { silent = true })
+
+-- PLUGINS
+
+-- ToggleTerm
+-- open a ToggleTerm float in current git directory
+keymap.set("n", "<leader>t", ":ToggleTerm direction=float dir=git_dir<CR>")
 
 -- Neovim Project Manager
 keymap.set("n", "<leader>p", ":Telescope neovim-project discover<CR>")
@@ -76,7 +83,7 @@ keymap.set("n", "<leader>p", ":Telescope neovim-project discover<CR>")
 --    vim.diagnostic.goto_next()
 -- end, opts)
 
--- @NOTE: interesting custom function from craftzdog. Assume this replaces all HEX colour codes in (CSS?) with HSL. Would prefer OKLCH
+-- @NOTE: interesting custom function from craftzdog. It appears to replace all HEX/RGB/HSL colour codes between each other. Encountered a run error though
 -- keymap.set("n", "<leader>r", function()
 --    require("jason.hsl").replaceHexWithHSL()
 -- end)
