@@ -1,14 +1,15 @@
 # themes from https://github.com/alacritty/alacritty-theme
 
-#import = ["~/.config/alacritty/themes/solarized_osaka.toml"]
-import = ["~/.config/alacritty/themes/challenger_deep.toml"]
+# import = ["~/.config/alacritty/themes/solarized_osaka.toml"]
+# import = ["~/.config/alacritty/themes/challenger_deep.toml"]
+import = ["~/.config/alacritty/themes/nightfly.toml"]
 
 [font]
 size = 20
 
 [font.normal]
-#family = "JetBrainsMono Nerd Font"
-family = "ZedMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
+# family = "ZedMono Nerd Font"
 
 [window]
 decorations = "none"

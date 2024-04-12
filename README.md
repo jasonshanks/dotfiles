@@ -58,11 +58,11 @@ defaults, and so on. Tweak this script, and occasionally run `dot` from
 time to time to keep your environment fresh and up-to-date. You can find
 this script in `bin/`.
 
-## Thanks and shoutouts!
+## 🙏Thanks and 📣shoutouts!
 
 Thanks really to the entire open source and github community who graciously shares their own dotfiles and ways of doing things. So many avenues and options.
 
 Special thanks to:
 
-- [Zach Holman](https://github.com/holman/dotfiles) - for the inspiration to organise by thematical folders and to include a bootstrap script to auto copy and symlink everything needed to configure a new system. Zach also has still [timeless article](https://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/) around his methodology and thinking. His were designed around zsh shell so I have adapted for my preferred fish shell.
+- [Zach Holman](https://github.com/holman/dotfiles) - for the inspiration to organise by thematical folders and to include a bootstrap script to auto copy and symlink everything needed to configure a new system. Zach also has still [timeless article](https://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/) around his methodology and thinking. His were designed around zsh shell, so I have adapted for my preferred shell – 🐟fish.
 - [Ryan Bates](http://github.com/ryanb/dotfiles) - recursively, much of the script foundation Zach based on Ryan Bates' dotfiles.
