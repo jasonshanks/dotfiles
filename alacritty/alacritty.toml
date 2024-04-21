@@ -20,6 +20,9 @@ blur = true
 x = 6
 y = 6
 
+# FIX: This was supposed to stop command scrolling at the prompt and allow scrolling of history buffer instead, but it's not
+[scrolling]
+history = 0
 
 # Shell and launch commands
 [shell]

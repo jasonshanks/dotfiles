@@ -59,18 +59,20 @@ end
 # Source dependencies
 #source ~/.config/fish/custom.fish
 set -g fish_user_paths /opt/homebrew/bin/libxml2/bin $fish_user_paths
-source ~/.config/.profile
 clear
 source ~/.config/.aliases
 source ~/.config/.functions
 
-##### DISABLE FOR WARP if [ "$TERM" != "WarpTerminal" ]; source ~/.iterm2_shell_integration.fish end Fish syntax highlighting
+### Fish syntax highlighting
 set -g fish_color_autosuggestion 555 brblack
 set -g fish_color_cancel -r
 set -g fish_color_command --bold
 
-# Fish keybindings
+### Fish keybindings
 # fish_vi_key_bindings
+
+# fzf key bindings
+fzf --fish | source
 
 # Abbreviations
 abbr -a -- - prevd
