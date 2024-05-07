@@ -9,16 +9,15 @@ size = 20
 
 [font.normal]
 family = "JetBrainsMono Nerd Font"
-# family = "ZedMono Nerd Font"
 
 [window]
 decorations = "none"
-opacity = 1
+opacity = 0.8
 blur = true
 
 [window.padding]
-x = 6
-y = 6
+x = 8
+y = 8
 
 # FIX: This was supposed to stop command scrolling at the prompt and allow scrolling of history buffer instead, but it's not
 [scrolling]

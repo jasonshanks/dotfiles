@@ -1,7 +1,7 @@
 # FISH Shell Configuration
 # by Jason Shanks
 # Date created: 2020-04-18
-# Date updated: 2024-03-01
+# Date updated: 2024-04-23
 
 # Set Fish greeting
 set -U fish_greeting "Go 🐟"
@@ -22,14 +22,6 @@ set -x GIT_EDITOR nvim
 set -x EDITSCRIPT_EDITOR "$HOME/scripts/editor.sh"
 set -x EDITSCRIPT_PATH "~/scripts:~/scripts/fish:~/.config/fish:~/.config/fish/functions:~/bin:~/.bash_it/custom:~/.bash_it/**/enabled:~/.*"
 set -x EDITSCRIPT_TYPES "rb,sh,py,bash,fish,,"
-
-# na
-set -x NA_TODO_EXT taskpaper
-set -x NA_NEXT_TAG "@na"
-set -x NA_DONE_TAG "@done"
-set -x NA_MAX_DEPTH 2
-set -x NA_AUTO_LIST_FOR_DIR 1
-set -x NA_AUTO_LIST_IS_RECURSIVE 0
 
 # NVM
 function __check_rvm --on-variable PWD --description 'Do nvm s

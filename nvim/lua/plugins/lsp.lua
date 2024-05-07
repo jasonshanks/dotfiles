@@ -56,7 +56,7 @@ return {
           },
         },
         html = {},
-        emmet_language_server = {
+        emmet_language_server = { -- FIX: needs work. Emmet not quite loading yet
           filetypes = {
             "css",
             "eruby",

@@ -94,6 +94,7 @@ alias ssh-do='ssh q@159.65.141.2' # Digital Ocean
 ### Wellmark
 alias ssh-stagvei='ssh stagvei@stagvei.ssh.wpengine.net'
 alias ssh-stagnew='ssh stagnewlifeivf@stagnewlifeivf.ssh.wpengine.net'
+alias ssh-stagvhg='ssh stagvhg@stagvhg.ssh.wpengine.net'
 
 ## Stream Ripping
 alias sr-sleep='streamripper http://63.150.180.173:8000 -d /Volumes/oz/Shuttle/Streams/Sleepbot\ Environmental\ Broadcast/ -s -u WinampMPEG/2.7'
