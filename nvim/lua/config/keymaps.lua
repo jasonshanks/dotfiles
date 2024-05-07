@@ -74,19 +74,11 @@ keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
 -- open a ToggleTerm float in current git directory
 keymap.set("n", "<leader>t", ":ToggleTerm direction=float dir=git_dir<CR>")
 
--- Neovim Project Manager
-keymap.set("n", "<leader>p", ":Telescope neovim-project discover<CR>")
-
 -- Diagnostics
 -- @TODO: if use this need a non-confliction keymapping with Vim/Tmux navigation
 -- keymap.set("n", "<C-j>", function()
 --    vim.diagnostic.goto_next()
 -- end, opts)
-
--- @NOTE: interesting custom function from craftzdog. It appears to replace all HEX/RGB/HSL colour codes between each other. Encountered a run error though
--- keymap.set("n", "<leader>r", function()
---    require("jason.hsl").replaceHexWithHSL()
--- end)
 
 keymap.set("n", "<leader>i", function()
   require("jason.lsp").toggleInlayHints()
