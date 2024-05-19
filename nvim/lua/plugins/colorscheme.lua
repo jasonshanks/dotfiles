@@ -17,6 +17,7 @@ return {
   --   name = "nightowl",
   --   lazy = false,
   --   priority = 1000,
+  --   transparent = true,
   -- },
 
   -- nightfly

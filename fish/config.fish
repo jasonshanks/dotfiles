@@ -54,6 +54,8 @@ set -g fish_user_paths /opt/homebrew/bin/libxml2/bin $fish_user_paths
 clear
 source ~/.config/.aliases
 source ~/.config/.functions
+# Jumper
+source /usr/local/bin/jumper.fish
 
 ### Fish syntax highlighting
 set -g fish_color_autosuggestion 555 brblack
@@ -73,3 +75,4 @@ abbr -a -- = nextd
 # CUSTOM PATHS
 set -x PATH $PATH /Users/jason/.composer/vendor/bin/
 set -g fish_user_paths /opt/homebrew/bin $fish_user_paths
+set -u fish_user_paths /Users/jason/.cargo/bin $fish_user_paths

@@ -139,7 +139,7 @@ return {
     opts = {
       plugins = {
         gitsigns = true,
-        tmux = true,
+        tmux = false,
         kitty = { enabled = false, font = "+2" },
       },
     },
@@ -151,11 +151,12 @@ return {
     event = "VimEnter",
     opts = function(_, opts)
       local logo = [[
-       _ _  ___  ___  _ _  _  __ __  _ 
-| \ || __>| . || | || ||  \  \| |
-|   || _> | | || ' || ||     ||_/
-|_\_||___>`___'|__/ |_||_|_|_|<_>
-                                 ]]
+                                        oo            
+                                                  
+88d888b. .d8888b. .d8888b. dP   .dP dP 88d8b.d8b. 
+88'  `88 88ooood8 88'  `88 88   d8' 88 88'`88'`88 
+88    88 88.  ... 88.  .88 88 .88'  88 88  88  88 
+dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]]
 
       logo = string.rep("\n", 8) .. logo .. "\n\n"
       opts.config.header = vim.split(logo, "\n")
