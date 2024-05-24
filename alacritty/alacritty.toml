@@ -19,9 +19,15 @@ blur = true
 x = 8
 y = 8
 
-# FIX: This was supposed to stop command scrolling at the prompt and allow scrolling of history buffer instead, but it's not
 [scrolling]
-history = 0
+# The number of lines the scrollback buffer should scroll
+history = 10000
+# Multiplier for scrolling speed
+multiplier = 3
+
+[mouse]
+# Whether to enable the mouse support in Alacritty.
+# enabled = true
 
 # Shell and launch commands
 [shell]
