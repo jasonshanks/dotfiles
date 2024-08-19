@@ -74,12 +74,38 @@ keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
 -- open a ToggleTerm float in current git directory
 keymap.set("n", "<leader>t", ":ToggleTerm direction=float dir=git_dir<CR>")
 
+-- Yanky
+keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
+keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
+keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
+
+keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
+keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
+
+keymap.set("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
+keymap.set("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
+keymap.set("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
+keymap.set("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
+
+keymap.set("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
+keymap.set("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
+keymap.set("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
+keymap.set("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
+
+keymap.set("n", "=p", "<Plug>(YankyPutAfterFilter)")
+keymap.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
+
+-- Leap
+keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
+keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)")
+keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
+
 -- Diagnostics
 -- @TODO: if use this need a non-confliction keymapping with Vim/Tmux navigation
 -- keymap.set("n", "<C-j>", function()
 --    vim.diagnostic.goto_next()
 -- end, opts)
 
-keymap.set("n", "<leader>i", function()
-  require("jason.lsp").toggleInlayHints()
-end)
+-- require("jason.lsp").toggleInlayHints()
+-- keymap.set("n", "<leader>i", function() end)

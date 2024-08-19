@@ -68,6 +68,16 @@ alias lcm='git show -s --format="%s:%n%n%b" | pbcopy' # copies latest commit mes
 alias gitvei='cd ~/Sites/Wellmark/vei/wp-content/themes/vei/'
 
 ## Apps & Folders
+# alias cd='z' # zoxide
+# function z_cd
+#   if test (count $argv) -eq 0
+#     z
+#   else
+#     z $argv; or cd $argv
+#   end
+# end
+#
+# alias cd='z_cd'
 alias v='nvim'
 alias stat='stat -x'
 alias pip='pip3'

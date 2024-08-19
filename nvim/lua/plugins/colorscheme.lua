@@ -1,15 +1,24 @@
 return {
-  -- solarized - osaka
+  -- tokyo night
   -- {
-  --   "craftzdog/solarized-osaka.nvim",
+  --   "folke/tokyonight.nvim",
+  --   name = "tokyonight",
   --   lazy = false,
   --   priority = 1000,
-  --   opts = function()
-  --     return {
-  --       transparent = true,
-  --     }
-  --   end,
+  --   transparent = true,
   -- },
+
+  -- solarized - osaka
+  {
+    "craftzdog/solarized-osaka.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = function()
+      return {
+        transparent = true,
+      }
+    end,
+  },
 
   -- nightowl
   -- {
@@ -21,14 +30,14 @@ return {
   -- },
 
   -- nightfly
-  {
-    "bluz71/vim-nightfly-guicolors",
-    name = "nightfly",
-    lazy = false,
-    priority = 1000,
-    transparent = true,
-  },
-
+  -- {
+  --   "bluz71/vim-nightfly-guicolors",
+  --   name = "nightfly",
+  --   lazy = false,
+  --   priority = 1000,
+  --   transparent = true,
+  -- },
+  --
   -- nightfox
   -- {
   --   "EdenEast/nightfox.nvim",

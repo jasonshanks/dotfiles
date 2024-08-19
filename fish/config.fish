@@ -54,8 +54,6 @@ set -g fish_user_paths /opt/homebrew/bin/libxml2/bin $fish_user_paths
 clear
 source ~/.config/.aliases
 source ~/.config/.functions
-# Jumper
-source /usr/local/bin/jumper.fish
 
 ### Fish syntax highlighting
 set -g fish_color_autosuggestion 555 brblack
@@ -65,9 +63,6 @@ set -g fish_color_command --bold
 ### Fish keybindings
 # fish_vi_key_bindings
 
-# fzf key bindings
-fzf --fish | source
-
 # Abbreviations
 abbr -a -- - prevd
 abbr -a -- = nextd
@@ -76,3 +71,9 @@ abbr -a -- = nextd
 set -x PATH $PATH /Users/jason/.composer/vendor/bin/
 set -g fish_user_paths /opt/homebrew/bin $fish_user_paths
 set -u fish_user_paths /Users/jason/.cargo/bin $fish_user_paths
+
+# fzf key bindings
+fzf --fish | source
+
+# zoxide
+zoxide init fish | source
