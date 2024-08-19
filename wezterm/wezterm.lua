@@ -22,5 +22,6 @@ config.keys = {
 	{ key = "k", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment },
 	{ key = "l", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment },
 }
+
 -- and finally, return the configuration to wezterm
 return config
