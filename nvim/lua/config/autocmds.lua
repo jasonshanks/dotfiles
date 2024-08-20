@@ -20,16 +20,47 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Disables tmux buffer scrollback so the neovim session doesn't scroll out of the viewport
 vim.api.nvim_create_augroup("TmuxMouse", { clear = true })
 
--- Disable tmux mouse mode when entering nvim
+local function disable_tmux_mouse()
+  if vim.env.TMUX then
+    vim.fn.system("tmux set-option -g mouse off")
+    vim.fn.system("tmux set-option -g history-limit 1")
+    print("Tmux mouse disabled") -- Debug print
+  end
+end
+
+local function enable_tmux_mouse()
+  if vim.env.TMUX then
+    vim.fn.system("tmux set-option -g mouse on")
+    vim.fn.system("tmux set-option -g history-limit 10000")
+    print("Tmux mouse enabled") -- Debug print
+  end
+end
+
+-- Run immediately
+disable_tmux_mouse()
+
+-- Also set up autocommands for redundancy
 vim.api.nvim_create_autocmd("VimEnter", {
   group = "TmuxMouse",
-  pattern = "*",
-  command = "silent !tmux setw -g mouse off; sleep 0; sleep 0.1",
+  callback = function()
+    disable_tmux_mouse()
+    -- Schedule another call just in case
+    vim.schedule(disable_tmux_mouse)
+  end,
 })
 
--- Enable tmux mouse mode when leaving nvim
 vim.api.nvim_create_autocmd("VimLeave", {
   group = "TmuxMouse",
-  pattern = "*",
-  command = "silent !tmux setw -g mouse on; sleep 0.1",
+  callback = enable_tmux_mouse,
 })
+
+-- Add a user command to toggle tmux mouse manually
+vim.api.nvim_create_user_command("ToggleTmuxMouse", function()
+  if vim.g.tmux_mouse_enabled then
+    disable_tmux_mouse()
+    vim.g.tmux_mouse_enabled = false
+  else
+    enable_tmux_mouse()
+    vim.g.tmux_mouse_enabled = true
+  end
+end, {})
