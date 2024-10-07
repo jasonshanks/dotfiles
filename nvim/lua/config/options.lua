@@ -65,6 +65,9 @@ vim.cmd([[let &t_Ce = "\e[4:0m"]])
 -- Add asterisks in block comments
 opt.formatoptions:append({ "r" })
 
+-- Session options
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
 vim.cmd([[au BufNewFile,BufRead *.astro setf astro]])
 vim.cmd([[au BufNewFile,BufRead Podfile setf ruby]])
 
