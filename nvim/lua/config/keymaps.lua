@@ -74,6 +74,9 @@ keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
 -- open a ToggleTerm float in current git directory
 keymap.set("n", "<leader>t", ":ToggleTerm direction=float dir=git_dir<CR>")
 
+-- Oil
+keymap.set("n", "-", ":Oil<CR>")
+
 -- Yanky
 keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
 keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
