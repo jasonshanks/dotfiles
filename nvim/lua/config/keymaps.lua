@@ -47,10 +47,11 @@ keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
 keymap.set("n", "ss", ":split<Return>", opts)
 keymap.set("n", "sv", ":vsplit<Return>", opts)
 -- Move window
-keymap.set("n", "sh", "<C-w>h")
-keymap.set("n", "sk", "<C-w>k")
-keymap.set("n", "sj", "<C-w>j")
-keymap.set("n", "sl", "<C-w>l")
+-- NOTE: below not needed with current usage of CTRL+vim bindings
+-- keymap.set("n", "sh", "<C-w>h")
+-- keymap.set("n", "sk", "<C-w>k")
+-- keymap.set("n", "sj", "<C-w>j")
+-- keymap.set("n", "sl", "<C-w>l")
 
 -- Resize window
 keymap.set("n", "<C-w><left>", "<C-w><")
@@ -100,9 +101,9 @@ keymap.set("n", "=p", "<Plug>(YankyPutAfterFilter)")
 keymap.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
 
 -- Leap
-keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
-keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)")
-keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
+-- keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
+-- keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)")
+-- keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
 
 -- Diagnostics
 -- @TODO: if use this need a non-confliction keymapping with Vim/Tmux navigation

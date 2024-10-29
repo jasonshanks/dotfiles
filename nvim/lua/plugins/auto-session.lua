@@ -7,6 +7,12 @@ return {
   ---@type AutoSession.Config
   opts = {
     suppressed_dirs = { '~/', '~/Sites', '~/Downloads', '/' },
+    pre_save_cmds = {
+        function()
+            -- Close all folds before saving
+            vim.cmd('silent! %foldopen!')
+        end
+    },
     -- log_level = 'debug',
   }
 }

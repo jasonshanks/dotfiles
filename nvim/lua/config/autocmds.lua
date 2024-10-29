@@ -20,20 +20,26 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Disables tmux buffer scrollback so the neovim session doesn't scroll out of the viewport
 vim.api.nvim_create_augroup("TmuxMouse", { clear = true })
 
-local function disable_tmux_mouse()
+-- Initialize the global variable
+vim.g.tmux_mouse_enabled = false
+
+local function set_tmux_mouse(enabled)
   if vim.env.TMUX then
-    vim.fn.system("tmux set-option -g mouse off")
-    vim.fn.system("tmux set-option -g history-limit 1")
-    print("Tmux mouse disabled") -- Debug print
+    local mouse_option = enabled and "on" or "off"
+    local history_limit = enabled and "10000" or "1"
+    vim.fn.system("tmux set-option -g mouse " .. mouse_option)
+    vim.fn.system("tmux set-option -g history-limit " .. history_limit)
+    vim.g.tmux_mouse_enabled = enabled
+    print("Tmux mouse " .. (enabled and "enabled" or "disabled")) -- Debug print
   end
 end
 
+local function disable_tmux_mouse()
+  set_tmux_mouse(false)
+end
+
 local function enable_tmux_mouse()
-  if vim.env.TMUX then
-    vim.fn.system("tmux set-option -g mouse on")
-    vim.fn.system("tmux set-option -g history-limit 10000")
-    print("Tmux mouse enabled") -- Debug print
-  end
+  set_tmux_mouse(true)
 end
 
 -- Run immediately
@@ -56,11 +62,5 @@ vim.api.nvim_create_autocmd("VimLeave", {
 
 -- Add a user command to toggle tmux mouse manually
 vim.api.nvim_create_user_command("ToggleTmuxMouse", function()
-  if vim.g.tmux_mouse_enabled then
-    disable_tmux_mouse()
-    vim.g.tmux_mouse_enabled = false
-  else
-    enable_tmux_mouse()
-    vim.g.tmux_mouse_enabled = true
-  end
+  set_tmux_mouse(not vim.g.tmux_mouse_enabled)
 end, {})

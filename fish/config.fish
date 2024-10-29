@@ -77,3 +77,6 @@ fzf --fish | source
 
 # zoxide
 zoxide init fish | source
+
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /Users/jason/.cache/lm-studio/bin
