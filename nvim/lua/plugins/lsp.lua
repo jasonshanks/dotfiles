@@ -11,8 +11,10 @@ return {
         "shfmt",
         "typescript-language-server",
         "css-lsp",
-        "intelephense",
         "emmet-language-server",
+        "intelephense",
+        "php-cs-fixer",
+        "phpcs",
       })
     end,
   },
@@ -22,7 +24,7 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       inlay_hints = { enabled = false },
-      ---@type lspconfig.options
+      --- @type lspconfig.options
       servers = {
         cssls = {},
         tsserver = {
@@ -57,45 +59,7 @@ return {
         },
 
         html = {},
-        emmet_language_server = { -- FIX: needs work. Emmet not quite loading yet
-          filetypes = {
-            "css",
-            "eruby",
-            "html",
-            "javascript",
-            "javascriptreact",
-            "less",
-            "php",
-            "pug",
-            "sass",
-            "scss",
-            "svelte",
-            "typescriptreact",
-            "vue",
-          },
-          -- Read more about this options in the [vscode docs](https://code.visualstudio.com/docs/editor/emmet#_emmet-configuration).
-          -- **Note:** only the options listed in the table are supported.
-          init_options = {
-            ---@type table<string, string>
-            includeLanguages = {},
-            --- @type string[]
-            excludeLanguages = {},
-            --- @type string[]
-            extensionsPath = {},
-            --- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/preferences/)
-            preferences = {},
-            --- @type boolean Defaults to `true`
-            showAbbreviationSuggestions = true,
-            --- @type "always" | "never" Defaults to `"always"`
-            showExpandedAbbreviation = "always",
-            --- @type boolean Defaults to `false`
-            showSuggestionsAsSnippets = false,
-            --- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/syntax-profiles/)
-            syntaxProfiles = {},
-            --- @type table<string, string> [Emmet Docs](https://docs.emmet.io/customization/snippets/#variables)
-            variables = {},
-          },
-        },
+        emmet_language_server = {}, -- Read more about this options in the [vscode docs](https://code.visualstudio.com/docs/editor/emmet#_emmet-configuration).
         yamlls = {
           settings = {
             yaml = {
@@ -104,7 +68,7 @@ return {
           },
         },
         lua_ls = {
-          -- enabled = false,
+          enabled = true,
           single_file_support = true,
           settings = {
             Lua = {
@@ -222,16 +186,36 @@ return {
               },
               environment = {
                 includePaths = { "/Users/jason/.composer/vendor/php-stubs/", "/Users/jason/.composer/vendor/wpsyntex/" },
-              },
+              }, -- TODO: Do these work if generified to ~/.composer...
               files = {
                 maxSize = 5000000,
               },
+               -- WordPress-specific settings
+              diagnostics = {
+                enable = true,
+              },
+              format = {
+                enable = true,
+              },
+              completion = {
+                triggerParameterHints = true,
+                insertUseDeclaration = true,
+              },
             },
           },
-          capabilities = capabilities,
-          on_attach = on_attach,
-        },
+          -- Define capabilities inline or reference from shared config
+          capabilities = (function()
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            capabilities.textDocument.completion.completionItem.snippetSupport = true
+            return capabilities
+          end)(),
+          -- Define on_attach inline or reference from shared config
+          on_attach = function(client, bufnr)
+            -- Your on_attach configuration
+            local opts = { noremap = true, silent = true, buffer = bufnr }
+        end,
       },
+     },
       setup = {},
     },
   },

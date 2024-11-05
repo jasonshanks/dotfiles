@@ -1,10 +1,9 @@
 return {
   "stevearc/conform.nvim",
-  event = { "BufWritePre" },
+  event = { "BufWritePre", "BufNewFile" },
   cmd = { "ConformInfo" },
   keys = {
     {
-      -- Customize or remove this keymap to your liking
       "<leader>F",
       function()
         require("conform").format({ async = true })
@@ -13,24 +12,31 @@ return {
       desc = "Format buffer",
     },
   },
-  -- This will provide type hinting with LuaLS
   ---@module "conform"
   ---@type conform.setupOpts
   opts = {
-    -- Define your formatters
     formatters_by_ft = {
       lua = { "stylua" },
       python = { "isort", "black" },
-      javascript = { "prettierd", "prettier", stop_after_first = true },
+      javascript = { "prettier" },
+      typescript = { "prettier" },
+      javascriptreact = { "prettier" },
+      typescriptreact = { "prettier" },
+      svelte = { "prettier" },
+      css = { "prettier" },
+      html = { "prettier" },
+      json = { "prettier" },
+      yaml = { "prettier" },
+      markdown = { "prettier" },
+      graphql = { "prettier" },
+      liquid = { "prettier" },
       php = { "php_cs_fixer" },
     },
-    -- Set default options
     default_format_opts = {
       lsp_format = "fallback",
     },
-    -- Customize formatters
     formatters = {
-    php_cs_fixer = {
+      php_cs_fixer = {
         command = "php-cs-fixer",
         args = {
           "fix",
@@ -40,6 +46,22 @@ return {
           "-",
         },
         stdin = true,
+        -- Add WordPress-specific configuration
+        config = {
+          rules = {
+            array_syntax = { syntax = "long" },
+            binary_operator_spaces = { align_double_arrow = true },
+            cast_spaces = { space = "single" },
+            concat_space = { spacing = "one" },
+            lowercase_keywords = true,
+            method_argument_space = { ensure_fully_multiline = true },
+            no_unused_imports = true,
+            ordered_imports = true,
+            single_quote = true,
+            ternary_operator_spaces = true,
+            visibility_required = true,
+          },
+        },
       },
       shfmt = {
         prepend_args = { "-i", "2" },
@@ -47,7 +69,6 @@ return {
     },
   },
   init = function()
-    -- If you want the formatexpr, here is the place to set it
     vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
   end,
 }

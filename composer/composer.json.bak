@@ -1,0 +1,20 @@
+{
+  "require": {
+    "php-stubs/wordpress-globals": "^0.2.0",
+    "php-stubs/wordpress-stubs": "^5.9",
+    "php-stubs/woocommerce-stubs": "^8.8",
+    "php-stubs/acf-pro-stubs": "^6.2",
+    "wpsyntex/polylang-stubs": "^3.4",
+    "php-stubs/genesis-stubs": "^3.4",
+    "php-stubs/wp-cli-stubs": "^2.10"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpcompatibility/phpcompatibility-wp": "*"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}
