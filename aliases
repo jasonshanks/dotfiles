@@ -9,7 +9,7 @@
 #                                                    
 # Designed by: Jason Shanks
 # Created: 2019-06-13
-# Modified: 2024-04-21
+# Modified: 2024-11-08
 #
 # Config Maintenance
 
@@ -55,12 +55,16 @@ alias llamatalk-uncensored-13b='cd /Applications/_LLMs/whisper.cpp/;./talk-llama
 alias llamatalk-huggin='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/huginnv1.2.ggmlv3.q4_K_M.bin -p "User" -t 8'
 
 ## Brew
-alias ,bi="brew install"
-alias ,bic="brew install --cask"
-alias ,bu="brew uninstall"
-alias ,bl="brew list -l"
-alias ,bud="brew update"
-alias ,bug="brew upgrade"
+alias !bi="brew install"
+alias !bic="brew install --cask"
+alias !bu="brew uninstall"
+alias !bl="brew list -l"
+alias !bud="brew update"
+alias !bug="brew upgrade"
+
+## Development
+alias ns="npm start"
+alias nrb="npm run build"
 
 ## Git
 alias lcm='git show -s --format="%s:%n%n%b" | pbcopy' # copies latest commit message to the clipboard
