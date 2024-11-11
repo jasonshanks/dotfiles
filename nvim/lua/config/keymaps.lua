@@ -65,15 +65,7 @@ keymap.set("n", "<C-j>", ":TmuxNavigateDown<CR>")
 keymap.set("n", "<C-k>", ":TmuxNavigateUp<CR>")
 keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
 
--- Open a new Tmux pane below in the same directory
--- @NOTE: this is nice but doesn't inherit the current neovim directory so currently preferring ToggleTerm for quick term access within a project
--- keymap.set("n", "<leader>t", ":silent !tmux split-window -c %:p:h<CR>", { silent = true })
-
 -- PLUGINS
-
--- ToggleTerm
--- open a ToggleTerm float in current git directory
-keymap.set("n", "<leader>t", ":ToggleTerm direction=float dir=git_dir<CR>")
 
 -- Oil
 keymap.set("n", "-", ":Oil<CR>")
