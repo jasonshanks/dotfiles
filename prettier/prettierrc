@@ -1,0 +1,29 @@
+{
+  "phpVersion": "8.0",
+  "printWidth": 120,
+  "tabWidth": 2,
+  "useTabs": false,
+  "singleQuote": true,
+  "trailingCommaPHP": true,
+  "braceStyle": "1tbs",
+  "requirePragma": false,
+  "insertPragma": false,
+  "htmlWhitespaceSensitivity": "css",
+  "endOfLine": "lf",
+  "plugins": ["@prettier/plugin-php"],
+  "overrides": [
+    {
+      "files": ["*.php"],
+      "options": {
+        "parser": "php",
+        "phpVersion": "8.0",
+        "braceStyle": "1tbs",
+        "singleQuote": true,
+        "tabWidth": 2,
+        "useTabs": false,
+        "printWidth": 120,
+        "trailingCommaPHP": true
+      }
+    }
+  ]
+}

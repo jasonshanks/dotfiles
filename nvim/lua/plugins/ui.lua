@@ -183,10 +183,42 @@ return {
   },
 
   {
-    "nvimdev/dashboard-nvim",
-    event = "VimEnter",
-    opts = function(_, opts)
-      local logo = [[
+    "folke/snacks.nvim",
+    opts = {
+      dashboard = {
+        preset = {
+          header = [[
+                                        oo            
+                                                  
+88d888b. .d8888b. .d8888b. dP   .dP dP 88d8b.d8b. 
+88'  `88 88ooood8 88'  `88 88   d8' 88 88'`88'`88 
+88    88 88.  ... 88.  .88 88 .88'  88 88  88  88 
+dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]],
+          -- stylua: ignore
+          ---@type snacks.dashboard.Item[]
+          keys = {
+            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+            { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+            { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+            { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
+            { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+          },
+        },
+      },
+    },
+  },
+
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      -- Set custom logo for snacks.dashboard
+      snacks = {
+        header = function()
+          local logo = [[
                                         oo            
                                                   
 88d888b. .d8888b. .d8888b. dP   .dP dP 88d8b.d8b. 
@@ -194,8 +226,21 @@ return {
 88    88 88.  ... 88.  .88 88 .88'  88 88  88  88 
 dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]]
 
-      logo = string.rep("\n", 8) .. logo .. "\n\n"
-      opts.config.header = vim.split(logo, "\n")
-    end,
+          local header = {}
+          for _, line in ipairs(vim.split(logo, "\n")) do
+            table.insert(header, line)
+          end
+          
+          -- Add padding
+          for i = 1, 8 do
+            table.insert(header, 1, "")
+          end
+          table.insert(header, "")
+          table.insert(header, "")
+          
+          return header
+        end,
+      },
+    },
   },
 }

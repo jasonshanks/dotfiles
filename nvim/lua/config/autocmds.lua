@@ -64,3 +64,11 @@ vim.api.nvim_create_autocmd("VimLeave", {
 vim.api.nvim_create_user_command("ToggleTmuxMouse", function()
   set_tmux_mouse(not vim.g.tmux_mouse_enabled)
 end, {})
+
+-- test for conform php on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.php",
+  callback = function()
+    print("PHP file save detected")
+  end,
+})

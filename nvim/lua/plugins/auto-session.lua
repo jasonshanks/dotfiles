@@ -1,18 +1,27 @@
 return {
-  'rmagatti/auto-session',
+  "rmagatti/auto-session",
   lazy = false,
-
-  ---enables autocomplete for opts
-  ---@module "auto-session"
-  ---@type AutoSession.Config
   opts = {
-    suppressed_dirs = { '~/', '~/Sites', '~/Downloads', '/' },
+    suppressed_dirs = { "~/", "~/Sites", "~/Downloads", "/" },
     pre_save_cmds = {
-        function()
-            -- Close all folds before saving
-            vim.cmd('silent! %foldopen!')
-        end
+      function()
+        -- Reset all folds before saving
+        pcall(vim.cmd, "silent! normal! zE")
+      end,
+    },
+    post_restore_cmds = {
+      function()
+        -- Reset fold settings after restore
+        pcall(function()
+          vim.cmd("silent! normal! zN") -- ensure folding is on
+          vim.cmd("silent! normal! zx") -- recompute folds
+        end)
+      end,
+    },
+    save_extra_cmds = {
+      "set foldmethod?", -- save the fold method
+      "set foldenable?", -- save fold enable state
     },
     -- log_level = 'debug',
-  }
+  },
 }

@@ -131,6 +131,9 @@ return {
           },
         },
         intelephense = {
+          init_options = {
+            documentFormatting = false, -- Disable LSP formatting
+          },
           settings = {
             intelephense = {
               stubs = {
@@ -186,16 +189,16 @@ return {
               },
               environment = {
                 includePaths = { "/Users/jason/.composer/vendor/php-stubs/", "/Users/jason/.composer/vendor/wpsyntex/" },
-              }, -- TODO: Do these work if generified to ~/.composer...
+              },
               files = {
                 maxSize = 5000000,
               },
-               -- WordPress-specific settings
+              -- WordPress-specific settings
               diagnostics = {
                 enable = true,
               },
               format = {
-                enable = true,
+                enable = false, -- Disable formatting here as well
               },
               completion = {
                 triggerParameterHints = true,
@@ -211,11 +214,11 @@ return {
           end)(),
           -- Define on_attach inline or reference from shared config
           on_attach = function(client, bufnr)
-            -- Your on_attach configuration
+            -- on_attach configuration
             local opts = { noremap = true, silent = true, buffer = bufnr }
-        end,
+          end,
+        },
       },
-     },
       setup = {},
     },
   },
