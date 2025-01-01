@@ -45,7 +45,7 @@
         </properties>
     </rule>
 
-    <!-- Minimum PHP version -->
+  <!-- Minimum PHP version -->
     <config name="testVersion" value="8.0+"/>
     <rule ref="PHPCompatibility"/>
 

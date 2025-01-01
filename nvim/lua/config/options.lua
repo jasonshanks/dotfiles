@@ -4,6 +4,9 @@
 
 vim.g.mapleader = " "
 
+-- LazyVim root dir detection
+vim.g.root_spec = { { ".git", "cwd" } }
+
 local opt = vim.opt -- sets an alias of opt to the full vim.opt prefix for conciseness
 
 -- encoding

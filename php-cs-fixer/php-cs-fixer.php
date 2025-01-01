@@ -1,4 +1,3 @@
-
 <?php
 
 $finder = PhpCsFixer\Finder::create()
@@ -39,4 +38,3 @@ return (new PhpCsFixer\Config())
     ->setIndent("    ")
     ->setLineEnding("\n")
     ->setFinder($finder);
-

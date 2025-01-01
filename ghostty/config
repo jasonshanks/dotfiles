@@ -1,0 +1,24 @@
+# General Appearance
+theme = Raycast_Dark
+font-family = "JetBrainsMono NFM Regular"
+font-size = 15
+window-colorspace = display-p3
+
+# MacOS Icon
+macos-icon = custom-style
+macos-icon-ghost-color = #ffffff
+macos-icon-screen-color = #0c23af
+macos-icon-frame = plastic
+
+# Titlebar
+window-decoration = false
+title = " "
+macos-titlebar-style = tabs
+
+# Cursor
+cursor-style = block
+adjust-cursor-thickness = 20%
+mouse-hide-while-typing = true
+
+# Quick Terminal
+quick-terminal-autohide = true
