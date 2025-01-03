@@ -1,7 +1,7 @@
 # FISH Shell Configuration
 # by Jason Shanks
 # Date created: 2020-04-18
-# Date updated: 2024-04-23
+# Date updated: 2025-01-03
 
 # Set Fish greeting
 set -U fish_greeting "Go 🐟"
