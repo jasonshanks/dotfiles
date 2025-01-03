@@ -92,11 +92,6 @@ keymap.set("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
 keymap.set("n", "=p", "<Plug>(YankyPutAfterFilter)")
 keymap.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
 
--- Leap
--- keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)")
--- keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)")
--- keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-from-window)")
-
 -- Diagnostics
 -- @TODO: if use this need a non-confliction keymapping with Vim/Tmux navigation
 -- keymap.set("n", "<C-j>", function()

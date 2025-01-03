@@ -10,6 +10,7 @@ return {
     "ofirgall/ofirkai.nvim",
     "navarasu/onedark.nvim",
     "rebelot/kanagawa.nvim",
+    "rose-pine/neovim",
     "sainnhe/sonokai",
   },
   -- Themery colorscheme switcher
@@ -37,7 +38,7 @@ return {
             before = [[
             theme = "wave" 
             background = {         
-              dark = "dragon",     
+              dark = "wave",     
               light = "lotus"
             }
             ]],
@@ -72,6 +73,14 @@ return {
             ]],
           },
           {
+            name = "Rose Pine",
+            colorscheme = "rose-pine",
+            before = [[
+            variant = "auto"
+            dark_variant = "main"
+            ]],
+          },
+          {
             name = "Solarized Osaka",
             colorscheme = "solarized-osaka",
           },
@@ -84,6 +93,13 @@ return {
             colorscheme = "tokyodark",
           },
         },
+        globalBefore = [[
+          transparent = true
+          styles = {
+            sidebars = "transparent",
+            floats = "transparent",
+          }
+        ]],
       })
     end,
   },

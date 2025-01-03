@@ -78,5 +78,15 @@ fzf --fish | source
 # zoxide
 zoxide init fish | source
 
+# yazi (exit to shell at CWD)
+function y
+    set tmp (mktemp -t "yazi-cwd.XXXXXX")
+    yazi $argv --cwd-file="$tmp"
+    if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+        builtin cd -- "$cwd"
+    end
+    rm -f -- "$tmp"
+end
+
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/jason/.cache/lm-studio/bin

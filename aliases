@@ -9,106 +9,141 @@
 #                                                    
 # Designed by: Jason Shanks
 # Created: 2019-06-13
-# Modified: 2024-11-08
+# Modified: 2025-01-03
 #
 # Config Maintenance
 
 ## Reload fish settings
 alias src-fish='source ~/.config/fish/config.fish'
 
-## Extra Cautious File Manueverings
+## Extra Cautious File Manueverings (Highly recommended for newbies)
 # alias mv 'mv -i'
 # alias rm 'rm -i'
 # alias cp 'cp -i'
 
-## Commands
+## Miscellaneous Commands
+alias c='clear'
+alias h='history -r | less'
+alias psid='ps auxc | grep ' # get the ID of a running process
+alias psup='ps acxo etime,command | grep -i -- '  # polls run time of a process
+alias logs='ll /var/log/'
+alias slog='zcat /var/log/system.log.* | grep sudo | less' # Security check for sudo activity in logs
+alias filecount='find . -type f | wc -l'
+alias finger='finger \!*'
+
+## Navigation and Directories
 alias .='pwd'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....="cd ../../.."
-alias c='clear'
-#alias ls='ls -aF'
-#alias ll='ls -FGhkls'
-#alias lla='ll -la'
-#if type -q eza
-  alias ls='eza -x'
-  alias lsa='eza -xa'
-  alias ll='eza -l -g --icons'
-  alias lla='ll -a'
-  alias llt='ll --tree --level=2 -a'
-  alias llt3='ll --tree --level=3 -a'
-#end
-alias h='history -r | less'
-alias f='finger \!*'
-alias rhttp='sudo apachectl graceful'
-alias id='ps auxc | grep'
-alias mlog='ll /var/log/*.out'
-alias slog='zcat /var/log/system.log.* | grep sudo | less'
-alias ip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d\   -f2; curl icanhazip.com"
-alias net='lsof -i tcp -i udp'
-alias nstat='netstat -ab -f inet | grep -i established | sort'
-alias filecount='find . -type f | wc -l'
-# alias psup='_() { ps acxo etime,command | grep -i -- "$1"; }; _'  ## polls actual run time of a process
+
+### Zoxide
+### Fuzzy directory matching with zoxide. fallback to regular cd when zoxide can't find a matching directory. Preserves the ability to use exact paths while getting the benefits of zoxide's fuzzy matching, and of cd without arguments to go to home directory.
+function z_cd
+  if test (count $argv) -eq 0
+    z
+  else
+    z $argv; or cd $argv
+  end
+end
+alias cd='z_cd'
+
+### Custom directory aliases (less needed now after Zoxide)
+alias sites='cd /Users/jason/Sites/'
+
+### EZA
+### Check for existence of eza with a Shell-specific function
+if test "$SHELL" = "/usr/bin/fish" -o "$SHELL" = "/bin/fish"
+    function command_exists
+        type -q $argv[1]
+    end
+else
+    function command_exists
+        command -v $argv[1] >/dev/null 2>&1
+    end
+end
+
+### Modern eza/ls replacements with fallback aliases
+if command_exists eza
+    alias ls='eza -x'
+    alias lsa='eza -xa'
+    alias ll='eza -l -g --icons'
+    alias lla='ll -a'
+    alias llt='ll --tree --level=2 -a'
+    alias llt3='ll --tree --level=3 -a'
+else
+    alias ls='ls -aF'
+    alias ll='ls -FGhkls'
+    alias lla='ll -la'
+end
+
+## File operations
+alias stat='stat -x'
+if command_exists bat
+  alias cat='bat'
+end
 alias doc2md='pandoc -s -f docx -t gfm --wrap=preserve ' ## append filename.docx -o outputfilename.md
-alias llamatalk='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/llama-2-7b-chat.ggmlv3.q4_0.bin -p "User" -t 8'
-alias llamatalk-uncensored-13b='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/wizardlm-1.0-uncensored-llama2-13b.ggmlv3.q4_0.bin -p "User" -t 8'
-alias llamatalk-huggin='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/huginnv1.2.ggmlv3.q4_K_M.bin -p "User" -t 8'
 
 ## Brew
-alias !bi="brew install"
-alias !bic="brew install --cask"
-alias !bu="brew uninstall"
-alias !bl="brew list -l"
-alias !bud="brew update"
-alias !bug="brew upgrade"
+alias brewi="brew info"
+alias brewin="brew install"
+alias brewinc="brew install --cask"
+alias brewun="brew uninstall"
+alias brewl="brew list -l"
+alias brewud="brew update"
+alias brewug="brew upgrade"
 
 ## Development
 alias ns="npm start"
+alias nrd="npm run dev"
 alias nrb="npm run build"
 
-## Git
+### Git - Custom commands
 alias lcm='git show -s --format="%s:%n%n%b" | pbcopy' # copies latest commit message to the clipboard
-### Git repos
+
+### Git - repos
 alias gitvei='cd ~/Sites/Wellmark/vei/wp-content/themes/vei/'
 
-## Apps & Folders
-# alias cd='z' # zoxide
-# function z_cd
-#   if test (count $argv) -eq 0
-#     z
-#   else
-#     z $argv; or cd $argv
-#   end
-# end
-#
-# alias cd='z_cd'
-alias v='nvim'
-alias stat='stat -x'
-alias pip='pip3'
-alias cat='bat'
-# if command -v bat > /dev/null; then alias cat='bat' fi
-alias stt='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -n -a .'
-alias te='/Applications/TextEdit.app/Contents/MacOS/TextEdit'
-alias sites='cd /Users/jason/Sites/'
-alias setistat='head -n 5 /Applications/INTERNET/setiathome-3.03/state.sah'
-alias games='cd /Applications/ARCADE/TextAdv/'
-alias nethack='cd /usr/games;./nethack'
-alias dict='curl dict://dict.org/d:\!*'
-alias dosbox='/Applications/-OS/DosBox.app/Contents/MacOS/DosBox -conf /Users/digitlee/.dosbox.conf'
+## Networking
+alias rhttp='sudo apachectl graceful'
+alias ip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d\   -f2; curl icanhazip.com"
+alias net='lsof -i tcp -i udp'
+alias nstat='netstat -ab -f inet | grep -i established | sort'
+
+## Servers - Local
 alias mampp='./Applications/xampp/xamppfiles/mampp'
 
-# Telnet
-alias aetolia='telnet aetolia.com' # Aetolia MUD
-
-## Remote servers 
+## Servers - Remote
 alias ssh-mc='ssh mediacentre@mediacentre.local'
 alias ssh-sl='ssh jason@studio.local'
 alias ssh-sr='ssh jason@studio.elxr.com'
 alias ssh-do='ssh q@159.65.141.2' # Digital Ocean
+
 ### Wellmark
 alias ssh-stagvei='ssh stagvei@stagvei.ssh.wpengine.net'
 alias ssh-stagnew='ssh stagnewlifeivf@stagnewlifeivf.ssh.wpengine.net'
 alias ssh-stagvhg='ssh stagvhg@stagvhg.ssh.wpengine.net'
+
+## Apps
+alias v='nvim'
+alias pip='pip3'
+alias stt='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -n -a .'
+alias te='/Applications/TextEdit.app/Contents/MacOS/TextEdit'
+alias setistat='head -n 5 /Applications/INTERNET/setiathome-3.03/state.sah'
+alias dosbox='/Applications/-OS/DosBox.app/Contents/MacOS/DosBox -conf /Users/digitlee/.dosbox.conf'
+
+### AI/LLMs
+alias llamatalk='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/llama-2-7b-chat.ggmlv3.q4_0.bin -p "User" -t 8'
+alias llamatalk-uncensored-13b='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/wizardlm-1.0-uncensored-llama2-13b.ggmlv3.q4_0.bin -p "User" -t 8'
+alias llamatalk-huggin='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/huginnv1.2.ggmlv3.q4_K_M.bin -p "User" -t 8'
+
+## Games
+alias games='cd /Applications/ARCADE/TextAdv/'
+alias nethack='cd /usr/games;./nethack'
+alias doom='cd /Applications/_GAMES/terminal-doom;zig-out/bin/terminal-doom'
+
+### Telnet (MUDs)
+alias aetolia='telnet aetolia.com'
 
 ## Stream Ripping
 alias sr-sleep='streamripper http://63.150.180.173:8000 -d /Volumes/oz/Shuttle/Streams/Sleepbot\ Environmental\ Broadcast/ -s -u WinampMPEG/2.7'
