@@ -1,68 +1,42 @@
 # dotfiles...a neverending story by Jason Shanks
 
-dotfiles. What self-respecting nerd wouldn't maintaining their own repo of this right?
+dotfiles. What self-respecting nerd wouldn't maintaining their own dotfiles repo, am I right?
 
-These are mine in an ever evolving state, take from it what you will.
+There's 4 main reasons why dotfiles are important:
 
-## topical
+1. **Backup & Restore**: If you need to restore your computer for any reason, your physical backup may not be available or in a complete state. Suffice it say, they more you invest in customising your system, the more painful it would be to recreate.
+2. **Portability**: You need portability to spin up your working environment on another machine.
+3. **Reference**: A historical reference log of how your systems, tools and practices have evolved over time.
+4. **Inspiration**: To share inspiration with the greater community. I have and continue to learn a tremendous amount from how others maximise and personalise their favourite tools.
 
-Everything's built around topic areas. If you're adding a new area to your
-forked dotfiles — say, "Java" — you can simply add a `java` directory and put
-files in there. Anything with an extension of `.zsh` will get automatically
-included into your shell. Anything with an extension of `.symlink` will get
-symlinked without extension into `$HOME` when you run `script/bootstrap`.
+These are mine in an ever evolving state. Pick from it what you will, or [Fork it](https://github.com/jasonshanks/dotfiles/fork), remove what you don't use, and build on what you do!
 
-## what's inside
+## Organisation
 
-A lot of stuff. Seriously, a lot of stuff. Check them out in the file browser
-above and see what components may mesh up with you.
-[Fork it](https://github.com/jasonshanks/dotfiles/fork), remove what you don't
-use, and build on what you do use.
+For now, it is largely a clone of the select pieces of my .config directory that are not transitional. There are a sprinkling of other non-dotfile related settings outside of that. I may further organise these into thematical folders at some point if necessary.
 
-## components
+## DEV
 
-There's a few special files in the hierarchy.
+These files are not currently in use and mostly borrowed from other dotfile systems waiting to be incorporated, discarded or awaiting decision on my overall bootstrapping approach.
 
-- **bin/**: Anything in `bin/` will get added to your `$PATH` and be made
-  available everywhere.
-- **topic/\*.zsh**: Any files ending in `.zsh` get loaded into your
-  environment.
-- **topic/path.zsh**: Any file named `path.zsh` is loaded first and is
-  expected to setup `$PATH` or similar.
-- **topic/completion.zsh**: Any file named `completion.zsh` is loaded
-  last and is expected to setup autocomplete.
-- **topic/install.sh**: Any file named `install.sh` is executed when you run `script/install`. To avoid being loaded automatically, its extension is `.sh`, not `.zsh`.
-- **topic/\*.symlink**: Any file ending in `*.symlink` gets symlinked into
-  your `$HOME`. This is so you can keep all of those versioned in your dotfiles
-  but still keep those autoloaded files in your home directory. These get
-  symlinked in when you run `script/bootstrap`.
+## 🙏Thanks and 📣shoutouts
 
-## install
+Thanks to the entire Open Source community and by extension Github. To all those who graciously share their dotfiles, tips, code contributions, not to mention literally every application I so preciously preserve my settings for here!! I ♥️ Open Source! My computing life would be all the less richer without it.
 
-Run this:
+📣shoutouts to:
 
-```sh
-git clone https://github.com/holman/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-script/bootstrap
-```
+- [Zach Holman](https://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/) and [Andrew Burgess](https://shaky.sh/simple-dotfiles/) - for the inspiration to organise by thematical folders and to include a bootstrap script to auto copy and symlink everything needed to configure a new system.
+- [Brian Mayo](https://medium.com/@protiumx/bash-gnu-stow-take-a-walk-while-your-new-macbook-is-being-set-up-351a6f2f9225) - for the 'reach for the sky' idea that you could wrap all your Mac apps, preferences and defaults up with this too!
 
-This will symlink the appropriate files in `.dotfiles` to your home directory.
-Everything is configured and tweaked within `~/.dotfiles`.
+## TODO
 
-The main file you'll want to change right off the bat is `zsh/zshrc.symlink`,
-which sets up a few paths that'll be different on your particular machine.
+- [ ] Migrate the remainder of legacy configs not yet symlinked.
+- [ ] Decide on symlink approach (custom variation on inspo above, or Stow command)
+- [ ] Finalise boostrap and restore method.
+- [ ] Adapt scripts to 🐟fish shell.
+- [ ] Incorporate `mas` for Mac App Store restoration
+- [ ] Incorporate Brew packages/taps/brews reinstall scripts
+- [ ] Incorporate main Mac Preferences backup
+- [ ] Collect all my Mac defaults and store for restoration
 
-`dot` is a simple script that installs some dependencies, sets sane macOS
-defaults, and so on. Tweak this script, and occasionally run `dot` from
-time to time to keep your environment fresh and up-to-date. You can find
-this script in `bin/`.
-
-## 🙏Thanks and 📣shoutouts!
-
-Thanks really to the entire open source and github community who graciously shares their own dotfiles and ways of doing things. So many avenues and options.
-
-Special thanks to:
-
-- [Zach Holman](https://github.com/holman/dotfiles) - for the inspiration to organise by thematical folders and to include a bootstrap script to auto copy and symlink everything needed to configure a new system. Zach also has still [timeless article](https://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/) around his methodology and thinking. His were designed around zsh shell, so I have adapted for my preferred shell – 🐟fish.
-- [Ryan Bates](http://github.com/ryanb/dotfiles) - recursively, much of the script foundation Zach based on Ryan Bates' dotfiles.
+UPDATED: 2025-01-04
