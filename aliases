@@ -9,7 +9,7 @@
 #                                                    
 # Designed by: Jason Shanks
 # Created: 2019-06-13
-# Modified: 2025-01-03
+# Modified: 2025-01-05
 #
 # Config Maintenance
 
@@ -84,6 +84,16 @@ if command_exists bat
 end
 alias doc2md='pandoc -s -f docx -t gfm --wrap=preserve ' ## append filename.docx -o outputfilename.md
 
+## Apps
+alias v='nvim'
+alias ff='fastfetch'
+alias ffall='fastfetch -c all.jsonc'
+alias pip='pip3'
+alias stt='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -n -a .'
+alias te='/Applications/TextEdit.app/Contents/MacOS/TextEdit'
+alias setistat='head -n 5 /Applications/INTERNET/setiathome-3.03/state.sah'
+alias dosbox='/Applications/-OS/DosBox.app/Contents/MacOS/DosBox -conf /Users/digitlee/.dosbox.conf'
+
 ## Brew
 alias brewi="brew info"
 alias brewin="brew install"
@@ -123,14 +133,6 @@ alias ssh-do='ssh q@159.65.141.2' # Digital Ocean
 alias ssh-stagvei='ssh stagvei@stagvei.ssh.wpengine.net'
 alias ssh-stagnew='ssh stagnewlifeivf@stagnewlifeivf.ssh.wpengine.net'
 alias ssh-stagvhg='ssh stagvhg@stagvhg.ssh.wpengine.net'
-
-## Apps
-alias v='nvim'
-alias pip='pip3'
-alias stt='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -n -a .'
-alias te='/Applications/TextEdit.app/Contents/MacOS/TextEdit'
-alias setistat='head -n 5 /Applications/INTERNET/setiathome-3.03/state.sah'
-alias dosbox='/Applications/-OS/DosBox.app/Contents/MacOS/DosBox -conf /Users/digitlee/.dosbox.conf'
 
 ### AI/LLMs
 alias llamatalk='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/llama-2-7b-chat.ggmlv3.q4_0.bin -p "User" -t 8'

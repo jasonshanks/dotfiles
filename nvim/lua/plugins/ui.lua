@@ -93,93 +93,112 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     opts = function(_, opts)
-      local LazyVim = require("lazyvim.util")
+      -- Custom Lualine component to show attached language server
+      local clients_lsp = function()
+        local clients = vim.lsp.get_clients()
+        if next(clients) == nil then
+          return ""
+        end
+
+        local c = {}
+        for _, client in pairs(clients) do
+          table.insert(c, client.name)
+        end
+        return " " .. table.concat(c, "|")
+      end
+
       opts.options = {
         theme = "auto",
-        component_separators = { left = " ", right = " " },
-        section_separators = { left = " ", right = " " },
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
       }
-      opts.sections.lualine_c[4] = {
-        LazyVim.lualine.pretty_path({
-          length = 0,
-          relative = "cwd",
-          modified_hl = "MatchParen",
-          directory_hl = "",
-          filename_hl = "Bold",
-          modified_sign = "",
-          readonly_icon = " 󰌾 ",
-        }),
+
+      -- Left sections (lualine_a, lualine_b, lualine_c)
+      opts.sections.lualine_a = {
+        { "mode" },
+      }
+
+      opts.sections.lualine_b = {
+        { "diagnostics" },
+        { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+        {
+          "filename",
+          file_status = true,
+          path = 1,
+          symbols = { modified = "", readonly = " 󰌾 " },
+          padding = { left = 0, right = 1 },
+        },
+      }
+
+      opts.sections.lualine_c = {}
+
+      -- custom filename alternative including filetype and relative pathname
+      -- local LazyVim = require("lazyvim.util")
+      -- opts.sections.lualine_c[4] = {
+      -- LazyVim.lualine.pretty_path({
+      --   length = 0,
+      --   relative = "cwd",
+      --   modified_hl = "MatchParen",
+      --   directory_hl = "",
+      --   filename_hl = "Bold",
+      --   modified_sign = "",
+      --   readonly_icon = " 󰌾 ",
+      -- }),
+      -- }
+
+      -- Right sections (lualine_x, lualine_y, lualine_z)
+      opts.sections.lualine_x = { clients_lsp }
+
+      opts.sections.lualine_y = {
+        { "branch", icon = "" },
+        {
+          "diff",
+          symbols = {
+            added = "+",
+            modified = "~",
+            removed = "-",
+          },
+          padding = { left = 0, right = 2 },
+        },
+      }
+
+      opts.sections.lualine_z = {
+        { "progress", icon = "", padding = { left = 0, right = 0 } },
+        { "location" },
       }
     end,
   },
-  -- require("lualine").setup({
-  --   options = {
-  --     theme = "auto",
-  --     component_separators = { left = "", right = "" },
-  --     section_separators = { left = "", right = "" },
-  --     always_divide_middle = true,
-  --     always_show_tabline = true,
-  --     globalstatus = false,
-  --     refresh = {
-  --       statusline = 100,
-  --       tabline = 100,
-  --       winbar = 100,
-  --     },
-  --   },
-  --   sections = {
-  --     lualine_a = { "mode" },
-  --     lualine_b = { "branch", "diff", "diagnostics" },
-  --     lualine_c = { "filename" },
-  --     lualine_x = { "encoding", "fileformat", "filetype" },
-  --     lualine_y = { "progress" },
-  --     lualine_z = { "location" },
-  --   },
-  --   inactive_sections = {
-  --     lualine_a = {},
-  --     lualine_b = {},
-  --     lualine_c = { "filename" },
-  --     lualine_x = { "location" },
-  --     lualine_y = {},
-  --     lualine_z = {},
-  --   },
-  --   tabline = {},
-  --   winbar = {},
-  --   inactive_winbar = {},
-  --   extensions = {},
-  -- }),
-  -- },
 
   -- filename
-  -- {
-  --   "b0o/incline.nvim",
-  --   dependencies = { "craftzdog/solarized-osaka.nvim" },
-  --   event = "BufReadPre",
-  --   priority = 1200,
-  --   config = function()
-  --     local colors = require("solarized-osaka.colors").setup()
-  --     require("incline").setup({
-  --       highlight = {
-  --         groups = {
-  --           InclineNormal = { guibg = colors.magenta500, guifg = colors.base04 },
-  --           InclineNormalNC = { guifg = colors.violet500, guibg = colors.base03 },
-  --         },
-  --       },
-  --       window = { margin = { vertical = 0, horizontal = 1 } },
-  --       hide = {
-  --         cursorline = true,
-  --       },
-  --       render = function(props)
-  --         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-  --         if vim.bo[props.buf].modified then
-  --           filename = "[+] " .. filename
-  --         end
-  --
-  --         local icon, color = require("nvim-web-devicons").get_icon_color(filename)
-  --         return { { icon, guifg = color }, { " " }, { filename } }
-  --       end,
-  --     })
-  --   end,
-  -- },
+  {
+    "b0o/incline.nvim",
+    event = "VeryLazy",
+    config = function()
+      local helpers = require("incline.helpers")
+      local devicons = require("nvim-web-devicons")
+      require("incline").setup({
+        window = {
+          padding = 0,
+          margin = { horizontal = 1, vertical = 1 },
+        },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          if filename == "" then
+            filename = "[No Name]"
+          end
+          local ft_icon, ft_color = devicons.get_icon_color(filename)
+          local modified = vim.bo[props.buf].modified
+          return {
+            ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or "",
+            " ",
+            { filename, gui = modified and "bold,italic" or "bold" },
+            " ",
+            guibg = "#44406e",
+          }
+        end,
+      })
+    end,
+  },
 
   {
     "folke/zen-mode.nvim",

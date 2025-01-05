@@ -10,6 +10,7 @@ return {
     "ofirgall/ofirkai.nvim",
     "navarasu/onedark.nvim",
     "rose-pine/neovim",
+    "craftzdog/solarized-osaka.nvim",
     "sainnhe/sonokai",
   },
   -- Themery colorscheme switcher
