@@ -4,10 +4,8 @@
 # Date updated: 2025-01-03
 
 # Set Fish greeting
-set -U fish_greeting "Go 🐟"
-#function fish_greeting
-#    fortune
-#end
+# set -U fish_greeting "Go 🐟"
+set -U fish_greeting ""
 
 set -x R_VERIFY_TASK false
 set -x R_AUTO_TIMEOUT 5

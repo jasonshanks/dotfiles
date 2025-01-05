@@ -3,13 +3,12 @@ return {
   {
     "EdenEast/nightfox.nvim",
     "tiagovla/tokyodark.nvim",
-    "loctvl842/monokai-pro.nvim",
+    "folke/tokyonight.nvim",
     "bluz71/vim-nightfly-colors",
     "Mofiqul/dracula.nvim",
     "marko-cerovac/material.nvim",
     "ofirgall/ofirkai.nvim",
     "navarasu/onedark.nvim",
-    "rebelot/kanagawa.nvim",
     "rose-pine/neovim",
     "sainnhe/sonokai",
   },
@@ -33,28 +32,10 @@ return {
             colorscheme = "dracula",
           },
           {
-            name = "Kanagawa",
-            colorscheme = "kanagawa",
-            before = [[
-            theme = "wave" 
-            background = {         
-              dark = "wave",     
-              light = "lotus"
-            }
-            ]],
-          },
-          {
             name = "Material Deep Ocean",
             colorscheme = "material",
             before = [[
             vim.g.material_style = "deep ocean"
-            ]],
-          },
-          {
-            name = "Monokai Pro",
-            colorscheme = "monokai-pro",
-            before = [[
-            filter = "octagon"
             ]],
           },
           {
@@ -91,6 +72,10 @@ return {
           {
             name = "Tokyo Dark",
             colorscheme = "tokyodark",
+          },
+          {
+            name = "Tokyo Night",
+            colorscheme = "tokyonight",
           },
         },
         globalBefore = [[
