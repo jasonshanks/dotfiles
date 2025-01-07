@@ -16,7 +16,7 @@ macos-titlebar-style = tabs
 window-padding-color = background
 
 # Theme
-theme = dark:"tokyonight", light:"catppuccin-latte"
+theme = dark:"catppuccin-mocha", light:"catppuccin-latte"
 background-opacity = "0.85"
 background-blur-radius = "10"
 # custom-shader = /Users/jason/iCloud/_/Development/Git-Repos/ghostty-shaders/starfield-colors.glsl
