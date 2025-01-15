@@ -68,7 +68,11 @@ keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
 -- PLUGINS
 
 -- Oil
-keymap.set("n", "-", ":Oil<CR>")
+-- keymap.set("n", "<Leader>-", ":Oil<CR>")
+
+-- Yazi
+keymap.set("n", "-", "<cmd>Yazi<cr>") -- Open at the current file
+keymap.set("n", "<Leader>cw", "<cmd>Yazi cwd<cr>") -- Open in the current working directory
 
 -- Yanky
 keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
