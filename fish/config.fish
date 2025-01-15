@@ -66,6 +66,7 @@ abbr -a -- - prevd
 abbr -a -- = nextd
 
 # CUSTOM PATHS
+set -Ux PATH $HOME/.npm-packages/bin $PATH
 set -x PATH $PATH /Users/jason/.composer/vendor/bin/
 set -g fish_user_paths /opt/homebrew/bin $fish_user_paths
 set -u fish_user_paths /Users/jason/.cargo/bin $fish_user_paths
