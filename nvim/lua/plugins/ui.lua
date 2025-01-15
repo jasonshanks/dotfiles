@@ -49,7 +49,7 @@ return {
         end,
       })
 
-      opts.presets.lsp_doc_border = true
+      opts.presets.lsp_doc_border = false
     end,
   },
 
@@ -261,6 +261,14 @@ dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]],
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },
         },
+      },
+      notifier = {
+        enabled = true,
+        --- available style: "compact"|"fancy"|"minimal"
+        style = "compact",
+      },
+      statuscolumn = {
+        enabled = true,
       },
     },
   },
