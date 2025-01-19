@@ -107,7 +107,7 @@ alias brewud="brew update"
 alias brewug="brew upgrade"
 
 ## Development
-alias ns="npm start"
+alias nrs="npm start"
 alias nrd="npm run dev"
 alias nrb="npm run build"
 
