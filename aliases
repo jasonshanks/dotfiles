@@ -85,6 +85,7 @@ end
 alias doc2md='pandoc -s -f docx -t gfm --wrap=preserve ' ## append filename.docx -o outputfilename.md
 
 ## Apps
+alias df='duf' # A better df with color-syntax and table output
 alias dig='dug' # A better dig with color-syntax table output
 alias v='nvim'
 alias ff='fastfetch'
