@@ -9,7 +9,7 @@
 #                                                    
 # Designed by: Jason Shanks
 # Created: 2019-06-13
-# Modified: 2025-01-05
+# Modified: 2025-01-18
 #
 # Config Maintenance
 
@@ -85,10 +85,13 @@ end
 alias doc2md='pandoc -s -f docx -t gfm --wrap=preserve ' ## append filename.docx -o outputfilename.md
 
 ## Apps
+alias df='duf' # A better df with color-syntax table output
+alias dig='dug' # A better dig with color-syntax table output
 alias v='nvim'
 alias ff='fastfetch'
 alias ffall='fastfetch -c all.jsonc'
 alias pip='pip3'
+alias sed='sd' # An improved sed with easier syntax but less features.
 alias stt='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -n -a .'
 alias te='/Applications/TextEdit.app/Contents/MacOS/TextEdit'
 alias setistat='head -n 5 /Applications/INTERNET/setiathome-3.03/state.sah'
