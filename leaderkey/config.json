@@ -1,0 +1,300 @@
+{
+  "type" : "group",
+  "actions" : [
+    {
+      "actions" : [
+        {
+          "key" : "e",
+          "type" : "application",
+          "value" : "/Applications/Mail.app"
+        },
+        {
+          "key" : "i",
+          "type" : "application",
+          "value" : "/System/Applications/Music.app"
+        },
+        {
+          "key" : "m",
+          "type" : "application",
+          "value" : "/Applications/Messages.app"
+        }
+      ],
+      "type" : "group",
+      "key" : "o"
+    },
+    {
+      "key" : "r",
+      "type" : "group",
+      "actions" : [
+        {
+          "key" : "e",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols"
+        },
+        {
+          "key" : "p",
+          "value" : "raycast://confetti",
+          "type" : "url"
+        },
+        {
+          "value" : "raycast://extensions/raycast/system/open-camera",
+          "type" : "url",
+          "key" : "c"
+        }
+      ]
+    },
+    {
+      "actions" : [
+        {
+          "value" : "/Applications/kitty.app",
+          "key" : "k",
+          "type" : "application"
+        },
+        {
+          "value" : "/Applications/Ghostty.app",
+          "type" : "application",
+          "key" : "g"
+        }
+      ],
+      "type" : "group",
+      "key" : "t"
+    },
+    {
+      "type" : "group",
+      "actions" : [
+        {
+          "value" : "raycast://extensions/raycast/window-management/first-third",
+          "key" : "a",
+          "type" : "url"
+        },
+        {
+          "value" : "raycast://extensions/raycast/window-management/center-third",
+          "key" : "s",
+          "type" : "url"
+        },
+        {
+          "key" : "d",
+          "value" : "raycast://extensions/raycast/window-management/last-third",
+          "type" : "url"
+        },
+        {
+          "type" : "url",
+          "key" : "h",
+          "value" : "raycast://extensions/raycast/window-management/left-half"
+        },
+        {
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/window-management/bottom-half",
+          "key" : "j"
+        },
+        {
+          "key" : "k",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/window-management/top-half"
+        },
+        {
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/window-management/right-half",
+          "key" : "l"
+        },
+        {
+          "value" : "raycast://extensions/raycast/window-management/toggle-fullscreen",
+          "type" : "url",
+          "key" : "f"
+        },
+        {
+          "type" : "url",
+          "key" : "m",
+          "value" : "raycast://extensions/raycast/window-management/maximize"
+        },
+        {
+          "type" : "group",
+          "actions" : [
+            {
+              "value" : "raycast://extensions/raycast/window-management/top-left-quarter",
+              "type" : "url",
+              "key" : "u"
+            },
+            {
+              "type" : "url",
+              "key" : "i",
+              "value" : "raycast://extensions/raycast/window-management/top-right-quarter"
+            },
+            {
+              "key" : "m",
+              "value" : "raycast://extensions/raycast/window-management/bottom-left-quarter",
+              "type" : "url"
+            },
+            {
+              "key" : ",",
+              "type" : "url",
+              "value" : "raycast://extensions/raycast/window-management/bottom-right-quarter"
+            }
+          ],
+          "key" : "q"
+        }
+      ],
+      "key" : "w"
+    },
+    {
+      "type" : "group",
+      "actions" : [
+        {
+          "key" : "a",
+          "type" : "application",
+          "value" : "/Applications/Arc.app"
+        },
+        {
+          "key" : "s",
+          "type" : "application",
+          "value" : "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app"
+        },
+        {
+          "key" : "f",
+          "value" : "/Applications/Firefox Developer Edition.app",
+          "type" : "application"
+        },
+        {
+          "key" : "b",
+          "type" : "application",
+          "value" : "/Applications/Brave Browser.app"
+        },
+        {
+          "key" : "z",
+          "type" : "application",
+          "value" : "/Applications/Zen Browser.app"
+        },
+        {
+          "type" : "application",
+          "value" : "/Applications/Orion.app",
+          "key" : "o"
+        }
+      ],
+      "key" : "b"
+    },
+    {
+      "key" : "n",
+      "actions" : [
+        {
+          "key" : "o",
+          "type" : "application",
+          "value" : "/Applications/Obsidian.app"
+        },
+        {
+          "key" : "i",
+          "type" : "application",
+          "value" : "/Applications/iA Writer.app"
+        },
+        {
+          "value" : "/System/Applications/Notes.app",
+          "type" : "application",
+          "key" : "n"
+        },
+        {
+          "key" : "s",
+          "type" : "application",
+          "value" : "/Applications/Scratchpad.app"
+        },
+        {
+          "key" : "j",
+          "type" : "application",
+          "value" : "/Applications/Day One.app"
+        },
+        {
+          "type" : "application",
+          "value" : "/Applications/Drafts.app",
+          "key" : "d"
+        }
+      ],
+      "type" : "group"
+    },
+    {
+      "key" : "p",
+      "type" : "group",
+      "actions" : [
+        {
+          "type" : "application",
+          "value" : "/Applications/Fantastical.app",
+          "key" : "f"
+        },
+        {
+          "type" : "application",
+          "value" : "/Applications/Things3.app",
+          "key" : "t"
+        },
+        {
+          "key" : "r",
+          "type" : "application",
+          "value" : "/System/Applications/Reminders.app"
+        },
+        {
+          "key" : "c",
+          "type" : "application",
+          "value" : "/Applications/ClickUp.app"
+        }
+      ]
+    },
+    {
+      "type" : "group",
+      "actions" : [
+        {
+          "value" : "/Users/jason/Desktop",
+          "type" : "folder",
+          "key" : "d"
+        },
+        {
+          "key" : "l",
+          "type" : "folder",
+          "value" : "/Users/jason/Downloads"
+        },
+        {
+          "type" : "folder",
+          "key" : "c",
+          "value" : "/Users/jason/Library/Mobile Documents/com~apple~CloudDocs/_"
+        },
+        {
+          "value" : "/Users/jason/Library/Mobile Documents/com~apple~CloudDocs/_/_INBOX 📥",
+          "type" : "folder",
+          "key" : "i"
+        }
+      ],
+      "key" : "f"
+    },
+    {
+      "type" : "group",
+      "key" : "c",
+      "actions" : [
+        {
+          "value" : "/System/Applications/Mail.app",
+          "key" : "m",
+          "type" : "application"
+        },
+        {
+          "value" : "/Applications/Slack.app",
+          "key" : "s",
+          "type" : "application"
+        },
+        {
+          "key" : "d",
+          "type" : "application",
+          "value" : "/Applications/Discord.app"
+        },
+        {
+          "type" : "application",
+          "value" : "/Applications/zoom.us.app",
+          "key" : "z"
+        },
+        {
+          "type" : "application",
+          "key" : "i",
+          "value" : "/Applications/IceCubesApp.app"
+        },
+        {
+          "key" : "t",
+          "type" : "application",
+          "value" : "/System/Applications/Messages.app"
+        }
+      ]
+    }
+  ]
+}

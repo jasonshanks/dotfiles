@@ -62,6 +62,10 @@ opt.background = "dark" -- colorschemes that are dark or light will be made dark
 opt.signcolumn = "yes" -- show sign column so that text doesn't shift
 
 -- Undercurl
+-- Enable cursorline highlight
+vim.opt.cursorline = true
+
+-- Set up undercurl
 vim.cmd([[let &t_Cs = "\e[4:3m"]])
 vim.cmd([[let &t_Ce = "\e[4:0m"]])
 
