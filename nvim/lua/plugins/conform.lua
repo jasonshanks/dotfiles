@@ -3,6 +3,8 @@ return {
   opts = {
     formatters_by_ft = {
       lua = { "stylua" },
+      sh = { "shfmt" },
+      fish = { "fish_indent" },
       python = { "isort", "black" },
       javascript = { "prettier" },
       typescript = { "prettier" },
@@ -18,9 +20,37 @@ return {
       liquid = { "prettier" },
       -- php = { "php_prettier" },
       -- php = { "prettier" },
-      php = { "php_cs_fixer", "phpcbf" },
+      php = { "phpcbf", "php_cs_fixer" },
+      ["_"] = { "trim_whitespace" }, -- run on filetypes that don't have other formatters configured
     },
     formatters = {
+      prettier = {
+        prepend_args = { "--config-precedence", "file" },
+        args = {
+          "--css-empty-line-before",
+          "always",
+          "--print-width",
+          "100",
+          "--tab-width",
+          "2",
+          "--single-quote",
+          "false",
+          "--trailing-comma",
+          "all",
+          "--bracket-spacing",
+          "true",
+          "--semi",
+          "true",
+          "--use-tabs",
+          "false",
+          "--prose-wrap",
+          "preserve",
+          "--arrow-parens",
+          "always",
+          "--css-declaration-sort-order",
+          "concentric-css",
+        },
+      },
       php_cs_fixer = {
         command = "php-cs-fixer", -- Homebrew installation
         args = {
