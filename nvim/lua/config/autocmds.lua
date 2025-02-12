@@ -30,7 +30,6 @@ local function set_tmux_mouse(enabled)
     vim.fn.system("tmux set-option -g mouse " .. mouse_option)
     vim.fn.system("tmux set-option -g history-limit " .. history_limit)
     vim.g.tmux_mouse_enabled = enabled
-    print("Tmux mouse " .. (enabled and "enabled" or "disabled")) -- Debug print
   end
 end
 
@@ -41,6 +40,16 @@ end
 local function enable_tmux_mouse()
   set_tmux_mouse(true)
 end
+
+-- Add protection for session restoration
+vim.api.nvim_create_autocmd("User", {
+  pattern = "SessionLoadPre",
+  callback = function()
+    -- Reset fold settings before loading session
+    vim.opt.foldmethod = "manual"
+    vim.cmd("silent! %foldopen!")
+  end,
+})
 
 -- Run immediately
 disable_tmux_mouse()
