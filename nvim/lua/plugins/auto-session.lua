@@ -4,10 +4,14 @@ return {
   opts = {
     suppressed_dirs = { "~/", "~/Sites", "~/Downloads", "/" },
     pre_save_cmds = {
+      "silent! %foldopen!", -- Open all folds before saving
       function()
         -- Reset all folds before saving
         pcall(vim.cmd, "silent! normal! zE")
       end,
+    },
+    pre_restore_cmds = {
+      "silent! %foldopen!", -- Open all folds before restoring
     },
     post_restore_cmds = {
       function()

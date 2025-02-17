@@ -130,9 +130,9 @@ return {
     },
   },
 
--- Set Transparency to editor
+  -- Set Transparency to editor
   vim.cmd([[
   autocmd VimEnter * highlight Normal guibg=NONE ctermbg=NONE
   autocmd VimEnter * highlight NonText guibg=NONE ctermbg=NONE
-]])
+]]),
 }
