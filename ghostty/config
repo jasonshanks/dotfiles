@@ -38,7 +38,7 @@ macos-icon-frame = "aluminum"
 # Keybindings
 keybind = super+i=inspector:toggle
 keybind = super+r=reload_config
-keybind = global:cmd+ctrl+alt+shift+t=toggle_quick_terminal
+keybind = global:cmd+ctrl+alt+shift+`=toggle_quick_terminal
 
 # Quick Terminal
 quick-terminal-position = center
