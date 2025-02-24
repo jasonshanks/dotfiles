@@ -26,8 +26,15 @@ background-blur-radius = "10"
 window-colorspace = display-p3
 
 # Fonts
-font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 18
+# font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "Monaspace Neon"
+font-family-bold = "Monaspace Xenon"
+font-family-italic = "Monaspace Radon"
+font-family-bold-italic = "Monaspace Krypton"
+
+# Enable ligatures
+font-feature = "ss01,ss02,ss03,ss04,calt,liga"
 
 # Icon
 macos-icon = custom-style
