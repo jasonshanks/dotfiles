@@ -45,6 +45,20 @@ dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]],
       -- special mode
       zen = {
         enabled = true,
+        enter = true,
+        fixbuf = false,
+        minimal = false,
+        width = 120,
+        height = 0,
+        backdrop = { transparent = true, blend = 40 },
+        keys = { q = false },
+        zindex = 40,
+        wo = {
+          winhighlight = "NormalFloat:Normal",
+        },
+        w = {
+          snacks_main = true,
+        },
         ---@type table<string, boolean>
         toggles = {
           dim = false,
