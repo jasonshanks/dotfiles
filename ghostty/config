@@ -1,4 +1,17 @@
+#
+#  ██████╗ ██╗  ██╗ ██████╗ ███████╗████████╗████████╗██╗   ██╗
+# ██╔════╝ ██║  ██║██╔═══██╗██╔════╝╚══██╔══╝╚══██╔══╝╚██╗ ██╔╝
+# ██║  ███╗███████║██║   ██║███████╗   ██║      ██║    ╚████╔╝
+# ██║   ██║██╔══██║██║   ██║╚════██║   ██║      ██║     ╚██╔╝
+# ╚██████╔╝██║  ██║╚██████╔╝███████║   ██║      ██║      ██║
+#  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝      ╚═╝      ╚═╝
+#
+# Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.
+# https://ghostty.org/docs/config/reference
+
 # Shell
+command = /opt/homebrew/bin/fish -l -c "if type -q tmux; tmux attach; or tmux new -s CommandCentre; else; fish; end" # Tmux initialisation
+shell-integration = fish
 shell-integration-features = "no-cursor,no-title,sudo"
 
 # Cursor & Mouse
@@ -51,6 +64,3 @@ keybind = global:cmd+ctrl+alt+shift+`=toggle_quick_terminal
 quick-terminal-position = center
 quick-terminal-autohide = true
 quick-terminal-animation-duration = 0.05
-
-# TMUX Initialisation
-command = /opt/homebrew/bin/fish -l -c "if type -q tmux; tmux attach; or tmux new -s CommandCentre; else; fish; end"
