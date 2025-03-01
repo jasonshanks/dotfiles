@@ -1,11 +1,20 @@
+# ███████╗██╗███████╗██╗  ██╗
+# ██╔════╝██║██╔════╝██║  ██║
+# █████╗  ██║███████╗███████║
+# ██╔══╝  ██║╚════██║██╔══██║
+# ██║     ██║███████║██║  ██║
+# ╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝
+# A smart and user-friendly command line
+# https://fishshell.com/
+
 # FISH Shell Configuration
 # by Jason Shanks
 # Date created: 2020-04-18
-# Date updated: 2025-01-03
+# Date updated: 2025-02-25
 
 # Set Fish greeting
 # set -U fish_greeting "Go 🐟"
-set -U fish_greeting ""
+set -U fish_greeting "" # disable fish greeting
 
 set -x R_VERIFY_TASK false
 set -x R_AUTO_TIMEOUT 5
@@ -65,11 +74,18 @@ set -g fish_color_command --bold
 abbr -a -- - prevd
 abbr -a -- = nextd
 
-# CUSTOM PATHS
+# PATHS
+fish_add_path /usr/bin
+fish_add_path /bin
+
+## CUSTOM PATHS
 set -Ux PATH $HOME/.npm-packages/bin $PATH
 set -x PATH $PATH /Users/jason/.composer/vendor/bin/
 set -g fish_user_paths /opt/homebrew/bin $fish_user_paths
 set -u fish_user_paths /Users/jason/.cargo/bin $fish_user_paths
+
+## Added by LM Studio CLI (lms)
+set -gx PATH $PATH /Users/jason/.cache/lm-studio/bin
 
 # fzf key bindings
 fzf --fish | source
@@ -86,6 +102,3 @@ function y
     end
     rm -f -- "$tmp"
 end
-
-# Added by LM Studio CLI (lms)
-set -gx PATH $PATH /Users/jason/.cache/lm-studio/bin
