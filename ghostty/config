@@ -29,7 +29,7 @@ macos-titlebar-style = tabs
 window-padding-color = background
 
 # Theme
-theme = dark:"catppuccin-mocha", light:"catppuccin-latte"
+theme = dark:"flexoki-dark", light:"catppuccin-latte"
 background-opacity = "0.85"
 background-blur-radius = "10"
 # custom-shader = /Users/jason/iCloud/_/Development/Git-Repos/ghostty-shaders/starfield-colors.glsl
@@ -41,10 +41,11 @@ window-colorspace = display-p3
 # Fonts
 font-size = 18
 # font-family = "JetBrainsMono Nerd Font Mono"
-font-family = "Monaspace Neon"
-font-family-bold = "Monaspace Xenon"
-font-family-italic = "Monaspace Radon"
-font-family-bold-italic = "Monaspace Krypton"
+font-family = "SF Mono"
+# font-family = "Monaspace Neon"
+# font-family-bold = "Monaspace Xenon"
+# font-family-italic = "Monaspace Radon"
+# font-family-bold-italic = "Monaspace Krypton"
 
 # Enable ligatures
 font-feature = "ss01,ss02,ss03,ss04,calt,liga"
