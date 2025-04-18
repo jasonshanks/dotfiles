@@ -41,11 +41,22 @@ window-colorspace = display-p3
 # Fonts
 font-size = 18
 # font-family = "JetBrainsMono Nerd Font Mono"
-font-family = "SF Mono"
+# font-family = "SF Mono"
 # font-family = "Monaspace Neon"
 # font-family-bold = "Monaspace Xenon"
 # font-family-italic = "Monaspace Radon"
 # font-family-bold-italic = "Monaspace Krypton"
+font-family = "0xProto Nerd Font Propo"
+# font-family = "BitstromWera Nerd Font Mono"
+# font-family = "BlexMono Nerd Font Mono"
+# font-family = "CaskaydiaCove Nerd Font Mono"
+# font-family = "FiraCode Nerd Font Mono"
+# font-family = "Hack Nerd Font Mono"
+# font-family = "iMWritingMono Nerd Font"
+# font-family = "Liga SFMono Nerd Font"
+# font-family = "Lilex Nerd Font Mono"
+# font-family = "Maple Mono NF"
+# font-family = "SauceCodePro Nerd Font Mono"
 
 # Enable ligatures
 font-feature = "ss01,ss02,ss03,ss04,calt,liga"
