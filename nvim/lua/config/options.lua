@@ -61,6 +61,12 @@ opt.termguicolors = true
 opt.background = "dark" -- colorschemes that are dark or light will be made dark
 opt.signcolumn = "yes" -- show sign column so that text doesn't shift
 
+-- Set transparent background
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+vim.api.nvim_set_hl(0, "Pmenu", { bg = "none" })
+
 -- Undercurl
 -- Enable cursorline highlight
 vim.opt.cursorline = true

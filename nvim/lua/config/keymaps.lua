@@ -36,9 +36,6 @@ keymap.set("n", "<C-a>", "gg<S-v>G")
 keymap.set("n", "<Leader>o", "o<Esc>^Da", opts)
 keymap.set("n", "<Leader>O", "O<Esc>^Da", opts)
 
--- Jumplist
-keymap.set("n", "<C-m>", "<C-i>", opts)
-
 -- New tab
 keymap.set("n", "te", ":tabedit")
 keymap.set("n", "<tab>", ":tabnext<Return>", opts)
@@ -63,7 +60,16 @@ keymap.set("n", "<C-j>", ":TmuxNavigateDown<CR>")
 keymap.set("n", "<C-k>", ":TmuxNavigateUp<CR>")
 keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
 
--- PLUGINS
+-- Jumplist
+keymap.set("n", "<C-m>", "<C-i>", opts)
+
+-- Quickfix list
+keymap.set("n", "<M-n>", ":cnext<CR>zz", opts)
+keymap.set("n", "<M-p>", ":cprev<CR>zz", opts)
+
+-------------
+-- PLUGINS --
+-------------
 
 -- Oil
 -- keymap.set("n", "<Leader>-", ":Oil<CR>")
