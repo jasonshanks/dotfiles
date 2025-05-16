@@ -4,124 +4,119 @@
       "actions" : [
         {
           "key" : "e",
-          "label" : "",
           "type" : "application",
-          "value" : "/Applications/Mail.app"
+          "value" : "/Applications/MailMate.app"
         },
         {
           "key" : "i",
-          "label" : "",
           "type" : "application",
           "value" : "/System/Applications/Music.app"
         },
         {
           "key" : "m",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Messages.app"
         }
       ],
-      "key" : "\n",
-      "label" : "",
+      "key" : "a",
+      "label" : "Applications",
       "type" : "group"
     },
     {
       "actions" : [
         {
           "key" : "e",
-          "label" : "",
+          "label" : "Emoji Picker",
           "type" : "url",
           "value" : "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols"
         },
         {
           "key" : "p",
-          "label" : "",
+          "label" : "Confetti",
           "type" : "url",
           "value" : "raycast://confetti"
         },
         {
           "key" : "c",
-          "label" : "",
+          "label" : "Camera",
           "type" : "url",
           "value" : "raycast://extensions/raycast/system/open-camera"
         }
       ],
       "key" : "r",
-      "label" : "",
+      "label" : "Raycast",
       "type" : "group"
     },
     {
       "actions" : [
         {
           "key" : "k",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/kitty.app"
         },
         {
           "key" : "g",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Ghostty.app"
         }
       ],
       "key" : "t",
-      "label" : "",
+      "label" : "Terminal",
       "type" : "group"
     },
     {
       "actions" : [
         {
           "key" : "a",
-          "label" : "",
+          "label" : "Left Third",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/first-third"
         },
         {
           "key" : "s",
-          "label" : "",
+          "label" : "Middle Third",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/center-third"
         },
         {
           "key" : "d",
-          "label" : "",
+          "label" : "Right Third",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/last-third"
         },
         {
           "key" : "h",
-          "label" : "",
+          "label" : "Left Half",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/left-half"
         },
         {
           "key" : "j",
-          "label" : "",
+          "label" : "Bottom Half",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/bottom-half"
         },
         {
           "key" : "k",
-          "label" : "",
+          "label" : "Top Half",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/top-half"
         },
         {
           "key" : "l",
-          "label" : "",
+          "label" : "Right Half",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/right-half"
         },
         {
           "key" : "f",
-          "label" : "",
+          "label" : "Fullscreen (toggle)",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/toggle-fullscreen"
         },
         {
           "key" : "m",
-          "label" : "",
+          "label" : "Maximise",
           "type" : "url",
           "value" : "raycast://extensions/raycast/window-management/maximize"
         },
@@ -129,227 +124,206 @@
           "actions" : [
             {
               "key" : "u",
-              "label" : "",
+              "label" : "Quarter Left Top",
               "type" : "url",
               "value" : "raycast://extensions/raycast/window-management/top-left-quarter"
             },
             {
               "key" : "i",
-              "label" : "",
+              "label" : "Quarter Right Top",
               "type" : "url",
               "value" : "raycast://extensions/raycast/window-management/top-right-quarter"
             },
             {
               "key" : "m",
-              "label" : "",
+              "label" : "Quarter Left Bottom",
               "type" : "url",
               "value" : "raycast://extensions/raycast/window-management/bottom-left-quarter"
             },
             {
               "key" : ",",
-              "label" : "",
+              "label" : "Quarter Right Bottom",
               "type" : "url",
               "value" : "raycast://extensions/raycast/window-management/bottom-right-quarter"
             }
           ],
           "key" : "q",
-          "label" : "",
+          "label" : "Quarters",
           "type" : "group"
         }
       ],
       "key" : "w",
-      "label" : "",
+      "label" : "Window",
       "type" : "group"
     },
     {
       "actions" : [
         {
           "key" : "a",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Arc.app"
         },
         {
           "key" : "s",
-          "label" : "",
           "type" : "application",
           "value" : "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app"
         },
         {
           "key" : "f",
-          "label" : "",
           "type" : "application",
-          "value" : "/Applications/Firefox Developer Edition.app"
+          "value" : "/Applications/Floorp.app"
         },
         {
-          "key" : "b",
-          "label" : "",
+          "key" : "v",
           "type" : "application",
-          "value" : "/Applications/Brave Browser.app"
+          "value" : "/Applications/Vivaldi.app"
         },
         {
           "key" : "z",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Zen Browser.app"
         },
         {
           "key" : "o",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Orion.app"
+        },
+        {
+          "key" : "e",
+          "type" : "application",
+          "value" : "/Applications/Microsoft Edge.app"
         }
       ],
       "key" : "b",
-      "label" : "",
+      "label" : "Browsers",
       "type" : "group"
     },
     {
       "actions" : [
         {
           "key" : "o",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Obsidian.app"
         },
         {
           "key" : "i",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/iA Writer.app"
         },
         {
           "key" : "n",
-          "label" : "",
           "type" : "application",
           "value" : "/System/Applications/Notes.app"
         },
         {
           "key" : "s",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Scratchpad.app"
         },
         {
           "key" : "j",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Day One.app"
         },
         {
           "key" : "d",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Drafts.app"
         }
       ],
       "key" : "n",
-      "label" : "",
+      "label" : "Notes",
       "type" : "group"
     },
     {
       "actions" : [
         {
           "key" : "f",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Fantastical.app"
         },
         {
           "key" : "t",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Things3.app"
         },
         {
           "key" : "r",
-          "label" : "",
           "type" : "application",
           "value" : "/System/Applications/Reminders.app"
         },
         {
           "key" : "c",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/ClickUp.app"
         }
       ],
       "key" : "p",
-      "label" : "",
+      "label" : "Planning",
       "type" : "group"
     },
     {
       "actions" : [
         {
           "key" : "d",
-          "label" : "",
           "type" : "folder",
           "value" : "/Users/jason/Desktop"
         },
         {
           "key" : "l",
-          "label" : "",
           "type" : "folder",
           "value" : "/Users/jason/Downloads"
         },
         {
           "key" : "c",
-          "label" : "",
           "type" : "folder",
           "value" : "/Users/jason/Library/Mobile Documents/com~apple~CloudDocs/_"
         },
         {
           "key" : "i",
-          "label" : "",
           "type" : "folder",
           "value" : "/Users/jason/Library/Mobile Documents/com~apple~CloudDocs/_/_INBOX 📥"
         }
       ],
       "key" : "f",
-      "label" : "",
+      "label" : "Finder",
       "type" : "group"
     },
     {
       "actions" : [
         {
           "key" : "m",
-          "label" : "",
           "type" : "application",
           "value" : "/System/Applications/Mail.app"
         },
         {
           "key" : "s",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Slack.app"
         },
         {
           "key" : "d",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/Discord.app"
         },
         {
           "key" : "z",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/zoom.us.app"
         },
         {
           "key" : "i",
-          "label" : "",
           "type" : "application",
           "value" : "/Applications/IceCubesApp.app"
         },
         {
           "key" : "t",
-          "label" : "",
           "type" : "application",
           "value" : "/System/Applications/Messages.app"
         }
       ],
       "key" : "c",
-      "label" : "",
+      "label" : "Communications",
       "type" : "group"
     }
   ],
