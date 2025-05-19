@@ -100,6 +100,38 @@
       "keyColor": "blue",
     },
     {
+      "type": "player",
+      "key": " AUX",
+      "keyColor": "yellow",
+    },
+    {
+      "type": "media",
+      "key": "│ ├ ",
+      "keyColor": "yellow",
+    },
+
+    {
+      "type": "custom",
+      "format": "\u001b[90m└────────────────────────────────────────────────────┘",
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[90m┌────────────────────Network─────────────────────────┐",
+    },
+    {
+      "type": "publicip",
+      "timeout": 1000,
+      "key": " PUB",
+      "keyColor": "green",
+    },
+    {
+      "type": "localip",
+      "showMac": true,
+      "showAllIps": true,
+      "key": " LOC",
+      "keyColor": "green",
+    },
+    {
       "type": "custom",
       "format": "\u001b[90m└────────────────────────────────────────────────────┘",
     },
