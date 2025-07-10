@@ -105,6 +105,3 @@ keymap.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
 -- keymap.set("n", "<C-j>", function()
 --    vim.diagnostic.goto_next()
 -- end, opts)
-
--- require("jason.lsp").toggleInlayHints()
--- keymap.set("n", "<leader>i", function() end)

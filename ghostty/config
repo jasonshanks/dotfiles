@@ -42,6 +42,7 @@ window-colorspace = display-p3
 font-size = 18
 # font-family = "JetBrainsMono Nerd Font Mono"
 font-family = "Input Mono Narrow"
+font-family = "Inter"
 # font-family = "Maple Mono NF"
 # font-family = "Hack Nerd Font Mono"
 # font-family = "BitstromWera Nerd Font Mono"

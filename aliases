@@ -6,10 +6,10 @@
 # ██╔══██║██║     ██║██╔══██║╚════██║██╔══╝  ╚════██║
 # ██║  ██║███████╗██║██║  ██║███████║███████╗███████║
 # ╚═╝  ╚═╝╚══════╝╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
-#                                                    
+#
 # Designed by: Jason Shanks
 # Created: 2019-06-13
-# Modified: 2025-01-18
+# Modified: 2025-05-23
 #
 # Config Maintenance
 
@@ -134,6 +134,7 @@ alias ssh-do='ssh q@159.65.141.2' # Digital Ocean
 
 ### Wellmark
 alias ssh-stagvei='ssh stagvei@stagvei.ssh.wpengine.net'
+alias ssh-vei='ssh vei@vei.ssh.wpengine.net'
 alias ssh-stagnew='ssh stagnewlifeivf@stagnewlifeivf.ssh.wpengine.net'
 alias ssh-stagvhg='ssh stagvhg@stagvhg.ssh.wpengine.net'
 
