@@ -28,11 +28,6 @@ require("lazy").setup({
           lazyvim = true,
           neovim = true,
         },
-        format = {
-          timeout_ms = 3000,
-          async = true, -- NOTE: default: false? not sure reasoning
-          quiet = false,
-        },
       },
     },
 
@@ -46,13 +41,14 @@ require("lazy").setup({
     -- Development tools
     { import = "lazyvim.plugins.extras.linting.eslint" },
     { import = "lazyvim.plugins.extras.formatting.prettier" },
+    { import = "plugins" },
   },
 
   -- Default Plugin Behavior
   defaults = {
     -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
     -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
-    lazy = true, -- NOTE: default: false? not sure why as seems to defeat purpose of lazy.
+    lazy = false,
     -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
     -- have outdated releases, which may break your Neovim install.
     version = false, -- always use the latest git commit

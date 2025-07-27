@@ -61,12 +61,6 @@ opt.termguicolors = true
 opt.background = "dark" -- colorschemes that are dark or light will be made dark
 opt.signcolumn = "yes" -- show sign column so that text doesn't shift
 
--- Set transparent background
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
-vim.api.nvim_set_hl(0, "Pmenu", { bg = "none" })
-
 -- Undercurl
 -- Enable cursorline highlight
 vim.opt.cursorline = true
@@ -83,7 +77,3 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 
 vim.cmd([[au BufNewFile,BufRead *.astro setf astro]])
 vim.cmd([[au BufNewFile,BufRead Podfile setf ruby]])
-
-if vim.fn.has("nvim-0.8") == 1 then
-  opt.cmdheight = 0
-end

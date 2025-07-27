@@ -33,13 +33,13 @@ keymap.set("n", "<C-a>", "gg<S-v>G")
 --vim.api.nvim_create_user_command('W', 'w !sudo tee > /dev/null %', {})
 
 -- Disable continuations
-keymap.set("n", "<Leader>o", "o<Esc>^Da", opts)
+-- keymap.set("n", "<Leader>o", "o<Esc>^Da", opts)
 keymap.set("n", "<Leader>O", "O<Esc>^Da", opts)
 
 -- New tab
-keymap.set("n", "te", ":tabedit")
-keymap.set("n", "<tab>", ":tabnext<Return>", opts)
-keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
+-- keymap.set("n", "te", ":tabedit")
+-- keymap.set("n", "<tab>", ":tabnext<Return>", opts)
+-- keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
 
 -- Move window
 -- NOTE: below not needed with current usage of CTRL+vim bindings
@@ -60,12 +60,19 @@ keymap.set("n", "<C-j>", ":TmuxNavigateDown<CR>")
 keymap.set("n", "<C-k>", ":TmuxNavigateUp<CR>")
 keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
 
+-- Vertical scroll and center
+keymap.set("n", "<C-u>", "<C-u>zz", opts)
+keymap.set("n", "<C-d>", "<C-d>zz", opts)
+
 -- Jumplist
 keymap.set("n", "<C-m>", "<C-i>", opts)
 
 -- Quickfix list
 keymap.set("n", "<M-n>", ":cnext<CR>zz", opts)
 keymap.set("n", "<M-p>", ":cprev<CR>zz", opts)
+
+-- SUPER Quit: quit and delete all buffers
+keymap.set("c", "Q", "%bd | qa", opts)
 
 -------------
 -- PLUGINS --
