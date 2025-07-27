@@ -9,7 +9,7 @@
 #
 # Designed by: Jason Shanks
 # Created: 2019-06-13
-# Modified: 2025-05-23
+# Modified: 2025-07-19
 #
 # Config Maintenance
 
@@ -110,6 +110,7 @@ alias brewug="brew upgrade"
 alias nrs="npm start"
 alias nrd="npm run dev"
 alias nrb="npm run build"
+alias localshell='sh "$(ls -t ~/Library/Application\ Support/Local/ssh-entry/*.sh | head -n 1)"'
 
 ### Git - Custom commands
 alias lcm='git show -s --format="%s:%n%n%b" | pbcopy' # copies latest commit message to the clipboard
