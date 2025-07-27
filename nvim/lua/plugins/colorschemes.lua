@@ -58,6 +58,16 @@ M.reset_background = function()
   print("Background reset to " .. state)
 end
 
+-- Force default background on initialization
+M.init = function()
+  bg_transparent = false
+  bg_black = false
+  -- Use vim.schedule to ensure this runs after colorscheme loading
+  vim.schedule(function()
+    apply_background_state()
+  end)
+end
+
 -- Set up keymaps
 vim.keymap.set("n", "<leader>tt", M.toggle_transparency, { desc = "Toggle transparency" })
 vim.keymap.set("n", "<leader>tb", M.toggle_black_background, { desc = "Toggle black background" })
@@ -65,6 +75,9 @@ vim.keymap.set("n", "<leader>tr", M.reset_background, { desc = "Reset to default
 
 -- Make globally accessible
 _G.ColorschemeTransparency = M
+
+-- Initialize default state
+M.init()
 
 -- Simple colorscheme configurations
 return {
