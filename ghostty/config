@@ -40,27 +40,29 @@ window-colorspace = display-p3
 
 # Fonts
 font-size = 18
+# font-family = "Hack Nerd Font Mono"
 # font-family = "JetBrainsMono Nerd Font Mono"
-# font-family = "Input Mono Narrow"
-# font-family = "Maple Mono NF"
-font-family = "Hack Nerd Font Mono"
-# font-family = "BitstromWera Nerd Font Mono"
 # font-family = "Input Mono"
+# font-family = "Input Mono Narrow"
+font-family = "MonaspiceNe Nerd Font Mono"
+# font-family = "Maple Mono NF"
+# font-family = "BitstromWera Nerd Font Mono"
 # font-family = "FiraCode Nerd Font Mono"
 # font-family = "CommitMono Nerd Font"
 # font-family = "SF Mono"
 # font-family = "iMWritingMono Nerd Font"
 # font-family = "Liga SFMono Nerd Font"
 # font-family = "BlexMono Nerd Font Mono"
-# font-family = "Lilex Nerd Font Mono"
 # font-family = "SauceCodePro Nerd Font Mono"
 # font-family = "CaskaydiaCove Nerd Font Mono"
 # font-family = "ZedMono Nerd Font"
-# font-family = "Monaspace Neon"
-# font-family-bold = "Monaspace Xenon"
-# font-family-italic = "Monaspace Radon"
-# font-family-bold-italic = "Monaspace Krypton"
 # font-family = "0xProto Nerd Font Propo"
+#
+# Font styles (set if different to default)
+# font-style = "regular"
+# font-style-bold = "bold"
+# font-style-italic = "italic"
+# font-style-bold-italic = "bold-italic"
 
 # Font preview
 # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ -> => !==
