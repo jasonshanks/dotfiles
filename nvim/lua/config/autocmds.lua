@@ -19,6 +19,24 @@ vim.api.nvim_create_autocmd("InsertLeave", {
   desc = "Disable paste mode when leaving insert mode",
 })
 
+-- Clean up swap files automatically on successful write
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = "*",
+  callback = function()
+    -- Only remove swap if Vim reports no swap file in use
+    if vim.fn.getbufvar(vim.fn.bufnr("%"), "&swapfile") == 0 then
+      return
+    end
+    local file_path = vim.fn.expand("<afile>:p")
+    -- Use Vim's built-in function to get the exact swap file path
+    local swap_file = vim.fn.swapname(file_path)
+    if swap_file ~= "" and vim.fn.filereadable(swap_file) == 1 then
+      vim.notify("Removing swap file: " .. swap_file, vim.log.levels.INFO)
+      os.remove(swap_file)
+    end
+  end,
+})
+
 -- ============================================================================
 -- FILE TYPE SPECIFIC AUTOCOMMANDS
 -- ============================================================================
