@@ -1,0 +1,92 @@
+#
+#  ██████╗ ██╗  ██╗ ██████╗ ███████╗████████╗████████╗██╗   ██╗
+# ██╔════╝ ██║  ██║██╔═══██╗██╔════╝╚══██╔══╝╚══██╔══╝╚██╗ ██╔╝
+# ██║  ███╗███████║██║   ██║███████╗   ██║      ██║    ╚████╔╝
+# ██║   ██║██╔══██║██║   ██║╚════██║   ██║      ██║     ╚██╔╝
+# ╚██████╔╝██║  ██║╚██████╔╝███████║   ██║      ██║      ██║
+#  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝      ╚═╝      ╚═╝
+#
+# Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.
+# https://ghostty.org/docs/config/reference
+
+# Shell
+command = /opt/homebrew/bin/fish -l -c "if type -q tmux; tmux attach; or tmux new -s CommandCentre; else; fish; end" # Tmux initialisation
+shell-integration = fish
+shell-integration-features = "no-cursor,no-title,sudo"
+
+# Cursor & Mouse
+cursor-style = "underline"
+mouse-hide-while-typing = true
+
+# Titlebar
+window-decoration = false
+title = " " # TODO: see if title can be customised in future to only display app, not cwd which is redundant in TMUX
+macos-titlebar-style = tabs
+
+# Windows
+# window-padding-x = 20
+# window-padding-y = 20
+window-padding-color = background
+
+# Theme
+theme = dark:"flexoki-dark", light:"catppuccin-latte"
+background-opacity = "0.75"
+background-blur-radius = "10"
+# custom-shader = /Users/jason/iCloud/_/Development/Git-Repos/ghostty-shaders/starfield-colors.glsl
+# custom-shader = /Users/jason/iCloud/_/Development/Git-Repos/ghostty-shaders/bloom.glsl
+
+# Colors - display-p3 or srgb (Mac Only)
+window-colorspace = display-p3
+
+# Fonts
+font-size = 18
+# font-family = "Hack Nerd Font Mono"
+# font-family = "JetBrainsMono Nerd Font Mono"
+# font-family = "Input Mono"
+# font-family = "Input Mono Narrow"
+font-family = "MonaspiceNe Nerd Font Mono"
+# font-family = "Maple Mono NF"
+# font-family = "BitstromWera Nerd Font Mono"
+# font-family = "FiraCode Nerd Font Mono"
+# font-family = "CommitMono Nerd Font"
+# font-family = "SF Mono"
+# font-family = "iMWritingMono Nerd Font"
+# font-family = "Liga SFMono Nerd Font"
+# font-family = "BlexMono Nerd Font Mono"
+# font-family = "SauceCodePro Nerd Font Mono"
+# font-family = "CaskaydiaCove Nerd Font Mono"
+# font-family = "ZedMono Nerd Font"
+#
+# font-family = "Monaspace Neon"
+# font-family-bold = "Monaspace Xenon"
+# font-family-italic = "Monaspace Radon"
+# font-family-bold-italic = "Monaspace Krypton"
+# font-family = "0xProto Nerd Font Propo"
+#
+# Font styles (set if different to default)
+# font-style = "regular"
+# font-style-bold = "bold"
+# font-style-italic = "italic"
+# font-style-bold-italic = "bold-italic"
+
+# Font preview
+# !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ -> => !==
+
+# Enable ligatures
+font-feature = "ss01,ss02,ss03,ss04,calt,liga"
+
+# Icon
+macos-icon = custom-style
+macos-icon-ghost-color = #ffffff
+macos-icon-screen-color = #0c23af
+macos-icon-frame = "aluminum"
+
+# Keybindings
+keybind = super+i=inspector:toggle
+keybind = super+r=reload_config
+keybind = global:cmd+ctrl+alt+shift+`=toggle_quick_terminal
+
+# Quick Terminal
+quick-terminal-position = center
+quick-terminal-autohide = true
+quick-terminal-animation-duration = 0.05
