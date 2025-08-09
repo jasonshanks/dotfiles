@@ -31,7 +31,8 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     -- Use Vim's built-in function to get the exact swap file path
     local swap_file = vim.fn.swapname(file_path)
     if swap_file ~= "" and vim.fn.filereadable(swap_file) == 1 then
-      vim.notify("Removing swap file: " .. swap_file, vim.log.levels.INFO)
+      -- Notification when swap file deleted.
+      -- vim.notify("Removing swap file: " .. swap_file, vim.log.levels.INFO)
       os.remove(swap_file)
     end
   end,
