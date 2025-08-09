@@ -54,12 +54,6 @@ keymap.set("n", "<C-w><right>", "<C-w>>")
 keymap.set("n", "<C-w><up>", "<C-w>+")
 keymap.set("n", "<C-w><down>", "<C-w>-")
 
--- Vim-Tmux-Navigator window navigation
-keymap.set("n", "<C-h>", ":TmuxNavigateLeft<CR>")
-keymap.set("n", "<C-j>", ":TmuxNavigateDown<CR>")
-keymap.set("n", "<C-k>", ":TmuxNavigateUp<CR>")
-keymap.set("n", "<C-l>", ":TmuxNavigateRight<CR>")
-
 -- Vertical scroll and center
 keymap.set("n", "<C-u>", "<C-u>zz", opts)
 keymap.set("n", "<C-d>", "<C-d>zz", opts)
@@ -73,39 +67,6 @@ keymap.set("n", "<M-p>", ":cprev<CR>zz", opts)
 
 -- SUPER Quit: quit and delete all buffers
 keymap.set("c", "Q", "%bd | qa", opts)
-
--------------
--- PLUGINS --
--------------
-
--- Oil
--- keymap.set("n", "<Leader>-", ":Oil<CR>")
-
--- Yazi
-keymap.set("n", "-", "<cmd>Yazi<cr>") -- Open at the current file
-keymap.set("n", "<Leader>cw", "<cmd>Yazi cwd<cr>") -- Open in the current working directory
-
--- Yanky
-keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
-keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
-keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
-
-keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
-keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
-
-keymap.set("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
-keymap.set("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
-keymap.set("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
-keymap.set("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
-
-keymap.set("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
-keymap.set("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
-keymap.set("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
-keymap.set("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
-
-keymap.set("n", "=p", "<Plug>(YankyPutAfterFilter)")
-keymap.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
 
 -- Diagnostics
 -- @TODO: if use this need a non-confliction keymapping with Vim/Tmux navigation
