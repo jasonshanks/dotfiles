@@ -68,6 +68,9 @@ keymap.set("n", "<M-p>", ":cprev<CR>zz", opts)
 -- SUPER Quit: quit and delete all buffers
 keymap.set("c", "Q", "%bd | qa", opts)
 
+-- Yazi (Global plugin trigger)
+keymap.set("n", "-", "<cmd>Yazi<cr>")
+
 -- Diagnostics
 -- @TODO: if use this need a non-confliction keymapping with Vim/Tmux navigation
 -- keymap.set("n", "<C-j>", function()
