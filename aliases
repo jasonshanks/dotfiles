@@ -111,6 +111,9 @@ alias nrs="npm start"
 alias nrd="npm run dev"
 alias nrb="npm run build"
 alias localshell='sh "$(ls -t ~/Library/Application\ Support/Local/ssh-entry/*.sh | head -n 1)"'
+function lh
+  CHROME_PATH="/Applications/Arc.app/Contents/MacOS/Arc" lighthouse https://$argv --chrome-flags="--headless --no-sandbox" --output html --output-path=$HOME/Downloads/$(date +%Y-%m-%dT%H%M)-lighthouse-report-$argv.html
+end
 
 ### Git - Custom commands
 alias lcm='git show -s --format="%s:%n%n%b" | pbcopy' # copies latest commit message to the clipboard
