@@ -74,18 +74,16 @@ set -g fish_color_command --bold
 abbr -a -- - prevd
 abbr -a -- = nextd
 
-# PATHS
+# PATHS - System paths (usually already set)
 fish_add_path /usr/bin
 fish_add_path /bin
 
-## CUSTOM PATHS
-set -Ux PATH $HOME/.npm-packages/bin $PATH
-set -x PATH $PATH /Users/jason/.composer/vendor/bin/
-set -g fish_user_paths /opt/homebrew/bin $fish_user_paths
-set -u fish_user_paths /Users/jason/.cargo/bin $fish_user_paths
-
-## Added by LM Studio CLI (lms)
-set -gx PATH $PATH /Users/jason/.cache/lm-studio/bin
+## CUSTOM PATHS - Use fish_add_path for all custom paths
+fish_add_path $HOME/.npm-packages/bin
+fish_add_path /Users/jason/.composer/vendor/bin
+fish_add_path /opt/homebrew/bin
+fish_add_path /Users/jason/.cargo/bin
+fish_add_path /Users/jason/.cache/lm-studio/bin
 
 # fzf key bindings
 fzf --fish | source
