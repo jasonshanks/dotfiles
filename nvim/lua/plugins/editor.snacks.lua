@@ -42,15 +42,30 @@ dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]],
       -- convenience
       quickfile = {},
 
-      -- special mode
+      ---@class snacks.zen.Config
       zen = {
+        ---@type table<string, boolean>
+        toggles = {
+          dim = true,
+          git_signs = false,
+          mini_diff_signs = false,
+          diagnostics = false,
+          inlay_hints = false,
+          line_number = false,
+        },
+        show = {
+          statusline = false, -- can only be shown when using the global statusline
+          tabline = false,
+        },
+        ---@type snacks.win.Config
+        win = { style = "zen" },
         enabled = true,
         enter = true,
         fixbuf = false,
         minimal = false,
-        width = 120,
+        width = 140,
         height = 0,
-        backdrop = { transparent = true, blend = 40 },
+        backdrop = { transparent = true, blend = 0 },
         keys = { q = false },
         zindex = 40,
         wo = {
@@ -59,12 +74,18 @@ dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]],
         w = {
           snacks_main = true,
         },
-        ---@type table<string, boolean>
-        toggles = {
-          dim = false,
-          git_signs = false,
-          mini_diff_signs = false,
-          diagnostics = true,
+        --- Options for the `Snacks.zen.zoom()`
+        ---@type snacks.zen.Config
+        zoom = {
+          toggles = {},
+          show = {
+            statusline = true,
+            tabline = true,
+          },
+          win = {
+            backdrop = false,
+            width = 0, -- full width
+          },
         },
       },
 
