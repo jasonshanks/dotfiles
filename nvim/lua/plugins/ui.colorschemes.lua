@@ -84,6 +84,7 @@ return {
   "folke/tokyonight.nvim",
   "EdenEast/nightfox.nvim",
   "bluz71/vim-nightfly-colors",
+  "bluz71/vim-moonfly-colors",
   "craftzdog/solarized-osaka.nvim",
   "rebelot/kanagawa.nvim",
   "webhooked/kanso.nvim",
@@ -99,6 +100,7 @@ return {
   "vague2k/vague.nvim",
   "kamwitsta/vinyl.nvim",
   "ribru17/bamboo.nvim",
+  "mcauley-penney/techbase.nvim",
   {
     "uloco/bluloco.nvim",
     lazy = false,
