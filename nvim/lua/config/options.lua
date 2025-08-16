@@ -72,6 +72,10 @@ vim.cmd([[let &t_Ce = "\e[4:0m"]])
 -- Add asterisks in block comments
 opt.formatoptions:append({ "r" })
 
+-- LSP Logs
+vim.lsp.set_log_level("warn") -- or "error" for even less logging
+-- Default is "info" which can be quite verbose
+
 -- Session options
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
