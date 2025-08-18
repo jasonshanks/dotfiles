@@ -16,6 +16,8 @@ shell-integration-features = "no-cursor,no-title,sudo"
 
 # Cursor & Mouse
 cursor-style = "bar"
+adjust-cursor-thickness = 400%
+cursor-color = aqua
 cursor-style-blink = true
 mouse-hide-while-typing = true
 
@@ -42,10 +44,10 @@ window-colorspace = display-p3
 # Fonts
 font-size = 18
 # font-family = "Hack Nerd Font Mono"
-# font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "JetBrainsMono Nerd Font Mono"
 # font-family = "Input Mono"
 # font-family = "Input Mono Narrow"
-font-family = "MonaspiceNe Nerd Font Mono"
+# font-family = "MonaspiceNe Nerd Font Mono"
 # font-family = "Maple Mono NF"
 # font-family = "BitstromWera Nerd Font Mono"
 # font-family = "FiraCode Nerd Font Mono"
