@@ -37,8 +37,13 @@ dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]],
         enabled = true,
       },
       image = {},
-      terminal = {},
-
+      terminal = {
+        -- win = { -- below is mostly default anyway but is currently being handled by edgy
+        --   position = "bottom", -- or "bottom", "top", "left", "right"
+        --   height = 0.3, -- 30% of screen height
+        --   width = 1.0, -- 100% of screen width
+        -- },
+      },
       -- convenience
       quickfile = {},
 
