@@ -16,7 +16,13 @@ return {
     dependencies = { "folke/snacks.nvim" },
     ---@type opencode.Config
     opts = {
-      -- Your configuration, if any
+      terminal = {
+        win = {
+          bo = {
+            filetype = "opencode",
+          },
+        },
+      },
     },
   -- stylua: ignore
   keys = {
