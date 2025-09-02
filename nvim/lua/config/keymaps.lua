@@ -59,7 +59,7 @@ keymap.set("n", "<C-u>", "<C-u>zz", opts)
 keymap.set("n", "<C-d>", "<C-d>zz", opts)
 
 -- Jumplist
-keymap.set("n", "<C-m>", "<C-i>", opts)
+-- keymap.set("n", "<C-m>", "<C-i>", opts)
 
 -- Quickfix list
 keymap.set("n", "<M-n>", ":cnext<CR>zz", opts)

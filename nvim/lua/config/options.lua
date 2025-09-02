@@ -29,6 +29,12 @@ opt.expandtab = true -- expand tab to spaces
 opt.smarttab = true
 opt.shiftwidth = 2 -- 2 spaces for indent
 
+-- Fold configuration
+opt.foldmethod = "indent" -- fold only where code is indented by spaces/tabs (assumes code is well formatted)
+opt.foldnestmax = 1 -- folds at the first indentation level, only folding functions (not loops or conditionals inside functions)
+opt.foldopen = "" -- these block auto-folding behaviour based on code navigation such as (search, quickfix, jumps, etc.)
+opt.foldclose = ""
+
 -- search settings
 opt.hlsearch = true
 opt.ignorecase = true -- Case insensitive searching UNLESS /C or capital in search
