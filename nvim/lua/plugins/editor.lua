@@ -1,6 +1,7 @@
 return {
   {
     "folke/flash.nvim",
+    enabled = false,
     event = "VeryLazy",
     ---@type Flash.Config
     opts = {},
@@ -15,7 +16,7 @@ return {
   },
 
   {
-    "echasnovski/mini.hipatterns",
+    "nvim-mini/mini.hipatterns",
     event = "BufReadPre",
     opts = {
       highlighters = {
