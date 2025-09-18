@@ -41,13 +41,6 @@ keymap.set("n", "<Leader>O", "O<Esc>^Da", opts)
 -- keymap.set("n", "<tab>", ":tabnext<Return>", opts)
 -- keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
 
--- Move window
--- NOTE: below not needed with current usage of CTRL+vim bindings
--- keymap.set("n", "sh", "<C-w>h")
--- keymap.set("n", "sk", "<C-w>k")
--- keymap.set("n", "sj", "<C-w>j")
--- keymap.set("n", "sl", "<C-w>l")
-
 -- Resize window
 keymap.set("n", "<C-w><left>", "<C-w><")
 keymap.set("n", "<C-w><right>", "<C-w>>")
