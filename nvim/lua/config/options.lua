@@ -41,9 +41,11 @@ opt.ignorecase = true -- Case insensitive searching UNLESS /C or capital in sear
 opt.smartcase = true -- if you include mixed case in your search, it will become case-sensitive
 
 opt.backup = false
-opt.showcmd = true
-opt.cmdheight = 1
-opt.laststatus = 2
+opt.cmdheight = 0
+opt.laststatus = 3
+opt.showmode = false
+opt.ruler = false
+opt.showcmd = false
 opt.scrolloff = 10
 opt.shell = "fish"
 opt.backupskip = { "/tmp/*", "/private/tmp/*" }
