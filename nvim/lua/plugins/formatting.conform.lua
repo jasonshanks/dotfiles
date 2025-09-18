@@ -19,73 +19,46 @@ return {
         markdown = { "prettier" },
         graphql = { "prettier" },
         liquid = { "prettier" },
-        -- php = { "php_prettier" },
-        -- php = { "prettier" },
-        php = { "phpcbf", "php_cs_fixer" },
-        ["_"] = { "trim_whitespace" }, -- run on filetypes that don't have other formatters configured
+        php = { "php_cs_fixer", "phpcbf", "php_prettier" }, -- try php-cs-fixer first, fallback to phpcbf
+        ["_"] = { "trim_whitespace" },
       },
       formatters = {
-        -- prettier = {
-        --   prepend_args = { "--config-precedence", "prefer-file" },
-        --   args = {
-        --     "--css-empty-line-before",
-        --     "always",
-        --     "--print-width",
-        --     "100",
-        --     "--tab-width",
-        --     "2",
-        --     "--single-quote",
-        --     "false",
-        --     "--trailing-comma",
-        --     "all",
-        --     "--bracket-spacing",
-        --     "true",
-        --     "--semi",
-        --     "true",
-        --     "--use-tabs",
-        --     "false",
-        --     "--prose-wrap",
-        --     "preserve",
-        --     "--arrow-parens",
-        --     "always",
-        --     "--css-declaration-sort-order",
-        --     "concentric-css",
-        --   },
-        -- },
         php_cs_fixer = {
-          command = "php-cs-fixer", -- Homebrew installation
+          command = "php-cs-fixer",
+          stdin = false,
           args = {
             "fix",
-            "--rules=@PSR2",
             "--using-cache=no",
+            "--allow-risky=no",
+            "--rules=@PSR12",
             "$FILENAME",
           },
         },
         phpcbf = {
-          command = "phpcbf", -- From Composer installation
+          command = "phpcbf",
+          stdin = false,
           args = {
-            "--standard=WordPress",
+            "--standard=WordPress", -- or omit to let project phpcs.xml decide
+            "--no-cache",
             "$FILENAME",
           },
         },
-        -- php_prettier = {
-        --   command = vim.fn.expand("~/node_modules/.bin/prettier"),
-        --   args = function(ctx)
-        --     return {
-        --       "--stdin-filepath",
-        --       ctx.filename,
-        --       "--parser=php",
-        --       "--plugin=@prettier/plugin-php"
-        --     }
-        --   end,
-        --   stdin = true,
-        -- },
+        -- If you want to use Prettier for PHP (plugin-php):
+        php_prettier = {
+          command = "prettier",
+          stdin = true,
+          args = function(ctx)
+            return {
+              "--plugin=@prettier/plugin-php",
+              "--parser=php",
+              "--stdin-filepath",
+              ctx.filename,
+            }
+          end,
+        },
+        -- Prettier: default binary is resolved by PATH; you can customize args if needed.
         -- prettier = {
-        --   -- Configure prettier for PHP files
-        --   args = {
-        --     "--plugin=prettier-plugin-php",
-        --     "--parser=php",
-        --   },
+        --     prepend_args = { "--config-precedence", "prefer-file" },
         -- },
       },
     },
