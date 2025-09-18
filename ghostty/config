@@ -12,12 +12,13 @@
 # Shell
 command = /opt/homebrew/bin/fish -l -c "if type -q tmux; tmux attach; or tmux new -s CommandCentre; else; fish; end" # Tmux initialisation
 shell-integration = fish
-shell-integration-features = "no-cursor,no-title,sudo"
+shell-integration-features = "no-cursor,title,sudo,ssh-env,ssh-terminfo"
 
 # Cursor & Mouse
-cursor-style = "bar"
-adjust-cursor-thickness = 400%
-cursor-color = aqua
+cursor-style = block
+adjust-cursor-thickness = 100%
+cursor-color = #23a9d5
+cursor-opacity = 1
 cursor-style-blink = true
 mouse-hide-while-typing = true
 
@@ -27,8 +28,8 @@ title = " " # TODO: see if title can be customised in future to only display app
 macos-titlebar-style = tabs
 
 # Windows
-# window-padding-x = 20
-# window-padding-y = 20
+window-padding-x = 0
+window-padding-y = 0
 window-padding-color = background
 
 # Theme
@@ -40,7 +41,8 @@ background-blur-radius = "10"
 # custom-shader = ~/.config/ghostty/shaders/cursor_smear_fade.glsl
 # custom-shader = ~/.config/ghostty/shaders/cursor_smear.glsl
 # custom-shader = ~/.config/ghostty/shaders/amber_v4.glsl
-custom-shader = ~/.config/ghostty/shaders/cursor_blaze.glsl
+# custom-shader = ~/.config/ghostty/shaders/cursor_blaze.glsl
+custom-shader = ~/.config/ghostty/shaders/cursor_aqua-blaze.glsl
 # custom-shader = /Users/jason/iCloud/_/Development/Git-Repos/ghostty-shaders/starfield-colors.glsl
 # custom-shader = /Users/jason/iCloud/_/Development/Git-Repos/ghostty-shaders/bloom.glsl
 
@@ -52,7 +54,7 @@ font-size = 18
 # font-family = "Hack Nerd Font Mono"
 # font-family = "JetBrainsMono Nerd Font Mono"
 # font-family = "Input Mono"
-# font-family = "Input Mono Narrow"
+font-family = "Input Mono Narrow"
 # font-family = "MonaspiceNe Nerd Font Mono"
 # font-family = "Maple Mono NF"
 # font-family = "BitstromWera Nerd Font Mono"
@@ -95,6 +97,8 @@ macos-option-as-alt = true
 
 ## Icon
 macos-icon = custom-style
-macos-icon-ghost-color = #ffffff
-macos-icon-screen-color = #0c23af
-macos-icon-frame = "aluminum"
+# macos-icon-ghost-color = #ffffff
+# macos-icon-screen-color = #0c23af
+macos-icon-ghost-color = #23a9d5
+macos-icon-screen-color = #1c617b
+macos-icon-frame = "plastic"
