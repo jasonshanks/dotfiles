@@ -51,12 +51,12 @@ window-colorspace = display-p3
 
 # Fonts
 font-size = 18
-# font-family = "Hack Nerd Font Mono"
-# font-family = "JetBrainsMono Nerd Font Mono"
+# font-family = "JetBrainsMono Nerd Font Mono" ## Default Ghostty font with native symbols patching. No need to use Nerd Font anymore.
+# font-family = "Input Mono Narrow"
 # font-family = "Input Mono"
-font-family = "Input Mono Narrow"
-# font-family = "MonaspiceNe Nerd Font Mono"
+# font-family = "Hack Nerd Font Mono"
 # font-family = "Maple Mono NF"
+# font-family = "Monaspace Argon"
 # font-family = "BitstromWera Nerd Font Mono"
 # font-family = "FiraCode Nerd Font Mono"
 # font-family = "CommitMono Nerd Font"
