@@ -134,7 +134,7 @@ alias mampp='./Applications/xampp/xamppfiles/mampp'
 alias ssh-mc='ssh mediacentre@mediacentre.local'
 alias ssh-sl='ssh jason@studio.local'
 alias ssh-sr='ssh jason@studio.elxr.com'
-alias ssh-do='ssh q@159.65.141.2' # Digital Ocean
+alias ssh-cw='ssh elxradmin@45.32.191.168' # Cloudways
 
 ### Wellmark
 alias ssh-stagvei='ssh stagvei@stagvei.ssh.wpengine.net'

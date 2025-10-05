@@ -38,10 +38,11 @@ return {
         "gopls", -- Go
         "emmet_language_server", -- Emmet.io
         "lua_ls", -- Lua
-        "phpactor", -- PHP (prefer over Intellephense)
+        -- "phpactor", -- PHP (prefer over Intellephense)
+        "intellephense", -- PHP (prefer over phpactor)
         "pyright", -- Python
         "rust_analyzer", -- Rust
-        "tailwindcss", -- CSS framework
+        -- "tailwindcss", -- CSS framework
         "ts_ls", -- TypeScript
       })
 

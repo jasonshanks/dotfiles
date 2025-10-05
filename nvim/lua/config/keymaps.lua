@@ -2,70 +2,72 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local keymap = vim.keymap
+local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
+vim.g.mapleader = " "
+
 -- Do things without affecting the registers
-keymap.set("n", "x", '"_x')
--- keymap.set("n", "<Leader>p", '"0p')
--- keymap.set("n", "<Leader>P", '"0P')
-keymap.set("v", "<Leader>p", '"0p')
-keymap.set("n", "<Leader>c", '"_c')
-keymap.set("n", "<Leader>C", '"_C')
-keymap.set("v", "<Leader>c", '"_c')
-keymap.set("v", "<Leader>C", '"_C')
-keymap.set("n", "<Leader>d", '"_d')
-keymap.set("n", "<Leader>D", '"_D')
-keymap.set("v", "<Leader>d", '"_d')
-keymap.set("v", "<Leader>D", '"_D')
+map("n", "x", '"_x')
+-- map("n", "<Leader>p", '"0p')
+-- map("n", "<Leader>P", '"0P')
+map("v", "<Leader>p", '"0p')
+map("n", "<Leader>c", '"_c')
+map("n", "<Leader>C", '"_C')
+map("v", "<Leader>c", '"_c')
+map("v", "<Leader>C", '"_C')
+map("n", "<Leader>d", '"_d')
+map("n", "<Leader>D", '"_D')
+map("v", "<Leader>d", '"_d')
+map("v", "<Leader>D", '"_D')
 
 -- Increment/decrement
-keymap.set("n", "+", "<C-a>")
-keymap.set("n", "-", "<C-x>")
+map("n", "+", "<C-a>")
+map("n", "-", "<C-x>")
 
 -- Delete a word backwards
-keymap.set("n", "dw", 'vb"_d')
+map("n", "dw", 'vb"_d')
 
 -- Select all
-keymap.set("n", "<C-a>", "gg<S-v>G")
+map("n", "<C-a>", "gg<S-v>G")
 
 -- Save with root permission (not working for now)
 --vim.api.nvim_create_user_command('W', 'w !sudo tee > /dev/null %', {})
 
 -- Disable continuations
--- keymap.set("n", "<Leader>o", "o<Esc>^Da", opts)
-keymap.set("n", "<Leader>O", "O<Esc>^Da", opts)
+-- map("n", "<Leader>o", "o<Esc>^Da", opts)
+map("n", "<Leader>O", "O<Esc>^Da", opts)
 
 -- New tab
--- keymap.set("n", "te", ":tabedit")
--- keymap.set("n", "<tab>", ":tabnext<Return>", opts)
--- keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
+-- map("n", "te", ":tabedit")
+-- map("n", "<tab>", ":tabnext<Return>", opts)
+-- map("n", "<s-tab>", ":tabprev<Return>", opts)
 
 -- Resize window
-keymap.set("n", "<C-w><left>", "<C-w><")
-keymap.set("n", "<C-w><right>", "<C-w>>")
-keymap.set("n", "<C-w><up>", "<C-w>+")
-keymap.set("n", "<C-w><down>", "<C-w>-")
+map("n", "<M-k>", "<cmd>resize +2<CR>") -- increase height
+map("n", "<M-j>", "<cmd>resize -2<CR>") -- decrease height
+map("n", "<M-l>", "<cmd>vertical resize +5<CR>") -- increase width
+map("n", "<M-h>", "<cmd>vertical resize -5<CR>") -- decrease width
 
 -- Vertical scroll and center
-keymap.set("n", "<C-u>", "<C-u>zz", opts)
-keymap.set("n", "<C-d>", "<C-d>zz", opts)
+map("n", "<C-u>", "<C-u>zz", opts)
+map("n", "<C-d>", "<C-d>zz", opts)
 
 -- Jumplist
--- keymap.set("n", "<C-m>", "<C-i>", opts)
+-- map("n", "<C-m>", "<C-i>", opts)
 
 -- Quickfix list
-keymap.set("n", "<M-n>", ":cnext<CR>zz", opts)
-keymap.set("n", "<M-p>", ":cprev<CR>zz", opts)
+map("n", "<M-n>", ":cnext<CR>zz", opts)
+map("n", "<M-p>", ":cprev<CR>zz", opts)
 
 -- SUPER Quit: quit and delete all buffers
-keymap.set("c", "Q", "%bd | qa", opts)
+map("c", "Q", "%bd | qa", opts)
 
 -- Yazi (Global plugin trigger)
-keymap.set("n", "-", "<cmd>Yazi<cr>")
+map("n", "-", "<cmd>Yazi<cr>")
 
 -- Diagnostics
 -- @TODO: if use this need a non-confliction keymapping with Vim/Tmux navigation
--- keymap.set("n", "<C-j>", function()
+-- map("n", "<C-j>", function()
 --    vim.diagnostic.goto_next()
 -- end, opts)
