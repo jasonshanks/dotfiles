@@ -116,7 +116,7 @@ return {
         "wp-cli",
         -- Optional plugin stubs if you use them:
         -- "woocommerce",
-        -- "acf-pro",
+        "acf-pro",
         -- "polylang",
       },
 

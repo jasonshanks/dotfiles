@@ -34,12 +34,13 @@ return {
       vim.lsp.enable({
         "bashls", -- Bash shell
         "cssls", -- CSS
+        "emmet_language_server", -- Emmet.io
         "fish_lsp", -- Fish shell
         "gopls", -- Go
-        "emmet_language_server", -- Emmet.io
+        "html", -- HTML
+        "intelephense", -- PHP (prefer over phpactor)
+        "jsonls",
         "lua_ls", -- Lua
-        -- "phpactor", -- PHP (prefer over Intellephense)
-        "intellephense", -- PHP (prefer over phpactor)
         "pyright", -- Python
         "rust_analyzer", -- Rust
         -- "tailwindcss", -- CSS framework

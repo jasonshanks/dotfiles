@@ -44,6 +44,7 @@ dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]],
         --   width = 1.0, -- 100% of screen width
         -- },
       },
+
       -- convenience
       quickfile = {},
 
