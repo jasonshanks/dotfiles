@@ -22,8 +22,8 @@ map("v", "<Leader>d", '"_d')
 map("v", "<Leader>D", '"_D')
 
 -- Increment/decrement
-map("n", "+", "<C-a>")
-map("n", "-", "<C-x>")
+-- map("n", "+", "<C-a>")
+-- map("n", "-", "<C-x>")
 
 -- Delete a word backwards
 map("n", "dw", 'vb"_d')
@@ -44,7 +44,7 @@ map("n", "<Leader>O", "O<Esc>^Da", opts)
 -- map("n", "<s-tab>", ":tabprev<Return>", opts)
 
 -- Resize window
-map("n", "<M-k>", "<cmd>resize +2<CR>") -- increase height
+map("n", "<M-k>", "<cmd>resize +6<CR>") -- increase height
 map("n", "<M-j>", "<cmd>resize -2<CR>") -- decrease height
 map("n", "<M-l>", "<cmd>vertical resize +5<CR>") -- increase width
 map("n", "<M-h>", "<cmd>vertical resize -5<CR>") -- decrease width
@@ -62,9 +62,6 @@ map("n", "<M-p>", ":cprev<CR>zz", opts)
 
 -- SUPER Quit: quit and delete all buffers
 map("c", "Q", "%bd | qa", opts)
-
--- Yazi (Global plugin trigger)
-map("n", "-", "<cmd>Yazi<cr>")
 
 -- Diagnostics
 -- @TODO: if use this need a non-confliction keymapping with Vim/Tmux navigation

@@ -1,6 +1,6 @@
 -- Simplified transparency and background toggle
 local M = {}
-local bg_transparent = false
+local bg_transparent = true
 local bg_black = false
 
 -- Apply background state (transparent, black, or default)

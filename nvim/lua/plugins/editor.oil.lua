@@ -4,7 +4,7 @@ return {
     ---@module 'oil'
     ---@type oil.SetupOpts
     keys = {
-      -- { "<Leader>-", "<cmd>Oil<cr>", desc = "Open Oil" },
+      { "-", "<cmd>Oil<cr>", desc = "Open Oil" },
     },
     opts = {
       keymaps = {

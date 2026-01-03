@@ -4,7 +4,7 @@ return {
     "mikavilpas/yazi.nvim",
     event = "VeryLazy",
     keys = {
-      { "-", "<cmd>Yazi<cr>", desc = "Open Yazi (current file)" },
+      { "_", "<cmd>Yazi<cr>", desc = "Open Yazi (current file)" },
       { "<Leader>cw", "<cmd>Yazi cwd<cr>", desc = "Open Yazi (cwd)" },
     },
     dependencies = {
