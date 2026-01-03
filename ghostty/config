@@ -34,7 +34,7 @@ window-padding-color = background
 
 # Theme
 theme = dark:"Flexoki Dark", light:"Catppuccin Latte"
-background-opacity = "0.75"
+background-opacity = "0.9"
 background-blur-radius = "10"
 # custom-shader = ~/.config/ghostty/shaders/cursor_glow.glsl
 # custom-shader = ~/.config/ghostty/shaders/cursor_slash.glsl
@@ -87,7 +87,7 @@ keybind = super+r=reload_config
 keybind = global:cmd+ctrl+alt+shift+`=toggle_quick_terminal
 
 # Quick Terminal
-quick-terminal-size = 75%,75%
+quick-terminal-size = 25%,25%
 quick-terminal-position = center
 quick-terminal-autohide = true
 quick-terminal-animation-duration = 0.05
@@ -99,6 +99,6 @@ macos-option-as-alt = true
 macos-icon = custom-style
 # macos-icon-ghost-color = #ffffff
 # macos-icon-screen-color = #0c23af
-macos-icon-ghost-color = #23a9d5
-macos-icon-screen-color = #1c617b
+macos-icon-ghost-color = #bbcafb
+macos-icon-screen-color = #14458A
 macos-icon-frame = "plastic"
