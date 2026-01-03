@@ -3,12 +3,16 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('vendor')
     ->exclude('node_modules')
+    ->exclude('wp-admin')
+    ->exclude('wp-includes')
+    ->notPath('index.php')
     ->in(getcwd());
 
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR2' => true,
-        'array_syntax' => ['syntax' => 'long'],
+        '@WordPress' => true, // WordPress-specific rules if you have wp-php-cs-fixer
+        'array_syntax' => ['syntax' => 'long'], // WordPress prefers long arrays
         'binary_operator_spaces' => [
             'default' => 'single_space',
         ],
@@ -35,6 +39,6 @@ return (new PhpCsFixer\Config())
         'no_whitespace_before_comma_in_array' => true,
         'normalize_index_brace' => true,
     ])
-    ->setIndent("    ")
+    ->setIndent("    ") // WordPress prefers tabs, but for consistency use spaces
     ->setLineEnding("\n")
     ->setFinder($finder);

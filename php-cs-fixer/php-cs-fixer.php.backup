@@ -3,7 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('vendor')
     ->exclude('node_modules')
-    ->in(getcwd());
+    ->in(__DIR__);
 
 return (new PhpCsFixer\Config())
     ->setRules([

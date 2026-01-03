@@ -32,7 +32,7 @@
         <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase"/>
         <exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
         <!-- Common exclusions in general -->
-        <exclude name="WordPress.PHP.DisallowShortTernary"/><!-- Allow short ternary -->
+        <!-- <exclude name="WordPress.PHP.DisallowShortTernary"/> Allow short ternary -->
         <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode"/><!-- Allow base64 -->
         <exclude name="WordPress.WP.AlternativeFunctions"/><!-- Allow PHP native functions -->
         <exclude name="WordPress.PHP.NoSilencedErrors"/><!-- Allow error suppression when needed -->
@@ -47,20 +47,17 @@
 
   <!-- Minimum PHP version -->
     <config name="testVersion" value="8.0+"/>
-    <rule ref="PHPCompatibility"/>
+    <!-- <rule ref="PHPCompatibility"/> -->
 
     <!-- Array syntax -->
     <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
         <severity>0</severity>
     </rule>
 
-    <!-- WordPress Rules -->
+     <!-- WordPress Rules -->
     <rule ref="WordPress-Core"/>
     <rule ref="WordPress-Docs"/>
     <rule ref="WordPress-Extra"/>
-     <!-- Optional: Exclude some Extra rules that might be too strict -->
-        <exclude name="WordPress.PHP.DisallowShortTernary"/>
-    <!-- </rule> -->
 
   <!-- Line Length -->
     <rule ref="Generic.Files.LineLength">
@@ -74,7 +71,7 @@
     <exclude-pattern>/third-party/*</exclude-pattern>
     <exclude-pattern>/vendor/*</exclude-pattern>
     <exclude-pattern>/node_modules/*</exclude-pattern>
-    <exclude-pattern>/wp-admin/*</exclude-pattern><
+    <exclude-pattern>/wp-admin/*</exclude-pattern>
     <exclude-pattern>/wp-includes/*</exclude-pattern>
 
     <!-- Modern PHP Features -->
