@@ -10,7 +10,7 @@
 # FISH Shell Configuration
 # by Jason Shanks
 # Date created: 2020-04-18
-# Date updated: 2025-02-25
+# Date updated: 2025-11-10
 
 # Set Fish greeting
 # set -U fish_greeting "Go 🐟"
@@ -82,6 +82,7 @@ fish_add_path /bin
 fish_add_path $HOME/.npm-packages/bin
 fish_add_path /Users/jason/.composer/vendor/bin
 fish_add_path /opt/homebrew/bin
+fish_add_path /opt/homebrew/sbin
 fish_add_path /Users/jason/.cargo/bin
 fish_add_path /Users/jason/.cache/lm-studio/bin
 
