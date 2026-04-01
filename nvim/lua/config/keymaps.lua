@@ -53,6 +53,14 @@ map("n", "<M-h>", "<cmd>vertical resize -5<CR>") -- decrease width
 map("n", "<C-u>", "<C-u>zz", opts)
 map("n", "<C-d>", "<C-d>zz", opts)
 
+-- Undotree toggle
+vim.cmd("packadd nvim.undotree")
+vim.keymap.set("n", "<leader>u", function()
+  require("undotree").open({
+    command = math.floor(vim.api.nvim_win_get_width(0) / 3) .. "vnew",
+  })
+end, { desc = "[U]ndotree toggle" })
+
 -- Jumplist
 -- map("n", "<C-m>", "<C-i>", opts)
 
