@@ -17,7 +17,6 @@ return {
     opts_extend = { "ensure_installed" },
     ---@class lazyvim.TSConfig: TSConfig
     opts = {
-      -- LazyVim config for treesitter
       ensure_installed = {
         "bash",
         "c",
@@ -45,6 +44,17 @@ return {
         "xml",
         "yaml",
       },
+      indent = { enable = true },
+      fold = { enable = true },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<CR>",
+          node_incremental = "<CR>",
+          scope_incremental = false,
+          node_decremental = "<BS>",
+        },
+      },
     },
     ---@param opts lazyvim.TSConfig
     config = function(_, opts)
@@ -65,20 +75,20 @@ return {
       -- setup treesitter
       TS.setup(opts)
 
-      -- install missing parsers
-      local install = vim.tbl_filter(function(lang)
-        return not LazyVim.treesitter.have(lang)
+      -- install missing parsers (use native TS.get_installed instead of LazyVim cache)
+      local installed = TS.get_installed() or {}
+      local to_install = vim.tbl_filter(function(lang)
+        return not vim.tbl_contains(installed, lang)
       end, opts.ensure_installed or {})
-      if #install > 0 then
-        TS.install(install, { summary = true }):await(function()
-          LazyVim.treesitter.get_installed(true) -- refresh the installed langs
-        end)
+      if #to_install > 0 then
+        TS.install(to_install, { summary = true }):await()
       end
 
-      -- treesitter highlighting
+      -- treesitter highlighting using native check
       vim.api.nvim_create_autocmd("FileType", {
         callback = function(ev)
-          if LazyVim.treesitter.have(ev.match) then
+          local lang = vim.treesitter.language.get_lang(ev.match)
+          if lang then
             pcall(vim.treesitter.start)
           end
         end,

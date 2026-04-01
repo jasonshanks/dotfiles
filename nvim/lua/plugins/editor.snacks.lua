@@ -33,6 +33,12 @@ dP    dP `88888P' `88888P' 8888P'   dP dP  dP  dP]],
         --- available style: "compact"|"fancy"|"minimal"
         style = "compact",
       },
+      picker = {
+        enabled = true,
+        matcher = {
+          frecency = true,
+        },
+      },
       statuscolumn = {
         enabled = true,
       },
