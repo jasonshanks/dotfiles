@@ -81,7 +81,7 @@ return {
         return not vim.tbl_contains(installed, lang)
       end, opts.ensure_installed or {})
       if #to_install > 0 then
-        TS.install(to_install, { summary = true }):await()
+        TS.update(true, { summary = true })
       end
 
       -- treesitter highlighting using native check
