@@ -14,6 +14,7 @@ return {
   },
   {
     "NickvanDyke/opencode.nvim",
+    enabled = false,
     dependencies = {
       -- Recommended for `ask()` and `select()`.
       -- Required for default `toggle()` implementation.
