@@ -3,6 +3,27 @@ return {
   {
     "folke/noice.nvim",
     opts = function(_, opts)
+      opts.views = vim.tbl_deep_extend("force", opts.views or {}, {
+        cmdline_popup = {
+          position = {
+            row = "40%",
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = "auto",
+          },
+          border = {
+            style = "none",
+            padding = { 1, 2 },
+          },
+          filter_options = {},
+          win_options = {
+            winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+          },
+        },
+      })
+
       table.insert(opts.routes, {
         filter = {
           event = "notify",
@@ -31,15 +52,6 @@ return {
         opts = { stop = false },
       })
 
-      opts.commands = {
-        all = {
-          -- options for the message history that you get with `:Noice`
-          view = "split",
-          opts = { enter = true, format = "details" },
-          filter = {},
-        },
-      }
-
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "markdown",
         callback = function(event)
@@ -48,8 +60,6 @@ return {
           end)
         end,
       })
-
-      opts.presets.lsp_doc_border = false
     end,
   },
 
@@ -162,36 +172,6 @@ return {
       }
     end,
   },
-
-  -- {
-  --   "b0o/incline.nvim",
-  --   event = "VeryLazy",
-  --   config = function()
-  --     local helpers = require("incline.helpers")
-  --     local devicons = require("nvim-web-devicons")
-  --     require("incline").setup({
-  --       window = {
-  --         padding = 0,
-  --         margin = { horizontal = 1, vertical = 1 },
-  --       },
-  --       render = function(props)
-  --         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-  --         if filename == "" then
-  --           filename = "[No Name]"
-  --         end
-  --         local ft_icon, ft_color = devicons.get_icon_color(filename)
-  --         local modified = vim.bo[props.buf].modified
-  --         return {
-  --           ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or "",
-  --           " ",
-  --           { filename, gui = modified and "bold,italic" or "bold" },
-  --           " ",
-  --           guibg = "#44406e",
-  --         }
-  --       end,
-  --     })
-  --   end,
-  -- },
 
   {
     "folke/twilight.nvim",
