@@ -1,160 +1,201 @@
--- Simplified transparency and background toggle
-local M = {}
-local bg_transparent = true
-local bg_black = false
+-- Colorscheme plugin specs + background/transparency toggle utilities
 
--- Apply background state (transparent, black, or default)
+--------------------------------------------------------------------------------
+-- Background Toggle Module
+--------------------------------------------------------------------------------
+local M = {}
+
+-- Single source of truth for background state: "transparent" | "black" | "default"
+local bg_state = "default"
+
+-- Highlight groups that receive a background override
+local BG_HIGHLIGHT_GROUPS = {
+  "Normal",
+  "NormalFloat",
+  "NormalNC",
+  "SignColumn",
+  "EndOfBuffer",
+}
+
+-- Colorschemes excluded from the custom picker
+local EXCLUDED_COLORSCHEMES = {
+  -- Vim built-ins
+  "blue",
+  "darkblue",
+  "default",
+  "delek",
+  "desert",
+  "elflord",
+  "evening",
+  "habamax",
+  "industry",
+  "koehler",
+  "lunaperche",
+  "morning",
+  "murphy",
+  "pablo",
+  "peachpuff",
+  "quiet",
+  "retrobox",
+  "ron",
+  "shine",
+  "slate",
+  "sorbet",
+  "torte",
+  "unokai",
+  "vim",
+  "zaibatsu",
+  "zellner",
+  -- Light / unwanted variants of installed themes
+  "bamboo-light",
+  "bamboo-multiplex",
+  "bamboo-vulgaris",
+  "bluloco-dark",
+  "bluloco-light",
+  "dawnfox",
+  "dayfox",
+  "kanso-ink",
+  "kanso-zen",
+  "kanso-mist",
+  "kanso-pearl",
+  "kanagawa-dragon",
+  "kanagawa-lotus",
+  "kanagawa-wave",
+  "material-lighter",
+  "material-darker",
+  "material-oceanic",
+  "material-palenight",
+  "ofirkai-darkblue",
+  "onedark",
+  "onelight",
+  "rose-pine-dawn",
+  "rose-pine-main",
+  "solarized-osaka-day",
+}
+
+--- Apply highlight groups for a given background colour value.
+--- Pass "NONE" for transparent or a hex string (e.g. "#000000") for a solid colour.
+---@param bg string
+local function set_bg_highlights(bg)
+  for _, group in ipairs(BG_HIGHLIGHT_GROUPS) do
+    vim.api.nvim_set_hl(0, group, { bg = bg })
+  end
+  vim.api.nvim_set_hl(0, "CursorLine", { blend = 50 })
+end
+
+--- Apply the current bg_state to Neovim highlight groups.
 local function apply_background_state()
-  if bg_transparent then
-    -- Transparent background
-    vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
-    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
-    vim.api.nvim_set_hl(0, "NormalNC", { bg = "NONE" })
-    vim.api.nvim_set_hl(0, "SignColumn", { bg = "NONE" })
-    vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "NONE" })
-    return "transparent"
-  elseif bg_black then
-    -- Black background
-    vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
-    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#000000" })
-    vim.api.nvim_set_hl(0, "NormalNC", { bg = "#000000" })
-    vim.api.nvim_set_hl(0, "SignColumn", { bg = "#000000" })
-    vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "#000000" })
-    return "black"
+  if bg_state == "transparent" then
+    set_bg_highlights("NONE")
+  elseif bg_state == "black" then
+    set_bg_highlights("#000000")
   else
-    -- Default colorscheme background
+    -- Restore the active colorscheme's default background
     local current_scheme = vim.g.colors_name or "default"
     if current_scheme ~= "default" then
       pcall(vim.cmd, "colorscheme " .. current_scheme)
     end
-    return "default"
+    -- Reset CursorLine to theme default
+    vim.api.nvim_set_hl(0, "CursorLine", {})
   end
 end
 
--- Get filtered colorschemes (excludes default vim themes)
+--- Return only user-installed colorschemes, filtering out built-ins and light variants.
+---@return string[]
 M.get_custom_colorschemes = function()
-  local all_colors = vim.fn.getcompletion("", "color")
-  local excluded_defaults = {
-    "blue",
-    "darkblue",
-    "default",
-    "delek",
-    "desert",
-    "elflord",
-    "evening",
-    "habamax",
-    "industry",
-    "koehler",
-    "lunaperche",
-    "morning",
-    "murphy",
-    "pablo",
-    "peachpuff",
-    "quiet",
-    "retrobox",
-    "ron",
-    "shine",
-    "slate",
-    "torte",
-    "unokai",
-    "vim",
-    "zaibatsu",
-    "zellner",
-    -- Custom theme (light variations)
-    "bamboo-light",
-    "bamboo-multiplex",
-    "bamboo-vulgaris",
-    "bluloco-dark",
-    "bluloco-light",
-    "dawnfox",
-    "dayfox",
-    "onelight",
-  }
-
-  local filtered_colors = {}
-  for _, color in ipairs(all_colors) do
-    if not vim.tbl_contains(excluded_defaults, color) then
-      table.insert(filtered_colors, color)
+  local filtered = {}
+  for _, color in ipairs(vim.fn.getcompletion("", "color")) do
+    if not vim.tbl_contains(EXCLUDED_COLORSCHEMES, color) then
+      table.insert(filtered, color)
     end
   end
-
-  return filtered_colors
+  return filtered
 end
 
--- Custom colorscheme picker that only shows your installed themes
+--- Open a picker for user-installed colorschemes and apply the selection.
 M.pick_colorscheme = function()
-  local colors = M.get_custom_colorschemes()
-  vim.ui.select(colors, {
-    prompt = "Select colorscheme:",
-    format_item = function(item)
-      return item
-    end,
-  }, function(choice)
+  vim.ui.select(M.get_custom_colorschemes(), { prompt = "Select colorscheme:" }, function(choice)
     if choice then
       vim.cmd("colorscheme " .. choice)
-      -- Reapply your background state
       apply_background_state()
-      print("Colorscheme changed to " .. choice)
+      vim.notify("Colorscheme changed to " .. choice, vim.log.levels.INFO)
     end
   end)
 end
 
+--- Toggle transparent background on/off.
 M.toggle_transparency = function()
-  bg_transparent = not bg_transparent
-  if bg_transparent then
-    bg_black = false -- Disable black when enabling transparency
-  end
-
-  local state = apply_background_state()
-  print("Background set to " .. state)
+  bg_state = (bg_state == "transparent") and "default" or "transparent"
+  apply_background_state()
+  vim.notify("Background set to " .. bg_state, vim.log.levels.INFO)
 end
 
+--- Toggle solid black background on/off.
 M.toggle_black_background = function()
-  bg_black = not bg_black
-  if bg_black then
-    bg_transparent = false -- Disable transparency when enabling black
-  end
-
-  local state = apply_background_state()
-  print("Background set to " .. state)
+  bg_state = (bg_state == "black") and "default" or "black"
+  apply_background_state()
+  vim.notify("Background set to " .. bg_state, vim.log.levels.INFO)
 end
 
+--- Reset background to the active colorscheme's default.
 M.reset_background = function()
-  bg_transparent = false
-  bg_black = false
-  local state = apply_background_state()
-  print("Background reset to " .. state)
+  bg_state = "default"
+  apply_background_state()
+  vim.notify("Background reset to default", vim.log.levels.INFO)
 end
 
--- Force default background on initialization
+--- Initialise the module: reset state after colorscheme loading completes.
 M.init = function()
-  bg_transparent = false
-  bg_black = false
-  -- Use vim.schedule to ensure this runs after colorscheme loading
-  vim.schedule(function()
-    apply_background_state()
-  end)
+  bg_state = "default"
+  vim.schedule(apply_background_state)
 end
 
--- Set up keymaps
-vim.keymap.set("n", "<leader>ct", M.toggle_transparency, { desc = "Toggle transparency" })
-vim.keymap.set("n", "<leader>cb", M.toggle_black_background, { desc = "Toggle black background" })
-vim.keymap.set("n", "<leader>cr", M.reset_background, { desc = "Reset to default background" })
-vim.keymap.set("n", "<leader>cp", M.pick_colorscheme, { desc = "Pick colorscheme (filtered)" })
+--------------------------------------------------------------------------------
+-- Keymaps
+--------------------------------------------------------------------------------
+local keymap_opts = { noremap = true, silent = true }
 
--- Make globally accessible
+vim.keymap.set(
+  "n",
+  "<leader>ct",
+  M.toggle_transparency,
+  vim.tbl_extend("force", keymap_opts, { desc = "Toggle transparency" })
+)
+vim.keymap.set(
+  "n",
+  "<leader>cb",
+  M.toggle_black_background,
+  vim.tbl_extend("force", keymap_opts, { desc = "Toggle black background" })
+)
+vim.keymap.set(
+  "n",
+  "<leader>cr",
+  M.reset_background,
+  vim.tbl_extend("force", keymap_opts, { desc = "Reset to default background" })
+)
+vim.keymap.set(
+  "n",
+  "<leader>cp",
+  M.pick_colorscheme,
+  vim.tbl_extend("force", keymap_opts, { desc = "Pick colorscheme (filtered)" })
+)
+
+--------------------------------------------------------------------------------
+-- Global accessor (intentional — allows access from other config files)
+--------------------------------------------------------------------------------
 _G.ColorschemeTransparency = M
 
--- Initialize default state
 M.init()
 
--- Simple colorscheme configurations
+--------------------------------------------------------------------------------
+-- Plugin specs (lazy.nvim)
+--------------------------------------------------------------------------------
 return {
   "ofirgall/ofirkai.nvim",
   "craftzdog/solarized-osaka.nvim",
   "bluz71/vim-moonfly-colors",
   "marko-cerovac/material.nvim",
-  "EdenEast/nightfox.nvim", -- carbonfox
+  "EdenEast/nightfox.nvim",
   "ayu-theme/ayu-vim",
   "bluz71/vim-nightfly-colors",
   "folke/tokyonight.nvim",
