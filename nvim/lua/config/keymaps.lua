@@ -61,12 +61,24 @@ vim.keymap.set("n", "<leader>u", function()
   })
 end, { desc = "[U]ndotree toggle" })
 
+-- Marks
+-- set these marks to always be cross-buffer when lower-case.
+map("n", "ma", "mA")
+map("n", "'a", "'A")
+map("n", "ms", "mS")
+map("n", "'s", "'S")
+map("n", "md", "mD")
+map("n", "'d", "'D")
+
 -- Jumplist
 -- map("n", "<C-m>", "<C-i>", opts)
 
 -- Quickfix list
 map("n", "<M-n>", ":cnext<CR>zz", opts)
 map("n", "<M-p>", ":cprev<CR>zz", opts)
+
+-- Restart Neovim
+map("n", "<leader>rr", ":restart<CR>", opts)
 
 -- SUPER Quit: quit and delete all buffers
 map("c", "Q", "%bd | qa", opts)
