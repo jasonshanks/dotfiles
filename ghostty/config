@@ -14,6 +14,10 @@ command = /opt/homebrew/bin/fish -l -c "if type -q tmux; tmux attach; or tmux ne
 shell-integration = fish
 shell-integration-features = "no-cursor,title,sudo,ssh-env,ssh-terminfo"
 
+# Notifications
+notify-on-command-finish = always
+notify-on-command-finish-action = notify
+
 # Cursor & Mouse
 cursor-style = block
 adjust-cursor-thickness = 100%
@@ -56,7 +60,8 @@ font-size = 18
 # font-family = "Input Mono"
 # font-family = "Hack Nerd Font Mono"
 # font-family = "Maple Mono NF"
-# font-family = "Monaspace Argon"
+font-family = "Monaspace Neon NF"
+font-family-italic = "Monaspace Radon NF"
 # font-family = "BitstromWera Nerd Font Mono"
 # font-family = "FiraCode Nerd Font Mono"
 # font-family = "CommitMono Nerd Font"
@@ -79,7 +84,7 @@ font-size = 18
 # !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ -> => !==
 
 # Enable ligatures
-font-feature = "ss01,ss02,ss03,ss04,calt,liga"
+font-feature = "ss01,ss02,ss03,ss04,ss05,ss06,ss07,ss08,ss09,calt,liga"
 
 # Keybindings
 keybind = super+i=inspector:toggle
