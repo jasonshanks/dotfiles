@@ -2,7 +2,6 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
-    version = false, -- last release is way too old and doesn't work on Windows
     build = function()
       local TS = require("nvim-treesitter")
       if not TS.get_installed then
@@ -20,12 +19,17 @@ return {
       ensure_installed = {
         "bash",
         "c",
+        "comment",
+        "css",
         "diff",
+        "git_config",
+        "gitcommit",
+        "gitignore",
         "html",
         "javascript",
         "jsdoc",
         "json",
-        "jsonc",
+        "json5",
         "lua",
         "luadoc",
         "luap",
@@ -34,8 +38,11 @@ return {
         "php",
         "printf",
         "python",
-        "query",
         "regex",
+        "rust",
+        "scss",
+        "ssh_config",
+        "sql",
         "toml",
         "tsx",
         "typescript",
