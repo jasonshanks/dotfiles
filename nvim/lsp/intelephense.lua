@@ -115,8 +115,10 @@ return {
         "wordpress",
         "wp-cli",
         -- Optional plugin stubs if you use them:
-        -- "woocommerce",
+        "woocommerce",
         "acf-pro",
+        -- Custom ACF (free) stubs - original package has been abandoned
+        vim.fn.expand("$HOME/.composer/vendor/paulthewalton/acf-stubs"),
         -- "polylang",
       },
 
