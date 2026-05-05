@@ -14,7 +14,7 @@ opt.fileencoding = "utf-8"
 
 -- lines
 opt.number = true -- show line numbers
-opt.relativenumber = true -- use relative line numbers
+-- opt.relativenumber = true -- use relative line numbers NOTE: an automcommmand enables this only in visual modes
 opt.cursorline = true -- highlight current line
 opt.wrap = false -- No Wrap lines
 
