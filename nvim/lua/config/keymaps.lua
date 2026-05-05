@@ -29,7 +29,8 @@ map("v", "<Leader>D", '"_D')
 map("n", "<C-a>", "gg<S-v>G")
 
 -- Copy current file path
-map("n", "<leader>yp", "<cmd>let @+ = expand('%:p')<CR>", { desc = "Copy file path" })
+map("n", "<leader>yp", "<cmd>let @+ = expand('%')<CR>", { desc = "Copy relative file path" })
+map("n", "<leader>yP", "<cmd>let @+ = expand('%:p')<CR>", { desc = "Copy absolute file path" })
 
 -- Disable continuations
 -- map("n", "<Leader>o", "o<Esc>^Da", opts)
