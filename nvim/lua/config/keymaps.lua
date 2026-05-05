@@ -2,8 +2,8 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local map = vim.keymap.set
-local opts = { noremap = true, silent = true }
+local map = vim.keymap.set -- set abbreviation for cleaner config
+local opts = { noremap = true, silent = true } -- noremap prevents recursive expansion (safe default) and silent suppresses command output (cleaner UX). must append `,opts` to apply.
 
 vim.g.mapleader = " "
 
@@ -25,18 +25,16 @@ map("v", "<Leader>D", '"_D')
 -- map("n", "+", "<C-a>")
 -- map("n", "-", "<C-x>")
 
--- Delete a word backwards
-map("n", "dw", 'vb"_d')
-
 -- Select all
 map("n", "<C-a>", "gg<S-v>G")
 
--- Save with root permission (not working for now)
---vim.api.nvim_create_user_command('W', 'w !sudo tee > /dev/null %', {})
+-- Copy current file path
+map("n", "<leader>yp", "<cmd>let @+ = expand('%:p')<CR>", { desc = "Copy file path" })
 
 -- Disable continuations
 -- map("n", "<Leader>o", "o<Esc>^Da", opts)
-map("n", "<Leader>O", "O<Esc>^Da", opts)
+
+map("n", "<Leader>O", "O<Esc>^Da", { desc = "Insert new blank line above" })
 
 -- New tab
 -- map("n", "te", ":tabedit")
