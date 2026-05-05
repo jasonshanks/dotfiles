@@ -34,9 +34,9 @@ return {
       -- Default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
-        default = { 'lsp', 'buffer', "snippets", 'path', 'codeium' },
+        default = { "lsp", "buffer", "snippets", "path", "codeium" },
         providers = {
-          codeium = { name = 'Codeium', module = 'codeium.blink', async = true },
+          codeium = { name = "Codeium", module = "codeium.blink", async = true },
         },
       },
       -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
