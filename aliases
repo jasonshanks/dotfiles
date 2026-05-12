@@ -9,7 +9,7 @@
 #
 # Designed by: Jason Shanks
 # Created: 2019-06-13
-# Modified: 2025-08-13
+# Modified: 2026-04-10
 #
 # Config Maintenance
 
@@ -87,15 +87,16 @@ alias doc2md='pandoc -s -f docx -t gfm --wrap=preserve ' ## append filename.docx
 ## Apps
 alias df='duf' # A better df with color-syntax ond table output
 alias dig='dug' # A better dig with color-syntax table output
-alias v='nvim'
+alias dosbox='/Applications/-OS/DosBox.app/Contents/MacOS/DosBox -conf /Users/digitlee/.dosbox.conf'
 alias ff='fastfetch'
 alias ffall='fastfetch -c all.jsonc'
+alias oc='opencode'
 alias pip='pip3'
-alias sed='sd' # An improved sed with easier syntax but less features.
+alias sed='sd' # A better sed with easier syntax but less features.
+alias setistat='head -n 5 /Applications/INTERNET/setiathome-3.03/state.sah'
 alias stt='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -n -a .'
 alias te='/Applications/TextEdit.app/Contents/MacOS/TextEdit'
-alias setistat='head -n 5 /Applications/INTERNET/setiathome-3.03/state.sah'
-alias dosbox='/Applications/-OS/DosBox.app/Contents/MacOS/DosBox -conf /Users/digitlee/.dosbox.conf'
+alias v='nvim'
 
 ## Brew
 alias brewi="brew info"
@@ -148,7 +149,7 @@ alias llamatalk-uncensored-13b='cd /Applications/_LLMs/whisper.cpp/;./talk-llama
 alias llamatalk-huggin='cd /Applications/_LLMs/whisper.cpp/;./talk-llama -mw ./models/ggml-base.en.bin -ml ../llama.cpp/models/huginnv1.2.ggmlv3.q4_K_M.bin -p "User" -t 8'
 
 ## Games
-alias games='cd /Applications/ARCADE/TextAdv/'
+alias textadv='cd /Applications/ARCADE/TextAdv/'
 alias nethack='cd /usr/games;./nethack'
 alias doom='cd /Applications/_GAMES/terminal-doom;zig-out/bin/terminal-doom'
 
