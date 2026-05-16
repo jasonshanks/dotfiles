@@ -21,6 +21,22 @@ map("n", "<Leader>D", '"_D')
 map("v", "<Leader>d", '"_d')
 map("v", "<Leader>D", '"_D')
 
+-- Move lines up and down
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")
+vim.keymap.set("i", "<A-j>", "<Esc>:m .+1<CR>==gi")
+vim.keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi")
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv")
+
+-- Duplicate lines up and down
+vim.keymap.set("n", "<A-J>", ":t.<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-K>", ":t-1<CR>", { noremap = true, silent = true })
+vim.keymap.set("i", "<A-J>", "<C-o>:t.<CR>", { noremap = true, silent = true })
+vim.keymap.set("i", "<A-K>", "<C-o>:t-1<CR>", { noremap = true, silent = true })
+vim.keymap.set("v", "<A-J>", ":t-1<CR>gv", { noremap = true, silent = true })
+vim.keymap.set("v", "<A-K>", ":t'><CR>gv", { noremap = true, silent = true })
+
 -- Increment/decrement
 -- map("n", "+", "<C-a>")
 -- map("n", "-", "<C-x>")
