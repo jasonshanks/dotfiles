@@ -1,3 +1,5 @@
+-- 🔧 Core: shared utilities and infrastructure
+
 return {
   {
     "nvim-lua/plenary.nvim",

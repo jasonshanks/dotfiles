@@ -1,3 +1,5 @@
+-- 🔀 Meta: all-in-one kitchen sink plugin
+
 return {
   {
     "folke/snacks.nvim",
@@ -41,7 +43,7 @@ return {
       terminal = {
         win = {
           position = "float", -- "float", "bottom", "top", "left", "right"
-          height = 0.5, -- 50% of screen height
+          height = 0.8, -- 80% of screen height
           width = 0.8, -- 80% of screen width
         },
       },

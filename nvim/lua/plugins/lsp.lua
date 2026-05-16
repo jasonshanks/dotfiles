@@ -1,4 +1,208 @@
+-- 🔬 LSP: Language Server Protocol stack — completion, diagnostics, formatting, and type info
+
 return {
+  {
+    "saghen/blink.cmp",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+      "Exafunction/windsurf.nvim",
+    },
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
+    opts = {
+      -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+      -- 'super-tab' for mappings similar to vscode (tab to accept)
+      -- 'enter' for enter to accept
+      -- 'none' for no mappings
+      --
+      -- All presets have the following mappings:
+      -- C-space: Open menu or open docs if already open
+      -- C-n/C-p or Up/Down: Select next/previous item
+      -- C-e: Hide menu
+      -- C-k: Toggle signature help (if signature.enabled = true)
+      --
+      -- See :h blink-cmp-config-keymap for defining your own keymap
+      keymap = { preset = "super-tab" },
+
+      appearance = {
+        -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- Adjusts spacing to ensure icons are aligned
+        nerd_font_variant = "mono",
+      },
+
+      -- (Default) Only show the documentation popup when manually triggered
+      completion = { documentation = { auto_show = false } },
+
+      -- Default list of enabled providers defined so that you can extend it
+      -- elsewhere in your config, without redefining it, due to `opts_extend`
+      sources = {
+        default = { "lsp", "buffer", "snippets", "path", "codeium" },
+        providers = {
+          codeium = { name = "Codeium", module = "codeium.blink", async = true },
+        },
+      },
+      -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+      -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+      -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+      --
+      -- See the fuzzy documentation for more information
+      fuzzy = { implementation = "prefer_rust_with_warning" },
+    },
+    opts_extend = { "sources.default" },
+  },
+
+  {
+    -- Mason for package installation
+    "mason-org/mason.nvim",
+    opts = {
+      ui = {
+        auto_update_packages = true,
+        icons = {
+          package_installed = "✓",
+          package_pending = "➜",
+          package_uninstalled = "✗",
+        },
+      },
+    },
+  },
+
+  {
+    -- Disable auto-configuration in favour of native lspconfig
+    "mason-org/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = {},
+      automatic_installation = false,
+      automatic_setup = false, -- must be false otherwise duplicate LSPs
+      automatic_enable = false, -- disable automatic server setup
+      handlers = {}, -- Empty = no auto-configuration
+    },
+  },
+
+  {
+    -- Native LSP configuration
+    -- [Default configs](https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md)
+    -- Place any custom configs in `/lsp/{language}.lua`
+    "neovim/nvim-lspconfig",
+    config = function()
+      -- Base LSP enablers
+      vim.lsp.enable({
+        "bashls", -- Bash shell
+        "cssls", -- CSS
+        "emmet_language_server", -- Emmet.io
+        "fish_lsp", -- Fish shell
+        "gopls", -- Go
+        "html", -- HTML
+        "intelephense", -- PHP (prefer over phpactor)
+        "jsonls",
+        "lua_ls", -- Lua
+        "pyright", -- Python
+        "rust_analyzer", -- Rust
+        -- "tailwindcss", -- CSS framework
+        "ts_ls", -- TypeScript
+      })
+
+      vim.diagnostic.config({ virtual_text = true })
+    end,
+  },
+
+  -- Incremental rename
+  {
+    "smjonas/inc-rename.nvim",
+    cmd = "IncRename",
+    config = true,
+  },
+
+  {
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters_by_ft = {
+        php = { "phpcs" },
+      },
+      linters = {
+        phpcs = {
+          cmd = "phpcs",
+          args = {
+            "--standard=" .. vim.fn.expand("$HOME/.config/.phpcs.xml"),
+            "--report=json",
+            "-q",
+            "-s",
+            "--basepath=" .. vim.fn.getcwd(),
+            "-",
+          },
+          stdin = true,
+          ignore_exitcode = true,
+          parser = function(output, bufnr)
+            -- If output is empty or contains an error message, return empty diagnostics
+            if output == "" or output:match("^ERROR: ") then
+              return {}
+            end
+
+            -- Attempt to decode JSON
+            local ok, decoded = pcall(vim.json.decode, output)
+            if not ok or not decoded or not decoded.files then
+              return {}
+            end
+
+            local diagnostics = {}
+            -- Get the first (and usually only) file's messages
+            for _, file in pairs(decoded.files) do
+              for _, message in ipairs(file.messages or {}) do
+                table.insert(diagnostics, {
+                  lnum = (message.line or 1) - 1,
+                  col = (message.column or 1) - 1,
+                  end_lnum = (message.line or 1) - 1,
+                  end_col = (message.column or 1),
+                  severity = message.type == "ERROR" and vim.diagnostic.severity.ERROR or vim.diagnostic.severity.WARN,
+                  message = message.message or "Unknown error",
+                  source = "phpcs",
+                })
+              end
+            end
+            return diagnostics
+          end,
+        },
+      },
+    },
+  },
+
+  {
+    "folke/trouble.nvim",
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=false<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+    },
+  },
+
   {
     "stevearc/conform.nvim",
     opts = {
@@ -182,6 +386,15 @@ return {
           stdin = false,
         },
       },
+    },
+  },
+
+  {
+    "simrat39/symbols-outline.nvim",
+    keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
+    cmd = "SymbolsOutline",
+    opts = {
+      position = "right",
     },
   },
 }

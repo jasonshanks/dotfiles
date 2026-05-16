@@ -1,3 +1,5 @@
+-- 🌳 Treesitter: syntax-aware parsing for highlighting, navigation, and text objects
+
 return {
   {
     "nvim-treesitter/nvim-treesitter",

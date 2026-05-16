@@ -1,3 +1,5 @@
+-- 🤖 AI: AI-assisted coding and LLM integrations
+
 return {
   {
     "Exafunction/windsurf.nvim",
@@ -12,6 +14,63 @@ return {
       })
     end,
   },
+  -- TODO: test NeoCodeium, alternative compared to windsurf official plugin
+  -- {
+  --   "monkoose/neocodeium",
+  --   event = "VeryLazy",
+  --   config = function()
+  --     local neocodeium = require("neocodeium")
+  --     neocodeium.setup()
+  --     vim.keymap.set("i", "<A-f>", neocodeium.accept)
+  --   end,
+  -- },
+  -- Sidekick AI
+  -- {
+  --   "folke/sidekick.nvim",
+  --   opts = {
+  --     nes = {
+  --       diff = { inline = "words" }, -- Granular diff view
+  --     },
+  --     cli = {
+  --       mux = {
+  --         backend = "tmux",
+  --         enabled = true,
+  --       },
+  --     },
+  --   },
+  --   keys = {
+  --     {
+  --       "<Tab>",
+  --       function()
+  --         return require("sidekick").nes_jump_or_apply() and "" or "<Tab>"
+  --       end,
+  --       expr = true,
+  --       desc = "NES Jump/Apply",
+  --     },
+  --     {
+  --       "<leader>aa",
+  --       function()
+  --         require("sidekick.cli").toggle()
+  --       end,
+  --       desc = "Toggle CLI",
+  --     },
+  --     {
+  --       "<leader>as",
+  --       function()
+  --         require("sidekick.cli").select()
+  --       end,
+  --       desc = "Select Tool",
+  --     },
+  --     {
+  --       "<leader>ap",
+  --       function()
+  --         require("sidekick.cli").prompt()
+  --       end,
+  --       mode = { "n", "x" },
+  --       desc = "Send Prompt",
+  --     },
+  --   },
+  -- },
   {
     "NickvanDyke/opencode.nvim",
     enabled = false,
