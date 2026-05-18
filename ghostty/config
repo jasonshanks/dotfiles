@@ -32,8 +32,9 @@ title = " " # TODO: see if title can be customised in future to only display app
 macos-titlebar-style = tabs
 
 # Windows
-window-padding-x = 0
-window-padding-y = 0
+window-padding-x = 2,2
+window-padding-y = 1,0
+window-padding-balance = true
 window-padding-color = background
 
 # Theme
@@ -60,8 +61,8 @@ font-size = 18
 # font-family = "Input Mono"
 # font-family = "Hack Nerd Font Mono"
 # font-family = "Maple Mono NF"
-font-family = "Monaspace Neon NF"
-font-family-italic = "Monaspace Radon NF"
+# font-family = "Monaspace Neon NF"
+# font-family-italic = "Monaspace Radon NF"
 # font-family = "BitstromWera Nerd Font Mono"
 # font-family = "FiraCode Nerd Font Mono"
 # font-family = "CommitMono Nerd Font"
