@@ -1,0 +1,164 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Prompt: left-side
+format = """
+$os\
+$hostname\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$git_metrics\
+$line_break\
+$python\
+$username\
+$character"""
+
+right_format = """
+$cmd_duration"""
+
+palette = "catppuccin_mocha"
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
+
+[os]
+disabled = false
+style = "bold fg:sapphire"
+format = "[$symbol]($style) "
+
+[os.symbols]
+AIX = ""
+AlmaLinux = ""
+Alpaquita = ""
+Alpine = ""
+ALTLinux = ""
+Amazon = ""
+Android = ""
+AOSC = ""
+Arch = ""
+Artix = ""
+Bluefin = ""
+CachyOS = ""
+CentOS = ""
+Debian = ""
+DragonFly = ""
+Elementary = ""
+Emscripten = ""
+EndeavourOS = ""
+Fedora = ""
+FreeBSD = ""
+Garuda = ""
+Gentoo = ""
+HardenedBSD = "󰞌"
+Illumos = ""
+InstantOS = ""
+Ios = "󰀷"
+Kali = ""
+Linux = ""
+Mabox = ""
+Macos = ""
+Manjaro = ""
+Mariner = ""
+MidnightBSD = ""
+Mint = ""
+NetBSD = ""
+NixOS = ""
+Nobara = ""
+OpenBSD = ""
+OpenCloudOS = ""
+openEuler = ""
+openSUSE = ""
+OracleLinux = "󰺡"
+PikaOS = ""
+Pop = ""
+Raspbian = ""
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Redox = "󰀘"
+RockyLinux = ""
+Solus = ""
+SUSE = ""
+Ubuntu = ""
+Ultramarine = ""
+Unknown = ""
+Uos = ""
+Void = ""
+Windows = "󰍲"
+Zorin = ""
+
+[character]
+success_symbol = "[❯](fg:purple)"
+error_symbol = "[❯](fg:red)"
+vimcmd_symbol = "[❮](fg:green)"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "fg:yellow"
+
+[directory]
+style = "fg:blue"
+
+[git_branch]
+format = "[$branch]($style) "
+style = "bright-black"
+
+[git_metrics]
+format = '([▴$added]($added_style))([▿$deleted]($deleted_style)) '
+added_style = 'italic dimmed fg:green'
+deleted_style = 'italic dimmed fg:red'
+ignore_submodules = true
+disabled = true
+
+[git_status]
+format = "[[($conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+style = "fg:peach"
+conflicted = "="
+untracked = "?"
+modified = "!"
+staged = "+"
+renamed = "󰑕"
+deleted = "󰗨"
+stashed = "󰵵"
+
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+style = "bright-black"
+
+[python]
+format = "[$virtualenv]($style) "
+style = "bright-black"
+detect_extensions = []
+detect_files = []
+
+[username]
+show_always = false
+style_user = "fg:white"
+style_root = "fg:red"
+format = '[ $user]($style) '
+

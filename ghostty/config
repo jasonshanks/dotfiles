@@ -38,7 +38,7 @@ window-padding-balance = true
 window-padding-color = background
 
 # Theme
-theme = dark:"Flexoki Dark", light:"Catppuccin Latte"
+theme = dark:"Catppuccin Mocha", light:"Catppuccin Latte"
 background-opacity = "0.9"
 background-blur-radius = "10"
 # custom-shader = ~/.config/ghostty/shaders/cursor_glow.glsl
