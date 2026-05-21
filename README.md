@@ -30,7 +30,7 @@ Thanks to the entire Open Source community and by extension Github. To all those
 
 ## TODO
 
-- [ ] Migrate the remainder of legacy configs not yet symlinked.
+- [-] Migrate the remainder of legacy configs not yet symlinked.
 - [ ] Decide on symlink approach (custom variation on inspo above, Stow, or maybe [Chezmoi](https://www.chezmoi.io) or [YADM](https://yadm.io/#))
 - [ ] Finalise boostrap and restore method.
 - [ ] Adapt scripts to 🐟fish shell.
