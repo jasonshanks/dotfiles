@@ -1,2 +1,3 @@
 aliases
 git/gitconfig.local.symlink
+/tmux/plugins/tmux-notify
