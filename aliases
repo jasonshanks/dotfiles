@@ -9,7 +9,7 @@
 #
 # Designed by: Jason Shanks
 # Created: 2019-06-13
-# Modified: 2026-04-10
+# Modified: 2026-05-26
 #
 # Config Maintenance
 
@@ -91,6 +91,7 @@ alias dosbox='/Applications/-OS/DosBox.app/Contents/MacOS/DosBox -conf /Users/di
 alias ff='fastfetch'
 alias ffall='fastfetch -c all.jsonc'
 alias oc='opencode'
+alias of='onefetch --no-art --nerd-fonts'
 alias pip='pip3'
 alias sed='sd' # A better sed with easier syntax but less features.
 alias setistat='head -n 5 /Applications/INTERNET/setiathome-3.03/state.sah'
