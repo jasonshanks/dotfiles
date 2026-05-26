@@ -43,11 +43,11 @@ background-opacity = "0.9"
 background-blur-radius = "10"
 # custom-shader = ~/.config/ghostty/shaders/cursor_glow.glsl
 # custom-shader = ~/.config/ghostty/shaders/cursor_slash.glsl
-# custom-shader = ~/.config/ghostty/shaders/cursor_smear_fade.glsl
+custom-shader = ~/.config/ghostty/shaders/cursor_smear_fade.glsl
 # custom-shader = ~/.config/ghostty/shaders/cursor_smear.glsl
 # custom-shader = ~/.config/ghostty/shaders/amber_v4.glsl
 # custom-shader = ~/.config/ghostty/shaders/cursor_blaze.glsl
-custom-shader = ~/.config/ghostty/shaders/cursor_aqua-blaze.glsl
+# custom-shader = ~/.config/ghostty/shaders/cursor_aqua-blaze.glsl
 # custom-shader = /Users/jason/iCloud/_/Development/Git-Repos/ghostty-shaders/starfield-colors.glsl
 # custom-shader = /Users/jason/iCloud/_/Development/Git-Repos/ghostty-shaders/bloom.glsl
 
