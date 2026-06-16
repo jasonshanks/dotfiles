@@ -1,18 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "context7": {
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp",
-      "headers": {
-        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
-      },
-      "enabled": true
-    }
-  },
-  "plugin": [
-    "oh-my-opencode-slim"
-  ],
   "agent": {
     "explore": {
       "disable": true
@@ -20,5 +7,20 @@
     "general": {
       "disable": true
     }
-  }
+  },
+  "lsp": true,
+  "mcp": {
+    "context7": {
+      "enabled": true,
+      "headers": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      },
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    }
+  },
+  "plugin": [
+    "file:///Users/jason/.config/opencode/plugins/ping-island.js",
+    "oh-my-opencode-slim"
+  ]
 }

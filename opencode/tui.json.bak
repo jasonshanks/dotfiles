@@ -4,5 +4,8 @@
   "keybinds": {
     "messages_half_page_up": "<leader>k",
     "messages_half_page_down": "<leader>j"
-  }
+  },
+  "plugin": [
+    "oh-my-opencode-slim"
+  ]
 }

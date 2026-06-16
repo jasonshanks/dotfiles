@@ -1,0 +1,42 @@
+{
+  "preset": "opencode",
+  "presets": {
+    "opencode": {
+      "orchestrator": {
+        "model": "opencode/big-pickle",
+        "skills": ["*"],
+        "mcps": ["websearch"]
+      },
+      "oracle": {
+        "model": "opencode/big-pickle",
+        "variant": "high",
+        "skills": [],
+        "mcps": []
+      },
+      "librarian": {
+        "model": "opencode/big-pickle",
+        "variant": "low",
+        "skills": [],
+        "mcps": ["websearch", "context7", "grep_app"]
+      },
+      "explorer": {
+        "model": "opencode/big-pickle",
+        "variant": "low",
+        "skills": [],
+        "mcps": []
+      },
+      "designer": {
+        "model": "opencode/big-pickle",
+        "variant": "medium",
+        "skills": ["agent-browser"],
+        "mcps": []
+      },
+      "fixer": {
+        "model": "opencode/big-pickle",
+        "variant": "low",
+        "skills": [],
+        "mcps": []
+      }
+    }
+  }
+}

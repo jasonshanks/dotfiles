@@ -67,6 +67,9 @@ set -g fish_color_autosuggestion 555 brblack
 set -g fish_color_cancel -r
 set -g fish_color_command --bold
 
+### Oh My Opencode Slim sub-agent support
+set -gx OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS true
+
 ### Fish keybindings
 # fish_vi_key_bindings
 
