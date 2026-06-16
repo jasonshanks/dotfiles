@@ -60,6 +60,7 @@ font-size = 18
 # font-family = "Input Mono Narrow"
 # font-family = "Input Mono"
 # font-family = "Hack Nerd Font Mono"
+font-family = "IoskeleyMono Nerd Font"
 # font-family = "Maple Mono NF"
 # font-family = "Monaspace Neon NF"
 # font-family-italic = "Monaspace Radon NF"
