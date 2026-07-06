@@ -10,7 +10,7 @@
 # FISH Shell Configuration
 # by Jason Shanks
 # Date created: 2020-04-18
-# Date updated: 2026-05-18
+# Date updated: 2026-07-07
 
 # Set Fish greeting
 # set -U fish_greeting "Go 🐟"
@@ -59,7 +59,8 @@ end
 #source ~/.config/fish/custom.fish
 set -g fish_user_paths /opt/homebrew/bin/libxml2/bin $fish_user_paths
 clear
-source ~/.config/.aliases
+source ~/.dotfiles/aliases/aliases
+source ~/.dotfiles/aliases/aliases-fish
 source ~/.config/.functions
 
 ### Fish syntax highlighting

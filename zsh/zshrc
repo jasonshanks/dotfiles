@@ -1,0 +1,24 @@
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+bindkey -e
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+zstyle :compinstall filename '/Users/jason/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Source config modules
+source ~/.dotfiles/aliases/aliases
+source ~/.dotfiles/aliases/aliases-fish
+
+# Load Starship.rs prompt
+eval "$(starship init zsh)"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/jason/.cache/lm-studio/bin"
