@@ -116,6 +116,7 @@
                 "rules": [
                     {
                         "description": "Right Command to HYPER key if used as modifier, Right Command if alone (never fires as Hyper modifier overrules)",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
