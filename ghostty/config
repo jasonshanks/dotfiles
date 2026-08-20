@@ -10,7 +10,7 @@
 # https://ghostty.org/docs/config/reference
 
 # Shell
-command = /opt/homebrew/bin/fish -l -c "if type -q tmux; tmux attach; or tmux new -s CommandCentre; else; fish; end" # Tmux initialisation
+# command = /opt/homebrew/bin/fish -l -c "if type -q tmux; tmux attach; or tmux new -s CommandCentre; else; fish; end" # Tmux initialisation
 shell-integration = fish
 shell-integration-features = "no-cursor,title,sudo,ssh-env,ssh-terminfo"
 
