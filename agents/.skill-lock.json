@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/skills.git",
       "skillPath": "skills/find-skills/SKILL.md",
-      "skillFolderHash": "3013fdeb8a11b10b1eb795ec3ae8bfca38f7c26d",
+      "skillFolderHash": "76a98a285cb0434f3d39e1a873823556330e398b",
       "installedAt": "2026-05-13T15:58:02.475Z",
-      "updatedAt": "2026-05-13T15:58:02.475Z"
+      "updatedAt": "2026-08-09T06:38:09.727Z"
     },
     "wordpress-pro": {
       "source": "jeffallan/claude-skills",
@@ -24,18 +24,18 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/kepano/obsidian-skills.git",
       "skillPath": "skills/obsidian-markdown/SKILL.md",
-      "skillFolderHash": "5caf5d9e7de204f3904216857545f2aa36bcfcac",
+      "skillFolderHash": "4723197c6dc59abc29819da87863b1ac20b96095",
       "installedAt": "2026-05-13T16:12:54.359Z",
-      "updatedAt": "2026-05-13T16:12:54.359Z"
+      "updatedAt": "2026-08-09T06:38:11.941Z"
     },
     "obsidian-bases": {
       "source": "kepano/obsidian-skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/kepano/obsidian-skills.git",
       "skillPath": "skills/obsidian-bases/SKILL.md",
-      "skillFolderHash": "4bef60bb848bfb02b4172b552626d5741b0d4057",
+      "skillFolderHash": "f3330f27de4d7907ead57d0f48672f4d3280bb77",
       "installedAt": "2026-05-13T16:13:38.229Z",
-      "updatedAt": "2026-05-13T16:13:38.229Z"
+      "updatedAt": "2026-08-09T06:38:14.043Z"
     },
     "obsidian-cli": {
       "source": "kepano/obsidian-skills",
@@ -78,10 +78,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/anthropics/skills.git",
       "skillPath": "skills/frontend-design/SKILL.md",
-      "skillFolderHash": "928950704df8a8b885c03de5da626331e6f29cf8",
-      "pluginName": "example-skills",
+      "skillFolderHash": "0d5b74a14bdf3ebcd64f352d06376a2ef05ed296",
       "installedAt": "2026-05-13T16:35:30.566Z",
-      "updatedAt": "2026-05-13T16:35:30.566Z"
+      "updatedAt": "2026-08-09T06:36:21.667Z"
     },
     "vite": {
       "source": "antfu/skills",
@@ -106,10 +105,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/coreyhaines31/marketingskills.git",
       "skillPath": "skills/seo-audit/SKILL.md",
-      "skillFolderHash": "d333a589b3cd513296c419ee6911903be8c9865b",
-      "pluginName": "marketing-skills",
+      "skillFolderHash": "0f1f5e31ce921513828ac8f440f358df6fa0751a",
       "installedAt": "2026-05-13T16:41:59.566Z",
-      "updatedAt": "2026-05-13T16:41:59.566Z"
+      "updatedAt": "2026-08-09T06:38:16.425Z"
     },
     "product-marketing-context": {
       "source": "coreyhaines31/marketingskills",
@@ -135,20 +133,18 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git",
       "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
-      "skillFolderHash": "75e1acaafe8b08e59d4b86fc253ac7873aff6bba",
-      "pluginName": "ui-ux-pro-max",
+      "skillFolderHash": "3d66a0486c1000e6da51da67b0cb917be22ea8dd",
       "installedAt": "2026-05-13T17:20:29.753Z",
-      "updatedAt": "2026-05-13T17:20:29.753Z"
+      "updatedAt": "2026-08-09T06:36:57.642Z"
     },
     "copywriting": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/coreyhaines31/marketingskills.git",
       "skillPath": "skills/copywriting/SKILL.md",
-      "skillFolderHash": "4ac08d315b36a42902eb015f913743a241986011",
-      "pluginName": "marketing-skills",
+      "skillFolderHash": "13d216690bbbcb88e2fee9f3e2d8f5a5bbc4b338",
       "installedAt": "2026-05-13T17:34:02.709Z",
-      "updatedAt": "2026-05-13T17:34:02.709Z"
+      "updatedAt": "2026-08-09T06:38:18.596Z"
     },
     "skill-creator": {
       "source": "anthropics/skills",
@@ -165,18 +161,18 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/juliusbrussee/caveman.git",
       "skillPath": "skills/caveman/SKILL.md",
-      "skillFolderHash": "75b63aa9ec7bbb0e72bb6b3524ff6b576c14a05a",
+      "skillFolderHash": "3e4386ca694c65a65ba84024f0fe2646a8c9076a",
       "installedAt": "2026-05-14T01:44:20.071Z",
-      "updatedAt": "2026-05-14T01:44:20.071Z"
+      "updatedAt": "2026-08-09T06:38:20.914Z"
     },
     "agent-browser": {
       "source": "vercel-labs/agent-browser",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
       "skillPath": "skills/agent-browser/SKILL.md",
-      "skillFolderHash": "c1470a475a0472fceda2401ea6763708a91680a8",
+      "skillFolderHash": "037e8078db4b20b4aa25c04f21c6de7d335ec449",
       "installedAt": "2026-05-15T16:28:36.198Z",
-      "updatedAt": "2026-05-15T16:28:36.198Z"
+      "updatedAt": "2026-08-09T06:38:22.978Z"
     }
   },
   "dismissed": {}
