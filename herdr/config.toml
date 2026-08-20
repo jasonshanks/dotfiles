@@ -1,0 +1,30 @@
+onboarding = false
+
+[ui.toast]
+delivery = "system"
+
+
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "herdr-nvim-nav.left"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "herdr-nvim-nav.down"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "herdr-nvim-nav.up"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "herdr-nvim-nav.right"
+
+[[keys.command]]
+key = "prefix+space"
+type = "plugin_action"
+command = "ramarivera.palette.open"

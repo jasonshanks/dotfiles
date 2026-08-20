@@ -1,0 +1,297 @@
+{
+  "version": 3,
+  "workspaces": [
+    {
+      "id": "w6",
+      "custom_name": "COMMAND CENTRE",
+      "identity_cwd": "/Users/jason",
+      "public_pane_numbers": {
+        "1": 1
+      },
+      "next_public_pane_number": 6,
+      "public_tab_numbers": [
+        1
+      ],
+      "next_public_tab_number": 3,
+      "tabs": [
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 1
+          },
+          "panes": {
+            "1": {
+              "cwd": "/Users/jason"
+            }
+          },
+          "zoomed": false,
+          "focused": 1,
+          "root_pane": 1
+        }
+      ],
+      "active_tab": 0
+    },
+    {
+      "id": "w7",
+      "custom_name": "DOTS",
+      "identity_cwd": "/Users/jason/.dotfiles",
+      "public_pane_numbers": {
+        "2": 1,
+        "3": 2,
+        "25": 6
+      },
+      "next_public_pane_number": 7,
+      "public_tab_numbers": [
+        1,
+        2
+      ],
+      "next_public_tab_number": 3,
+      "tabs": [
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 2
+          },
+          "panes": {
+            "2": {
+              "cwd": "/Users/jason/.dotfiles"
+            }
+          },
+          "zoomed": false,
+          "focused": 2,
+          "root_pane": 2
+        },
+        {
+          "custom_name": null,
+          "layout": {
+            "Split": {
+              "direction": "Horizontal",
+              "ratio": 0.5,
+              "first": {
+                "Pane": 3
+              },
+              "second": {
+                "Pane": 25
+              }
+            }
+          },
+          "panes": {
+            "25": {
+              "cwd": "/Users/jason/.dotfiles"
+            },
+            "3": {
+              "cwd": "/Users/jason/.dotfiles/herdr/plugins/github/vim-herdr-navigation-a8bf42123d81/editor"
+            }
+          },
+          "zoomed": false,
+          "focused": 25,
+          "root_pane": 3
+        }
+      ],
+      "active_tab": 1
+    },
+    {
+      "id": "w8",
+      "custom_name": "VEI",
+      "identity_cwd": "/Users/jason/Sites/Wellmark/vei/app/public/wp-content/themes/vei",
+      "public_pane_numbers": {
+        "5": 2,
+        "4": 1
+      },
+      "next_public_pane_number": 4,
+      "public_tab_numbers": [
+        1,
+        2
+      ],
+      "next_public_tab_number": 3,
+      "tabs": [
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 4
+          },
+          "panes": {
+            "4": {
+              "cwd": "/Users/jason/Sites/Wellmark/vei/app/public/wp-content/themes/vei"
+            }
+          },
+          "zoomed": false,
+          "focused": 4,
+          "root_pane": 4
+        },
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 5
+          },
+          "panes": {
+            "5": {
+              "cwd": "/Users/jason/Sites/Wellmark/vei/app/public/wp-content/themes/vei"
+            }
+          },
+          "zoomed": false,
+          "focused": 5,
+          "root_pane": 5
+        }
+      ],
+      "active_tab": 0
+    },
+    {
+      "id": "wF",
+      "custom_name": "VHG",
+      "identity_cwd": "/Users/jason/Sites/Wellmark/vhg/app/public/wp-content/themes/vhg",
+      "public_pane_numbers": {
+        "15": 1
+      },
+      "next_public_pane_number": 2,
+      "public_tab_numbers": [
+        1
+      ],
+      "next_public_tab_number": 2,
+      "tabs": [
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 15
+          },
+          "panes": {
+            "15": {
+              "cwd": "/Users/jason/Sites/Wellmark/vhg/app/public/wp-content/themes/vhg"
+            }
+          },
+          "zoomed": false,
+          "focused": 15,
+          "root_pane": 15
+        }
+      ],
+      "active_tab": 0
+    },
+    {
+      "id": "w9",
+      "custom_name": "NEWLIFE",
+      "identity_cwd": "/Users/jason/Sites/Wellmark/newlife/app/public/wp-content/themes/newlifeivf",
+      "public_pane_numbers": {
+        "8": 1
+      },
+      "next_public_pane_number": 2,
+      "public_tab_numbers": [
+        1
+      ],
+      "next_public_tab_number": 2,
+      "tabs": [
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 8
+          },
+          "panes": {
+            "8": {
+              "cwd": "/Users/jason/Sites/Wellmark/newlife/app/public/wp-content/themes/newlifeivf"
+            }
+          },
+          "zoomed": false,
+          "focused": 8,
+          "root_pane": 8
+        }
+      ],
+      "active_tab": 0
+    },
+    {
+      "id": "wA",
+      "custom_name": "ALEC",
+      "identity_cwd": "/Users/jason/Sites/Wellmark/alec/app/public/wp-content/themes/alec",
+      "public_pane_numbers": {
+        "9": 1,
+        "10": 2
+      },
+      "next_public_pane_number": 3,
+      "public_tab_numbers": [
+        1,
+        2
+      ],
+      "next_public_tab_number": 3,
+      "tabs": [
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 9
+          },
+          "panes": {
+            "9": {
+              "cwd": "/Users/jason/Sites/Wellmark/alec/app/public/wp-content/themes/alec"
+            }
+          },
+          "zoomed": false,
+          "focused": 9,
+          "root_pane": 9
+        },
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 10
+          },
+          "panes": {
+            "10": {
+              "cwd": "/Users/jason/Sites/Wellmark/alec/app/public/wp-content/themes/alec"
+            }
+          },
+          "zoomed": false,
+          "focused": 10,
+          "root_pane": 10
+        }
+      ],
+      "active_tab": 0
+    },
+    {
+      "id": "wD",
+      "custom_name": null,
+      "identity_cwd": "/Users/jason/Sites/Wellmark/sobi-tryngolza-esc-fcs-podium",
+      "public_pane_numbers": {
+        "11": 1,
+        "12": 2
+      },
+      "next_public_pane_number": 3,
+      "public_tab_numbers": [
+        1,
+        2
+      ],
+      "next_public_tab_number": 3,
+      "tabs": [
+        {
+          "custom_name": null,
+          "layout": {
+            "Pane": 11
+          },
+          "panes": {
+            "11": {
+              "cwd": "/Users/jason/Sites/Wellmark/sobi-tryngolza-esc-fcs-podium"
+            }
+          },
+          "zoomed": false,
+          "focused": 11,
+          "root_pane": 11
+        },
+        {
+          "custom_name": "OpenCode",
+          "layout": {
+            "Pane": 12
+          },
+          "panes": {
+            "12": {
+              "cwd": "/Users/jason/Sites/Wellmark/sobi-tryngolza-esc-fcs-podium"
+            }
+          },
+          "zoomed": false,
+          "focused": 12,
+          "root_pane": 12
+        }
+      ],
+      "active_tab": 0
+    }
+  ],
+  "active": 1,
+  "selected": 1,
+  "sidebar_width": 26,
+  "sidebar_section_split": 0.5,
+  "collapsed_space_keys": []
+}
