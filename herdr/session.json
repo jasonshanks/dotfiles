@@ -37,15 +37,14 @@
       "identity_cwd": "/Users/jason/.dotfiles",
       "public_pane_numbers": {
         "2": 1,
-        "3": 2,
-        "25": 6
+        "3": 2
       },
-      "next_public_pane_number": 7,
+      "next_public_pane_number": 9,
       "public_tab_numbers": [
         1,
         2
       ],
-      "next_public_tab_number": 3,
+      "next_public_tab_number": 4,
       "tabs": [
         {
           "custom_name": null,
@@ -64,27 +63,15 @@
         {
           "custom_name": null,
           "layout": {
-            "Split": {
-              "direction": "Horizontal",
-              "ratio": 0.5,
-              "first": {
-                "Pane": 3
-              },
-              "second": {
-                "Pane": 25
-              }
-            }
+            "Pane": 3
           },
           "panes": {
-            "25": {
-              "cwd": "/Users/jason/.dotfiles"
-            },
             "3": {
-              "cwd": "/Users/jason/.dotfiles/herdr/plugins/github/vim-herdr-navigation-a8bf42123d81/editor"
+              "cwd": "/Users/jason/.dotfiles"
             }
           },
           "zoomed": false,
-          "focused": 25,
+          "focused": 3,
           "root_pane": 3
         }
       ],
@@ -95,8 +82,8 @@
       "custom_name": "VEI",
       "identity_cwd": "/Users/jason/Sites/Wellmark/vei/app/public/wp-content/themes/vei",
       "public_pane_numbers": {
-        "5": 2,
-        "4": 1
+        "4": 1,
+        "5": 2
       },
       "next_public_pane_number": 4,
       "public_tab_numbers": [
@@ -141,27 +128,43 @@
       "custom_name": "VHG",
       "identity_cwd": "/Users/jason/Sites/Wellmark/vhg/app/public/wp-content/themes/vhg",
       "public_pane_numbers": {
-        "15": 1
+        "6": 1,
+        "7": 2
       },
-      "next_public_pane_number": 2,
+      "next_public_pane_number": 3,
       "public_tab_numbers": [
-        1
+        1,
+        2
       ],
-      "next_public_tab_number": 2,
+      "next_public_tab_number": 3,
       "tabs": [
         {
           "custom_name": null,
           "layout": {
-            "Pane": 15
+            "Pane": 6
           },
           "panes": {
-            "15": {
+            "6": {
               "cwd": "/Users/jason/Sites/Wellmark/vhg/app/public/wp-content/themes/vhg"
             }
           },
           "zoomed": false,
-          "focused": 15,
-          "root_pane": 15
+          "focused": 6,
+          "root_pane": 6
+        },
+        {
+          "custom_name": "OpenCode",
+          "layout": {
+            "Pane": 7
+          },
+          "panes": {
+            "7": {
+              "cwd": "/Users/jason/Sites/Wellmark/vhg/app/public/wp-content/themes/vhg"
+            }
+          },
+          "zoomed": false,
+          "focused": 7,
+          "root_pane": 7
         }
       ],
       "active_tab": 0
@@ -226,13 +229,19 @@
           "root_pane": 9
         },
         {
-          "custom_name": null,
+          "custom_name": "OpenCode",
           "layout": {
             "Pane": 10
           },
           "panes": {
             "10": {
-              "cwd": "/Users/jason/Sites/Wellmark/alec/app/public/wp-content/themes/alec"
+              "cwd": "/Users/jason/Sites/Wellmark/alec/app/public/wp-content/themes/alec",
+              "agent_session": {
+                "source": "herdr:opencode",
+                "agent": "opencode",
+                "kind": "id",
+                "value": "ses_fa9c56678ffeSGFDabAxyDlqA5"
+              }
             }
           },
           "zoomed": false,
@@ -291,7 +300,7 @@
   ],
   "active": 1,
   "selected": 1,
-  "sidebar_width": 26,
+  "sidebar_width": 36,
   "sidebar_section_split": 0.5,
   "collapsed_space_keys": []
 }

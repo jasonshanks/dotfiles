@@ -83,75 +83,105 @@
     }
   },
   {
-    "plugin_id": "vim-herdr-navigation",
-    "name": "Vim Herdr Navigation",
-    "version": "0.1.0",
+    "plugin_id": "ramarivera.palette",
+    "name": "Herdr Palette",
+    "version": "0.1.10",
     "min_herdr_version": "0.7.0",
-    "description": "Seamless Ctrl+h/j/k/l navigation across herdr panes and Vim/Neovim splits",
-    "manifest_path": "/Users/jason/.config/herdr/plugins/github/vim-herdr-navigation-a8bf42123d81/herdr-plugin.toml",
-    "plugin_root": "/Users/jason/.config/herdr/plugins/github/vim-herdr-navigation-a8bf42123d81",
+    "description": "A Raycast/Linear-style fuzzy command palette for Herdr.",
+    "manifest_path": "/Users/jason/.dotfiles/herdr/plugins/github/ramarivera.palette-3e57d9104d91/herdr-plugin.toml",
+    "plugin_root": "/Users/jason/.dotfiles/herdr/plugins/github/ramarivera.palette-3e57d9104d91",
     "enabled": true,
     "platforms": [
       "linux",
       "macos"
     ],
+    "build": [
+      {
+        "platforms": [
+          "linux",
+          "macos"
+        ],
+        "command": [
+          "cargo",
+          "build",
+          "--release"
+        ]
+      }
+    ],
     "actions": [
       {
-        "id": "down",
-        "title": "Navigate down (Vim/herdr)",
+        "id": "open",
+        "title": "Open palette",
         "contexts": [
+          "workspace",
+          "tab",
+          "pane",
           "global"
         ],
         "command": [
-          "bash",
-          "navigate.sh",
-          "down"
+          "herdr",
+          "plugin",
+          "pane",
+          "open",
+          "--plugin",
+          "ramarivera.palette",
+          "--entrypoint",
+          "overlay",
+          "--placement",
+          "overlay",
+          "--focus"
         ]
       },
       {
-        "id": "left",
-        "title": "Navigate left (Vim/herdr)",
+        "id": "shell",
+        "title": "Open palette shell",
         "contexts": [
+          "workspace",
+          "tab",
+          "pane",
           "global"
         ],
         "command": [
-          "bash",
-          "navigate.sh",
-          "left"
+          "herdr",
+          "plugin",
+          "pane",
+          "open",
+          "--plugin",
+          "ramarivera.palette",
+          "--entrypoint",
+          "shell",
+          "--placement",
+          "overlay",
+          "--focus"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "overlay",
+        "title": "Palette",
+        "placement": "overlay",
+        "command": [
+          "target/release/herdr-palette"
         ]
       },
       {
-        "id": "right",
-        "title": "Navigate right (Vim/herdr)",
-        "contexts": [
-          "global"
-        ],
+        "id": "shell",
+        "title": "Palette Shell",
+        "placement": "overlay",
         "command": [
-          "bash",
-          "navigate.sh",
-          "right"
-        ]
-      },
-      {
-        "id": "up",
-        "title": "Navigate up (Vim/herdr)",
-        "contexts": [
-          "global"
-        ],
-        "command": [
-          "bash",
-          "navigate.sh",
-          "up"
+          "target/release/herdr-palette",
+          "--shell"
         ]
       }
     ],
     "source": {
       "kind": "github",
-      "owner": "paulbkim-dev",
-      "repo": "vim-herdr-navigation",
-      "resolved_commit": "53e318c772c4d3b7fbd904ac43bcf3e5b5d8b244",
-      "managed_path": "/Users/jason/.config/herdr/plugins/github/vim-herdr-navigation-a8bf42123d81",
-      "installed_unix_ms": 1785322428336
+      "owner": "ramarivera",
+      "repo": "herdr-palette",
+      "resolved_commit": "0478a908afd4f0775d8165765dcdc7d70a6e5ac1",
+      "managed_path": "/Users/jason/.config/herdr/plugins/github/ramarivera.palette-3e57d9104d91",
+      "installed_unix_ms": 1787187039331
     }
   }
 ]
