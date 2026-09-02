@@ -57,12 +57,44 @@ return {
     },
   },
 
-  "christoomey/vim-tmux-navigator",
-  keys = {
-    { "<C-h>", "<cmd>TmuxNavigateLeft<cr>", desc = "Navigate Left" },
-    { "<C-j>", "<cmd>TmuxNavigateDown<cr>", desc = "Navigate Down" },
-    { "<C-k>", "<cmd>TmuxNavigateUp<cr>", desc = "Navigate Up" },
-    { "<C-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Navigate Right" },
+  {
+    "christoomey/vim-tmux-navigator",
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
+      "TmuxNavigatorProcessList",
+    },
+    keys = {
+      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+    },
+  },
+
+  -- Herdr/Nvim Navigation
+  {
+    "aimdevlee/herdr-nvim-nav",
+    dependencies = { "christoomey/vim-tmux-navigator" }, -- omit if with_tmux = false
+    config = function()
+      require("herdr-nvim-nav").setup({
+        with_tmux = nil, -- nil = auto-detect $TMUX; true/false to force
+        keymaps = { -- lhs list per direction; {} disables a direction
+          left = { "<C-h>", "<C-Left>" },
+          down = { "<C-j>", "<C-Down>" },
+          up = { "<C-k>", "<C-Up>" },
+          right = { "<C-l>", "<C-Right>" },
+        },
+        socket_path = nil, -- default: $HERDR_SOCKET_PATH or ~/.config/herdr/herdr.sock
+        cache_dir = nil, -- default: $XDG_CACHE_HOME or ~/.cache
+        herdr_bin = nil, -- default: $HERDR_BIN_PATH or "herdr"
+        socket_timeout_ms = 150,
+      })
+    end,
   },
 
   -- Create annotations with one keybind, and jump your cursor in the inserted annotation
