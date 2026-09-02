@@ -20,7 +20,6 @@
     }
   },
   "plugin": [
-    "file:///Users/jason/.config/opencode/plugins/ping-island.js",
     "oh-my-opencode-slim"
   ]
 }

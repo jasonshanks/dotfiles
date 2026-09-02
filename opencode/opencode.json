@@ -11,7 +11,39 @@
       "disable": true
     }
   },
-  "lsp": true,
+  "lsp": {
+    "php": {
+      "command": ["intelephense", "--stdio"],
+      "extensions": [".php"],
+      "initialization": {
+        "intelephense": {
+          "stubs": [
+            "wordpress",
+            "wp-cli",
+            "woocommerce",
+            "acf-pro",
+            "/Users/jason/.composer/vendor/paulthewalton/acf-stubs"
+          ],
+          "files": {
+            "maxSize": 5000000
+          },
+          "environment": {
+            "phpVersion": "8.2"
+          },
+          "diagnostics": {
+            "enable": true
+          },
+          "completion": {
+            "fullyQualifyGlobalConstantsAndFunctions": true,
+            "insertUseDeclaration": true
+          },
+          "format": {
+            "enable": false
+          }
+        }
+      }
+    }
+  },
   "mcp": {
     "context7": {
       "enabled": true,
@@ -20,10 +52,13 @@
       },
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
+    },
+    "figma-desktop": {
+      "enabled": true,
+      "type": "remote",
+      "url": "http://127.0.0.1:3845/mcp",
+      "timeout": 30000
     }
   },
-  "plugin": [
-    "file:///Users/jason/.config/opencode/plugins/ping-island.js",
-    "oh-my-opencode-slim"
-  ]
+  "plugin": ["oh-my-opencode-slim"]
 }
