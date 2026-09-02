@@ -35,6 +35,7 @@
       "designer": {
         "model": "opencode/big-pickle",
         "skills": [
+          "agent-browser",
           "make-interfaces-feel-better",
           "better-icons",
           "vue",
@@ -65,9 +66,7 @@
       "mcps": []
     }
   },
-  "tmux": {
-    "enabled": true,
-    "layout": "main-vertical",
-    "main_pane_size": 60
+  "multiplexer": {
+    "type": "none"
   }
 }
