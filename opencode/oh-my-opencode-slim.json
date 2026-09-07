@@ -33,7 +33,7 @@
         "mcps": ["codegraph"]
       },
       "designer": {
-        "model": "opencode/big-pickle",
+        "model": "opencode/muse-spark-1.2-contributor-free",
         "skills": [
           "agent-browser",
           "make-interfaces-feel-better",
