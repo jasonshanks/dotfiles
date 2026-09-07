@@ -7,7 +7,7 @@ appearance = "system"
 play_sounds = true
 url_scheme_enabled = true
 show_menu_bar_icon = true
-start_at_login = false
+start_at_login = true
 export_location = "~/Desktop/Screen Captures"
 
 [updates]
@@ -101,7 +101,7 @@ hold_duration = 0.3
 enabled = true
 position = "bottomRight"
 auto_dismiss = true
-auto_dismiss_delay = 10.0
+auto_dismiss_delay = 30.0
 pause_countdown_on_hover = true
 overlay_scale = 1.0
 drag_drop = true
