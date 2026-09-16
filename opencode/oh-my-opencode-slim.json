@@ -5,7 +5,8 @@
   "companion": {
     "enabled": true,
     "position": "bottom-left",
-    "size": "small"
+    "size": "small",
+    "loopStyle": "smooth"
   },
   "presets": {
     "opencode": {

@@ -13,8 +13,13 @@
   },
   "lsp": {
     "php": {
-      "command": ["intelephense", "--stdio"],
-      "extensions": [".php"],
+      "command": [
+        "intelephense",
+        "--stdio"
+      ],
+      "extensions": [
+        ".php"
+      ],
       "initialization": {
         "intelephense": {
           "stubs": [
@@ -60,5 +65,7 @@
       "timeout": 30000
     }
   },
-  "plugin": ["oh-my-opencode-slim"]
+  "plugin": [
+    "oh-my-opencode-slim"
+  ]
 }
