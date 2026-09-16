@@ -217,7 +217,7 @@ key = ""
 modifiers = []
 
 [shortcuts.global.annotate]
-enabled = true
+enabled = false
 key = "A"
 modifiers = ["command", "shift"]
 
@@ -254,7 +254,7 @@ modifiers = ["command", "shift"]
 [shortcuts.global.history]
 enabled = true
 key = "H"
-modifiers = ["command", "shift"]
+modifiers = ["command", "shift", "option", "control"]
 
 [shortcuts.overlay.area_application_capture]
 enabled = true
