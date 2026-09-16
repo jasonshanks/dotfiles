@@ -70,6 +70,7 @@ set -g fish_color_command --bold
 
 ### Oh My Opencode Slim sub-agent support
 set -gx OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS true
+set -gx OPENCODE_ENABLE_EXA 1
 
 ### Fish keybindings
 # fish_vi_key_bindings
