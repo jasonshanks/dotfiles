@@ -14,7 +14,7 @@ opt.fileencoding = "utf-8"
 
 -- lines
 opt.number = true -- show line numbers
--- opt.relativenumber = true -- use relative line numbers NOTE: an automcommmand enables this only in visual modes
+opt.relativenumber = true -- use relative line numbers NOTE: this can be overwritten by an automcommand that enables this only in visual modes [nvim/lua/config/autocmds.lua:41]
 opt.cursorline = true -- highlight current line
 opt.wrap = false -- No Wrap lines
 

@@ -39,21 +39,22 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 --  Enable Relative line numbers only in Visual modes
-vim.api.nvim_create_autocmd("ModeChanged", {
-  pattern = "*:*v", -- Triggered when entering any visual mode
-  callback = function()
-    if vim.fn.mode():find("[vV\022]") then -- Check for visual modes (v, V, or Ctrl-V)
-      vim.opt.relativenumber = true
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd("ModeChanged", {
-  pattern = "*:[^v]*", -- Triggered when leaving visual modes
-  callback = function()
-    vim.opt.relativenumber = false
-  end,
-})
+--  to default to all modes, comment this out and ensure relativenumber is uncommented in [nvim/lua/config/options.lua]
+-- vim.api.nvim_create_autocmd("ModeChanged", {
+--   pattern = "*:*v", -- Triggered when entering any visual mode
+--   callback = function()
+--     if vim.fn.mode():find("[vV\022]") then -- Check for visual modes (v, V, or Ctrl-V)
+--       vim.opt.relativenumber = true
+--     end
+--   end,
+-- })
+--
+-- vim.api.nvim_create_autocmd("ModeChanged", {
+-- --   pattern = "*:[^v]*", -- Triggered when leaving visual modes
+--   callback = function()
+--     vim.opt.relativenumber = false
+--   end,
+-- })
 
 -- ============================================================================
 -- FILE TYPE SPECIFIC AUTOCOMMANDS
