@@ -83,13 +83,13 @@
     }
   },
   {
-    "plugin_id": "ramarivera.palette",
-    "name": "Herdr Palette",
-    "version": "0.1.10",
-    "min_herdr_version": "0.7.0",
-    "description": "A Raycast/Linear-style fuzzy command palette for Herdr.",
-    "manifest_path": "/Users/jason/.dotfiles/herdr/plugins/github/ramarivera.palette-3e57d9104d91/herdr-plugin.toml",
-    "plugin_root": "/Users/jason/.dotfiles/herdr/plugins/github/ramarivera.palette-3e57d9104d91",
+    "plugin_id": "herdr-workspacer",
+    "name": "Herdr Workspacer",
+    "version": "0.3.0",
+    "min_herdr_version": "0.8.0",
+    "description": "MRU fuzzy workspace picker for Herdr and zoxide directories.",
+    "manifest_path": "/Users/jason/.dotfiles/herdr/plugins/github/herdr-workspacer-55fa6f021c4f/herdr-plugin.toml",
+    "plugin_root": "/Users/jason/.dotfiles/herdr/plugins/github/herdr-workspacer-55fa6f021c4f",
     "enabled": true,
     "platforms": [
       "linux",
@@ -97,91 +97,56 @@
     ],
     "build": [
       {
-        "platforms": [
-          "linux",
-          "macos"
-        ],
         "command": [
-          "cargo",
-          "build",
-          "--release"
+          "/bin/sh",
+          "scripts/fetch-or-build.sh"
         ]
       }
     ],
     "actions": [
       {
         "id": "open",
-        "title": "Open palette",
+        "title": "Open workspace picker",
         "contexts": [
-          "workspace",
-          "tab",
-          "pane",
-          "global"
+          "global",
+          "workspace"
         ],
         "command": [
-          "herdr",
-          "plugin",
-          "pane",
-          "open",
-          "--plugin",
-          "ramarivera.palette",
-          "--entrypoint",
-          "overlay",
-          "--placement",
-          "overlay",
-          "--focus"
+          "bin/herdr-workspacer",
+          "open"
         ]
-      },
+      }
+    ],
+    "events": [
       {
-        "id": "shell",
-        "title": "Open palette shell",
-        "contexts": [
-          "workspace",
-          "tab",
-          "pane",
-          "global"
-        ],
+        "on": "workspace.focused",
         "command": [
-          "herdr",
-          "plugin",
-          "pane",
-          "open",
-          "--plugin",
-          "ramarivera.palette",
-          "--entrypoint",
-          "shell",
-          "--placement",
-          "overlay",
-          "--focus"
+          "bin/herdr-workspacer",
+          "record-focus"
         ]
       }
     ],
     "panes": [
       {
-        "id": "overlay",
-        "title": "Palette",
-        "placement": "overlay",
+        "id": "picker",
+        "title": "Workspace",
+        "placement": "popup",
+        "width": "55%",
+        "height": "45%",
         "command": [
-          "target/release/herdr-palette"
-        ]
-      },
-      {
-        "id": "shell",
-        "title": "Palette Shell",
-        "placement": "overlay",
-        "command": [
-          "target/release/herdr-palette",
-          "--shell"
+          "/bin/sh",
+          "-c",
+          "exec \"$HERDR_PLUGIN_ROOT/bin/herdr-workspacer\" picker"
         ]
       }
     ],
     "source": {
       "kind": "github",
-      "owner": "ramarivera",
-      "repo": "herdr-palette",
-      "resolved_commit": "0478a908afd4f0775d8165765dcdc7d70a6e5ac1",
-      "managed_path": "/Users/jason/.config/herdr/plugins/github/ramarivera.palette-3e57d9104d91",
-      "installed_unix_ms": 1787187039331
+      "owner": "mcuste",
+      "repo": "herdr-workspacer",
+      "resolved_commit": "1d56e0336adb983835755a21b148851db06e9cbe",
+      "managed_path": "/Users/jason/.config/herdr/plugins/github/herdr-workspacer-55fa6f021c4f",
+      "installed_unix_ms": 1789350949940
     }
   }
 ]

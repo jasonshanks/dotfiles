@@ -3,6 +3,16 @@ onboarding = false
 [ui.toast]
 delivery = "system"
 
+[keys]
+prefix = "ctrl+s"
+toggle_sidebar = ["prefix+b", "cmd+alt+s"]
+goto = ["prefix+g"]
+new_tab = ["prefix+c", "cmd+t"]
+close_tab = ["prefix+shift+x", "cmd+w"]
+previous_tab = ["prefix+p", "prefix+h"]
+next_tab = ["prefix+n", "prefix+l"]
+split_horizontal = "prefix+minus"
+split_vertical = "prefix+|"
 
 [[keys.command]]
 key = "ctrl+h"
@@ -25,7 +35,7 @@ type = "plugin_action"
 command = "herdr-nvim-nav.right"
 
 [[keys.command]]
-key = "prefix+space"
+key = ["prefix+space"]
 type = "plugin_action"
 command = "herdr-workspacer.open"
 description = "open workspace picker"
