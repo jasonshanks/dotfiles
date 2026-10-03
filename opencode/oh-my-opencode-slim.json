@@ -3,7 +3,7 @@
   "preset": "opencode",
   "showStartupToast": false,
   "companion": {
-    "enabled": true,
+    "enabled": false,
     "position": "bottom-left",
     "size": "small",
     "loopStyle": "smooth"
@@ -34,9 +34,10 @@
         "mcps": ["codegraph"]
       },
       "designer": {
-        "model": "opencode/muse-spark-1.2-contributor-free",
+        "model": "opencode/mimo-v2.6-flash-free",
         "skills": [
           "agent-browser",
+          "frontend-design",
           "make-interfaces-feel-better",
           "better-icons",
           "vue",
