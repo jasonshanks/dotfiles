@@ -11,14 +11,19 @@
   "presets": {
     "opencode": {
       "orchestrator": {
-        "model": "opencode/big-pickle",
+        "model": "opencode/mimo-v2.6-flash-free",
         "skills": ["*", "!make-interfaces-feel-better"],
         "mcps": ["*", "!context7", "!gh_app", "!websearch"]
       },
       "oracle": {
         "model": "opencode/big-pickle",
         "variant": "high",
-        "skills": ["ce-brainstorm", "workers-best-practices", "web-perf"],
+        "skills": [
+          "simplify",
+          "ce-brainstorm",
+          "workers-best-practices",
+          "web-perf"
+        ],
         "mcps": ["codegraph", "searxng", "crawl4ai"]
       },
       "librarian": {
@@ -31,7 +36,7 @@
         "model": "opencode/big-pickle",
         "variant": "low",
         "skills": [],
-        "mcps": ["codegraph"]
+        "mcps": ["codegraph", "systemone"]
       },
       "designer": {
         "model": "opencode/mimo-v2.6-flash-free",
@@ -53,7 +58,7 @@
         "model": "opencode/big-pickle",
         "variant": "low",
         "skills": ["vitest", "pnpm", "vite", "tsdown"],
-        "mcps": ["codegraph", "searxng", "crawl4ai"]
+        "mcps": ["codegraph", "searxng", "crawl4ai", "systemone"]
       }
     }
   },

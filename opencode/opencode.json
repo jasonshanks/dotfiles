@@ -63,6 +63,19 @@
       "type": "remote",
       "url": "http://127.0.0.1:3845/mcp",
       "timeout": 30000
+    },
+    "systemone": {
+      "enabled": true,
+      "type": "local",
+      "command": [
+        "node",
+        "/Users/jason/.dotfiles/opencode/mcp/ollama-systemone/server.js"
+      ],
+      "environment": {
+        "OLLAMA_HOST": "http://localhost:11434",
+        "SYSTEMONE_MODEL": "nimble:latest",
+        "SYSTEMONE_TIMEOUT": "30000"
+      }
     }
   },
   "plugin": [
