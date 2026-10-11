@@ -13,13 +13,8 @@
   },
   "lsp": {
     "php": {
-      "command": [
-        "intelephense",
-        "--stdio"
-      ],
-      "extensions": [
-        ".php"
-      ],
+      "command": ["intelephense", "--stdio"],
+      "extensions": [".php"],
       "initialization": {
         "intelephense": {
           "stubs": [
@@ -59,7 +54,7 @@
       "url": "https://mcp.context7.com/mcp"
     },
     "figma-desktop": {
-      "enabled": true,
+      "enabled": false,
       "type": "remote",
       "url": "http://127.0.0.1:3845/mcp",
       "timeout": 30000
@@ -78,7 +73,7 @@
       }
     }
   },
-  "plugin": [
+  "plugins": [
     "oh-my-opencode-slim"
   ]
 }
