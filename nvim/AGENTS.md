@@ -25,33 +25,36 @@
 - Prefer LazyVim's default configurations when possible
 - Keep plugin configurations modular and focused
 - Use `vim.notify()` for user notifications
-## Opencode Integration (Critical)
+## Opencode Integration (Critical) — v2 Architecture
 
-The `lua/plugins/ai.lua` file contains a per-project OpenCode server manager with these invariants:
+The `lua/plugins/ai.lua` file contains a per-project OpenCode server manager for **OpenCode v2** (server/TUI split with basic auth).
 
-### Server Discovery
-- **Port must be pinned**: OpenCode 1.18.34 writes no `~/.local/state/opencode/service.json`, so auto-discovery fails. Always pass `--port <N>`.
-- **Project isolation**: `x-opencode-directory` header is global in the event stream (`/api/event`) but regular API requests are directory-scoped. Each project gets its own server on a deterministic port (hash 4100-4999).
-- **No bare listener**: Running `opencode` or `opencode --session ...` exposes no TCP listener. You MUST pass `--port <N>` to reach the HTTP API.
-- **Realpath keys**: State keys are the realpath of the project directory. `vim.fn.getcwd()` returns realpath, and `/api/command`/session endpoints use directory headers. Symlink forms do not match.
-- **Probe truth**: `probe(port, cwd)` calls `GET /api/command` with `x-opencode-directory: <realpath>` and only adopts a URL if `location.directory` matches that realpath. Never trust pane liveness alone.
+### Server Discovery (v2)
+- **Port must be pinned**: v2 has no auto-discovery. Always pass `--port <N>` to `opencode serve`.
+- **Server/TUI split**: Server runs `opencode serve --port N` (detached, prints `server password <token>` to stdout). TUI runs `opencode --server http://127.0.0.1:N` with `OPENCODE_PASSWORD` env var.
+- **Basic auth**: All API calls use `-u opencode:<password>`. The password is captured once at server start and persisted in state.
+- **Project isolation**: `x-opencode-directory` header scopes regular API requests. Each project gets its own server on a deterministic port (hash 4100-4999).
+- **Realpath keys**: State keys are the realpath of the project directory. `vim.fn.getcwd()` returns realpath; symlink forms do not match.
+- **Probe truth**: `probe(entry, cwd)` calls `GET /api/command` with auth + `x-opencode-directory`. Returns `(dir, listening)` tuple — `listening=true` for foreign servers (401), `dir` non-nil only when auth succeeds. Never trust pane liveness alone.
 
-### Sessions & Forking
-- **Targeting**: `Server:resolve_session()` picks the newest non-archived **root** session (`parentID=null`) for the current directory, sorted by `updated`. This is used by both `api/prompt.lua` and `api/command.lua` — every nvim action targets it.
-- **Restoring doesn't bump `updated`**: `opencode --port N -s <id>` alone does not change `time.created`/`time.updated`. Neither does `PATCH /api/session/<id>` (unchanged title/archived round-trips are no-ops). As a result, a restored session will NOT become the target unless we fork it.
-- **Fork is CLI-only**: `opencode --port N -s <id> --fork` creates a **new root** session with `(fork #n)` in its title and a current `created` time, so it becomes the newest. There is no HTTP fork endpoint (`POST /api/session/<id>/fork` returns the SPA HTML). Fork detection polls `/api/session?directory=<realpath>&order=desc&parentID=null` and looks for a new root session whose `title` contains `(fork #`.
-- **Manual servers are never killed**: If a live server exists but was not started by this manager (no recorded pane/state for that key), `M.restore_session` refuses to kill it and prints the exact command to run in a split instead.
-- **Stale-pane hazard**: `ensure_opencode()` must probe before returning when a pane is recorded. A surviving shell with a dead opencode child looks "alive" but answers no probe — the entry must be cleared and respawned.
-- **Snack fallback**: If no multiplexer is usable, fall back to `snacks.terminal.open({ "opencode", "--port", port, ... }, { cwd = cwd, win = { position = "right" } })`. Never spawn bare `opencode` without `--port`.
+### Sessions & Forking (v2)
+- **Targeting**: `Server:resolve_session()` picks newest non-archived **root** session (`parentID=null`) for cwd, sorted by `updated`. Used by both `api/prompt.lua` and `api/command.lua`.
+- **Forking is API-only**: `POST /api/session` with `{"parentID": "<id>"}` returns new child session ID. No CLI `--fork` flag in v2.
+- **Fork detection**: Polls `/api/session?directory=<realpath>&order=desc&parentID=<id>` matching `parentID == session_id` (not title).
+- **Manual servers are never killed**: If a live server exists but was not started by this manager (no recorded pane/state for that key), `M.restore_session` refuses to kill it and prints the exact command to run manually.
+- **Stale-pane hazard**: `ensure_opencode()` must probe before trusting a recorded pane. A surviving shell with a dead opencode child looks "alive" but answers no probe — the entry is cleared and respawned.
+- **Snack fallback**: If no multiplexer usable, `snacks.terminal.open(argv, { cwd, win={position="right"} })` with `argv = {"env","OPENCODE_PASSWORD=...","opencode","--server","http://127.0.0.1:N",...}`.
 
 ### UI Entrypoints
-- `:OpencodeRestore <ses_id>` — forks and adopts a session for the current project. Tab-completes via `opencode session list --format json`.
-- `<leader>os` — Snacks picker of this project's recent sessions (filtered by `directory` from the CLI payload), confirms to fork the chosen session.
+- `:OpencodeRestore <ses_id>` — forks via API, adopts session. Tab-completes via `opencode session list --format json`.
+- `<leader>os` — Snacks picker of project sessions (filtered by `directory` from CLI payload), confirms to fork.
 
 ### Implementation Notes
-- `spawn_tui(entry, cwd, extra)` threads CLI args to all backends (tmux `split-window … -- <argv>`, herdr `pane run <pane> <argv>`, Snacks `argv` passed directly). Uses `unpack` shim (`unpack = unpack or table.unpack`) for LuaJIT.
-- `restart_pane()` reloads a managed server in-place: tmux `respawn-pane -k`, herdr sends `C-c` then waits for the port to free before `pane run`, Snacks sends `C-c` then re-runs the line.
-- `rel_time(ms)` uses `os.time()` (wall-clock) against epoch-millisecond `updated`/`created`; `vim.uv.now()` is monotonic and cannot be differenced against those values.
-- `vim.notify` defaults to `INFO`; only actual failures use `ERROR`. The success messages ("reloading…", "forked … as …") must remain INFO to avoid aborting command callbacks.
-- `Snacks.picker.pick` expects `(opts)` with `opts.items` when passing custom items. Do **not** pass the items list as the first argument.
-- `fetch_sessions()` uses `vim.fn.jobstart` with `cwd` to avoid blocking; completion uses `vim.system` since synchronous `system` variants behave differently here.
+- `start_server(entry, cwd)` starts `opencode serve --port N` detached, captures password from stdout log file, stores PID for cleanup.
+- `restart_pane(entry, cwd, args)` stops server (SIGTERM PID) + TUI (C-c), waits for port free, starts fresh server, restarts TUI with new args. For herdr: closes old pane, creates fresh split.
+- `tui_argv(entry, extra)` returns `{"env","OPENCODE_PASSWORD=...","opencode","--server","http://127.0.0.1:N",...}` — portable across tmux/herdr/Snacks.
+- `adopt(url, password)` sets plugin `server.url` and `server.password` so it can authenticate.
+- `rel_time(ms)` uses `os.time()` (wall-clock) against epoch-millisecond `updated`/`created`; `vim.uv.now()` is monotonic.
+- `vim.notify` defaults to `INFO`; only actual failures use `ERROR`.
+- `Snacks.picker.pick` expects `(opts)` with `opts.items` — do not pass items list as first argument.
+- `fetch_sessions()` uses `vim.fn.jobstart` with `cwd` to avoid blocking; completion uses `vim.system`.

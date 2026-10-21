@@ -9,6 +9,8 @@ local unpack = unpack or table.unpack
 
 ---@class ai.OpencodeEntry
 ---@field port? integer
+---@field password? string basic-auth password printed by our `opencode serve`
+---@field server_pid? integer pid of our detached `opencode serve` (survives nvim)
 ---@field mux? "tmux"|"herdr"|"snacks"
 ---@field pane? string
 ---@field src? string herdr only: the pane the TUI was split from
@@ -77,28 +79,43 @@ local function same_project(dir, key, cwd)
     or served:sub(1, #root + 1) == root .. "/"
 end
 
----Ask a port which project it serves: the directory it answers with, or nil when
----nothing is listening there.
----@param port integer
+---Ask a port which project it serves, authenticating with the entry's password.
+---A server that rejects our credentials still proves something is listening there,
+---so `listening` is true for foreign servers too — only `dir` is ours to adopt.
+---@param entry ai.OpencodeEntry
 ---@param cwd string
----@return string?
-local function probe(port, cwd)
-  local ok, reply = pcall(vim.fn.system, {
-    "curl",
-    "-s",
-    "-m",
-    "2",
+---@return string? dir the served directory, when the server authenticates us
+---@return boolean listening true when anything answers the port
+local function probe(entry, cwd)
+  local port = tonumber(entry.port)
+  if not port then
+    return nil, false
+  end
+  local cmd = { "curl", "-s", "-m", "2", "-w", "\n%{http_code}" }
+  if type(entry.password) == "string" and entry.password ~= "" then
+    vim.list_extend(cmd, { "-u", "opencode:" .. entry.password })
+  end
+  vim.list_extend(cmd, {
     "-H",
     "x-opencode-directory: " .. vim.uri_encode(cwd),
-    "http://" .. OC_HOST .. ":" .. port .. "/api/command",
+    oc_url(port) .. "/api/command",
   })
-  if not ok or type(reply) ~= "string" or vim.trim(reply) == "" then
-    return nil
+  local ok, reply = pcall(vim.fn.system, cmd)
+  if not ok or type(reply) ~= "string" then
+    return nil, false
   end
-  local decoded_ok, decoded = pcall(vim.json.decode, reply)
+  local body, code = reply:match("^(.*)\n(%d%d%d)$")
+  if not body or code == "000" then
+    return nil, false
+  end
+  if code ~= "200" then
+    -- 401 etc.: something is listening, but it is not ours to adopt.
+    return nil, true
+  end
+  local decoded_ok, decoded = pcall(vim.json.decode, body)
   local location = decoded_ok and type(decoded) == "table" and decoded.location
   local dir = type(location) == "table" and location.directory
-  return type(dir) == "string" and dir ~= "" and dir or nil
+  return type(dir) == "string" and dir ~= "" and dir or nil, true
 end
 
 ---@return table<string, ai.OpencodeEntry>
@@ -117,8 +134,8 @@ local function write_state(state)
   pcall(vim.fn.writefile, { vim.fn.json_encode(state) }, OC_STATE_PATH)
 end
 
----Persisted port first while it still serves this project, else the first free (or
----self-serving) slot in the window starting at the hashed candidate.
+---Persisted port first while it still serves this project (or is free), else the
+---first free (or self-serving) slot in the window starting at the hashed candidate.
 ---@param key string
 ---@param cwd string
 ---@param entry ai.OpencodeEntry?
@@ -126,8 +143,8 @@ end
 local function resolve_port(key, cwd, entry)
   local persisted = tonumber(entry and entry.port)
   if persisted then
-    local dir = probe(persisted, cwd)
-    if not dir or same_project(dir, key, cwd) then
+    local dir, listening = probe(entry, cwd)
+    if not listening or (dir and same_project(dir, key, cwd)) then
       return persisted
     end
   end
@@ -136,8 +153,9 @@ local function resolve_port(key, cwd, entry)
   for offset = 0, OC_PORT_SLOTS - 1 do
     local port = candidate + offset
     if port <= OC_PORT_MAX then
-      local dir = probe(port, cwd)
-      if not dir or same_project(dir, key, cwd) then
+      -- No password for unknown candidates: a 401 still means "occupied, skip".
+      local dir, listening = probe({ port = port }, cwd)
+      if not listening or (dir and same_project(dir, key, cwd)) then
         return port
       end
     end
@@ -313,16 +331,97 @@ local function detach(cmd, entry, capture)
   )
 end
 
----Start this project's opencode TUI in a multiplexer split, degrading to a Snacks
----terminal split when no multiplexer CLI is usable.
+---TUI argv for this project's server. The TUI is a pure client in v2: it attaches
+---with `--server <url>` and authenticates via `OPENCODE_PASSWORD` in its env
+---(`env` keeps that portable across tmux/herdr/Snacks, which all exec argv).
+---@param entry ai.OpencodeEntry
+---@param extra? string[] extra CLI args appended after `--server <url>`
+---@return string[]
+local function tui_argv(entry, extra)
+  local argv = { "env", "OPENCODE_PASSWORD=" .. (entry.password or ""), "opencode", "--server", oc_url(entry.port) }
+  vim.list_extend(argv, extra or {})
+  return argv
+end
+
+---Start `opencode serve` detached on the entry's port and capture the password it
+---prints ("server password <token>" on stdout). An already-authenticating server is
+---adopted instead of raced.
 ---@param entry ai.OpencodeEntry
 ---@param cwd string
----@param extra? string[] extra CLI args appended after `--port <n>`
 ---@return boolean started
-local function spawn_tui(entry, cwd, extra)
-  -- The TUI *is* the server, so every extra arg has to survive in each backend's argv.
-  local argv = { "opencode", "--port", tostring(entry.port) }
-  vim.list_extend(argv, extra or {})
+local function start_server(entry, cwd)
+  if probe(entry, cwd) then
+    return true
+  end
+
+  -- Start the server detached, redirecting stdout/stderr to a temp file so we can
+  -- capture the password. The password is printed once right after the listener binds.
+  local log_file = vim.fs.joinpath(vim.fn.stdpath("cache"), "opencode_" .. entry.port .. ".log")
+  local cmd = string.format("opencode serve --port %d >%s 2>&1 &", entry.port, vim.fn.shellescape(log_file))
+
+  -- Background shell command returns immediately; ignore its exit code.
+  vim.fn.system(cmd)
+
+  -- Give the server a moment to start and write the password to the log file.
+  local password ---@type string?
+  local got = vim.wait(10000, function()
+    local lines = vim.fn.readfile(log_file, "", 100)
+    if type(lines) == "table" then
+      for _, line in ipairs(lines) do
+        local token = tostring(line or ""):match("server password%s+(%S+)")
+        if token then
+          password = token
+          return true
+        end
+      end
+    end
+    return false
+  end, 100)
+
+  -- Try to get the PID from the log file or by finding the process on the port
+  local pid ---@type integer?
+  if password then
+    -- Find the PID by checking what's listening on the port
+    local lsof_out = vim.fn.systemlist({ "lsof", "-nP", "-iTCP:" .. entry.port, "-sTCP:LISTEN", "-t" })
+    if type(lsof_out) == "table" and #lsof_out > 0 then
+      pid = tonumber(lsof_out[1])
+    end
+  end
+
+  -- Clean up log file
+  pcall(vim.fn.delete, log_file)
+
+  if not password or not pid then
+    return false
+  end
+
+  entry.server_pid = pid
+  entry.password = password
+  return true
+end
+
+---Stop the detached server this entry owns, if it is still ours to stop.
+---@param entry ai.OpencodeEntry
+local function stop_server(entry)
+  local pid = tonumber(entry.server_pid)
+  entry.server_pid = nil
+  if pid then
+    -- SIGTERM lets opencode shut down cleanly; a stale pid just errors into pcall.
+    local ok, proc = pcall(vim.system, { "kill", "-TERM", tostring(pid) })
+    if ok then
+      pcall(proc.wait, proc, 3000)
+    end
+  end
+end
+
+---Open this project's opencode TUI in a multiplexer split, degrading to a Snacks
+---terminal split when no multiplexer CLI is usable. The server must already be up.
+---@param entry ai.OpencodeEntry
+---@param cwd string
+---@param extra? string[] extra CLI args appended after `--server <url>`
+---@return boolean started
+local function start_tui(entry, cwd, extra)
+  local argv = tui_argv(entry, extra)
   entry.pane = ""
 
   if entry.mux == "tmux" then
@@ -354,7 +453,12 @@ local function spawn_tui(entry, cwd, extra)
         return entry.pane ~= "" and pane_alive("herdr", entry.pane)
       end, 100)
     if ready then
-      return detach({ "herdr", "pane", "run", entry.pane, unpack(argv) }, entry)
+      -- `herdr pane run` parses global flags (like --session) before the command,
+      -- so we use send-text + send-keys to send the raw command line.
+      local cmd_line = table.concat(argv, " ")
+      pcall(vim.fn.system, { "herdr", "--session", "default", "pane", "send-text", entry.pane, cmd_line })
+      pcall(vim.fn.system, { "herdr", "--session", "default", "pane", "send-keys", entry.pane, "enter" })
+      return true
     end
   end
 
@@ -366,12 +470,29 @@ local function spawn_tui(entry, cwd, extra)
   return (pcall(terminal.open, argv, { cwd = cwd, win = { position = "right" } }))
 end
 
----Point the plugin at `url`. `opencode.config` memoises its merged opts on first
----require, so the cached table has to move together with the global.
+---Start this project's opencode server in the background and its TUI in a
+---multiplexer split, degrading to a Snacks terminal split when no multiplexer CLI
+---is usable.
+---@param entry ai.OpencodeEntry
+---@param cwd string
+---@param extra? string[] extra CLI args appended after `--server <url>`
+---@return boolean started
+local function spawn_tui(entry, cwd, extra)
+  if not start_server(entry, cwd) then
+    return false
+  end
+  return start_tui(entry, cwd, extra)
+end
+
+---Point the plugin at `url`, authenticating with `password` when the server
+---requires it. `opencode.config` memoises its merged opts on first require, so the
+---cached table has to move together with the global.
 ---@param url string
+---@param password? string
 ---@return string url
-local function adopt(url)
-  vim.g.opencode_opts = vim.tbl_deep_extend("force", vim.g.opencode_opts or {}, { server = { url = url } })
+local function adopt(url, password)
+  vim.g.opencode_opts =
+    vim.tbl_deep_extend("force", vim.g.opencode_opts or {}, { server = { url = url, password = password } })
 
   local ok, config = pcall(require, "opencode.config")
   if not ok or type(config.opts) ~= "table" then
@@ -379,6 +500,7 @@ local function adopt(url)
   end
   config.opts.server = config.opts.server or {}
   config.opts.server.url = url
+  config.opts.server.password = password
 
   local cached_ok, connected = pcall(function()
     return require("opencode.server").connected
@@ -406,13 +528,15 @@ local function ensure_opencode()
 
   -- A live pane is not proof of a live server: the pane outlives its opencode child when
   -- opencode crashes or the user quits it, leaving a shell behind that answers no probe.
-  -- Trust the recorded pane only once the recorded port actually answers.
+  -- Trust the recorded pane only once the recorded port actually answers our password.
   if pane_alive(entry.mux, entry.pane) then
     local recorded = tonumber(entry.port)
-    if recorded and probe(recorded, cwd) then
+    if recorded and probe(entry, cwd) then
       focus_pane(entry)
       entry.port, entry.url = recorded, oc_url(recorded)
-      return adopt(entry.url)
+      state[key] = entry
+      write_state(state)
+      return adopt(entry.url, entry.password)
     end
 
     -- Stale pane: forget it so a fresh TUI is spawned instead of a second one.
@@ -428,17 +552,36 @@ local function ensure_opencode()
     )
     return nil
   end
+  if port ~= tonumber(entry.port) then
+    -- Credentials/pid belong to the old port's server, not this one.
+    entry.password, entry.server_pid = nil, nil
+  end
   entry.port = port
 
-  -- A server already answering here is adopted as-is; a second TUI would race it.
-  if not probe(port, cwd) then
+  -- Server already answering with our credentials: adopt it.
+  local server_live = probe(entry, cwd)
+  if server_live then
+    -- Server is up, but we need a TUI pane if we don't have one.
+    if entry.pane == "" or not pane_alive(entry.mux, entry.pane) then
+      entry.mux = mux_kind()
+      if not start_tui(entry, cwd) then
+        notify("could not start an opencode TUI for " .. key, vim.log.levels.ERROR)
+        return nil
+      end
+      -- Wait briefly for TUI to attach
+      vim.wait(3000, function()
+        return pane_alive(entry.mux, entry.pane)
+      end, 100)
+    end
+  else
+    -- No server: start server + TUI
     entry.mux = mux_kind()
     if not spawn_tui(entry, cwd) then
-      notify("could not start an opencode TUI for " .. key, vim.log.levels.ERROR)
+      notify("could not start an opencode server/TUI for " .. key, vim.log.levels.ERROR)
       return nil
     end
     if not vim.wait(15000, function()
-      return probe(port, cwd) ~= nil
+      return (probe(entry, cwd)) ~= nil
     end, 300) then
       notify("no opencode server answered on port " .. port, vim.log.levels.ERROR)
       return nil
@@ -448,80 +591,148 @@ local function ensure_opencode()
   entry.url = oc_url(port)
   state[key] = entry
   write_state(state)
-  return adopt(entry.url)
+  return adopt(entry.url, entry.password)
 end
 
 local M = {}
 
----Restart the opencode child inside a pane recorded in *our* state file: the child is
----terminated first so the replacement can bind the freed port. Manually started
----opencode instances have no entry here and are never touched.
+---Restart the opencode child inside a pane recorded in *our* state file: the TUI is
+---interrupted, the background server is stopped so the replacement can rebind the
+---freed port, then a fresh server + TUI pair is started with the given extra args.
+---Manually started opencode instances have no entry here and are never touched.
 ---@param entry ai.OpencodeEntry
 ---@param cwd string
----@param args string[] extra CLI args appended after `--port <n>`
+---@param args string[] extra CLI args appended after `--server <url>`
 ---@return boolean restarted
 local function restart_pane(entry, cwd, args)
-  local argv = { "opencode", "--port", tostring(entry.port) }
-  vim.list_extend(argv, args)
+  -- The TUI's terminal/pane identity is tied to the *old* argv (its env carries the
+  -- old password), so capture it before the server rotates it below.
+  local old_term
+  if entry.mux == "snacks" then
+    local ok, terminal = pcall(require, "snacks.terminal")
+    if ok then
+      old_term = terminal.get(tui_argv(entry), { cwd = cwd, win = { position = "right" } })
+    end
+  end
+
+  -- Interrupt the TUI where the pane outlives it (tmux respawn -k does this itself).
+  if entry.mux == "herdr" then
+    pcall(vim.fn.system, { "herdr", "pane", "send-keys", entry.pane, "ctrl+c" })
+  elseif old_term then
+    pcall(old_term.send_keys, old_term, "C-c")
+  end
+
+  stop_server(entry)
+  if not vim.wait(5000, function()
+    return select(2, probe(entry, cwd)) == false
+  end, 100) then
+    return false
+  end
+
+  if not start_server(entry, cwd) then
+    return false
+  end
+
+  local argv = tui_argv(entry, args)
   local line = table.concat(argv, " ")
 
   if entry.mux == "tmux" then
-    -- `-k` kills the current child, so the fresh one can take the port back.
+    -- `-k` kills the lingering shell so the fresh TUI takes the pane back.
     local ok = pcall(vim.fn.system, { "tmux", "respawn-pane", "-k", "-t", entry.pane, "-c", cwd, line })
     return ok and vim.v.shell_error == 0
   end
 
   if entry.mux == "herdr" then
-    -- herdr has no respawn: interrupt the child, wait for the port to actually free
-    -- up, and only then type the replacement command into the pane's shell.
-    pcall(vim.fn.system, { "herdr", "pane", "send-keys", entry.pane, "ctrl+c" })
-    if not vim.wait(3000, function()
-      return probe(entry.port, cwd) == nil
-    end, 100) then
-      return false
+    -- herdr pane run doesn't work if the pane is running nvim/vim.
+    -- Close the old pane and create a fresh split (same as start_tui).
+    local old_src = entry.src
+    local old_dir = entry.dir
+    pcall(vim.fn.system, { "herdr", "pane", "close", entry.pane })
+    entry.pane = ""
+    local current = herdr_json({ "herdr", "pane", "current", "--current" })
+    local src = current and extract_field(current, "pane_id") or old_src
+    local dir = old_dir or "right"
+    entry.src, entry.dir = src, dir
+    local split_cmd = { "herdr", "pane", "split" }
+    if src then
+      table.insert(split_cmd, "--pane")
+      table.insert(split_cmd, src)
+    else
+      table.insert(split_cmd, "--current")
     end
-    return (pcall(vim.fn.system, { "herdr", "pane", "run", entry.pane, unpack(argv) }))
+    vim.list_extend(split_cmd, { "--direction", dir, "--cwd", cwd, "--no-focus" })
+    local split = detach(split_cmd, entry, true)
+    local ready = split
+      and vim.wait(10000, function()
+        return entry.pane ~= "" and pane_alive("herdr", entry.pane)
+      end, 100)
+    if ready then
+      local cmd_line = table.concat(argv, " ")
+      pcall(vim.fn.system, { "herdr", "--session", "default", "pane", "send-text", entry.pane, cmd_line })
+      pcall(vim.fn.system, { "herdr", "--session", "default", "pane", "send-keys", entry.pane, "enter" })
+      return true
+    end
+    return false
   end
 
   if entry.mux == "snacks" then
-    local ok, terminal = pcall(require, "snacks.terminal")
-    if not ok then
+    if not old_term then
       return false
     end
-    local term = terminal.get(argv, { cwd = cwd, win = { position = "right" } })
-    if not term then
-      return false
-    end
-    pcall(term.send_keys, term, "C-c")
-    if not vim.wait(3000, function()
-      return probe(entry.port, cwd) == nil
-    end, 100) then
-      return false
-    end
-    pcall(term.send_keys, term, line, "enter")
+    -- The TUI exited on C-c; type the replacement argv into the same terminal's shell.
+    pcall(old_term.send_keys, old_term, line, "enter")
     return true
   end
 
   return false
 end
 
----The fork is created by the CLI, not by an endpoint, so it is confirmed by watching
----the project session list for the new `<title> (fork #n)` root.
----@param port integer
+---POST /api/session with `parentID` forks a session server-side; the new session's
+---id comes straight back in the response body.
+---@param entry ai.OpencodeEntry
+---@param cwd string
+---@param session_id string
+---@return string? new_id
+local function fork_session(entry, cwd, session_id)
+  local cmd = { "curl", "-s", "-m", "5", "-X", "POST", "-H", "Content-Type: application/json" }
+  if type(entry.password) == "string" and entry.password ~= "" then
+    vim.list_extend(cmd, { "-u", "opencode:" .. entry.password })
+  end
+  vim.list_extend(cmd, {
+    "-H",
+    "x-opencode-directory: " .. vim.uri_encode(cwd),
+    "-d",
+    vim.json.encode({ parentID = session_id }),
+    oc_url(entry.port) .. "/api/session",
+  })
+  local ok, reply = pcall(vim.fn.system, cmd)
+  if not ok or type(reply) ~= "string" or vim.trim(reply) == "" then
+    return nil
+  end
+  local decoded_ok, decoded = pcall(vim.json.decode, reply)
+  local data = decoded_ok and type(decoded) == "table" and (decoded.data or decoded)
+  local id = type(data) == "table" and data.id or nil
+  return type(id) == "string" and id or nil
+end
+
+---Fallback confirmation: poll the project's session list for a child of
+---`session_id` (`parentID == session_id`) rather than matching forked titles.
+---@param entry ai.OpencodeEntry
 ---@param key string
 ---@param session_id string
 ---@return string? new_id
-local function find_fork(port, key, session_id)
+local function find_fork(entry, key, session_id)
   local dir = vim.uri_encode(realpath(key))
-  local ok, reply = pcall(vim.fn.system, {
-    "curl",
-    "-s",
-    "-m",
-    "2",
+  local cmd = { "curl", "-s", "-m", "2" }
+  if type(entry.password) == "string" and entry.password ~= "" then
+    vim.list_extend(cmd, { "-u", "opencode:" .. entry.password })
+  end
+  vim.list_extend(cmd, {
     "-H",
     "x-opencode-directory: " .. dir,
-    "http://" .. OC_HOST .. ":" .. port .. "/api/session?directory=" .. dir .. "&order=desc&parentID=null",
+    oc_url(entry.port) .. "/api/session?directory=" .. dir .. "&order=desc&parentID=" .. session_id,
   })
+  local ok, reply = pcall(vim.fn.system, cmd)
   if not ok or type(reply) ~= "string" or vim.trim(reply) == "" then
     return nil
   end
@@ -531,13 +742,7 @@ local function find_fork(port, key, session_id)
     return nil
   end
   for _, session in ipairs(list) do
-    if
-      type(session) == "table"
-      and type(session.id) == "string"
-      and session.id ~= session_id
-      and type(session.title) == "string"
-      and session.title:find("(fork #", 1, true)
-    then
+    if type(session) == "table" and type(session.id) == "string" and session.parentID == session_id then
       return session.id
     end
   end
@@ -546,9 +751,9 @@ end
 
 ---Restore a session into this project's opencode as a *fork*.
 ---
----`-s <id>` alone would leave the newer session as the plugin's target, and `--fork`
----is the only way to branch a session (there is no HTTP fork endpoint), so the fork
----becomes the newest root session and `:Opencode`/`ask` follow it.
+---v2 forks through the API (`POST /api/session` with `parentID`) instead of the
+---removed `--fork` CLI flag, then reopens the TUI on the new session with
+---`--session <new_id>` so `:Opencode`/`ask` follow it.
 ---@param session_id string
 ---@return boolean restored
 function M.restore_session(session_id)
@@ -572,67 +777,92 @@ function M.restore_session(session_id)
     notify("no free port for " .. key, vim.log.levels.ERROR)
     return false
   end
+  if port ~= tonumber(entry.port) then
+    -- Credentials/pid belong to the old port's server, not this one.
+    entry.password, entry.server_pid = nil, nil
+  end
   entry.port = port
 
-  local args = { "-s", session_id, "--fork" }
-  local live = probe(port, cwd) ~= nil
-  local owned = pane_alive(entry.mux, entry.pane) or (recorded_mux == "snacks" and live)
+  local _, live = probe(entry, cwd)
+  -- We own the server if probe succeeds with our credentials (even if pane died).
+  -- For Snacks, we also consider it ours if the server is live (no pane to check).
+  local server_ours = probe(entry, cwd) ~= nil
+  local owned = server_ours or (recorded_mux == "snacks" and live)
 
   if owned then
+    if not live and not start_server(entry, cwd) then
+      notify("could not start an opencode server for " .. key, vim.log.levels.ERROR)
+      return false
+    end
+    local forked = fork_session(entry, cwd, session_id)
+    if not forked then
+      vim.wait(5000, function()
+        forked = find_fork(entry, key, session_id)
+        return forked ~= nil
+      end, 250)
+    end
+    if not forked then
+      notify("opencode did not fork " .. session_id, vim.log.levels.ERROR)
+      return false
+    end
     notify("reloading this project's opencode from " .. session_id .. "…")
-    if not restart_pane(entry, cwd, args) then
+    if not restart_pane(entry, cwd, { "--session", forked }) then
       notify("could not restart the opencode in " .. entry.mux .. " pane " .. entry.pane, vim.log.levels.ERROR)
       return false
     end
-  elseif live then
+    entry.url = oc_url(port)
+    state[key] = entry
+    write_state(state)
+    adopt(entry.url, entry.password)
+    notify("forked " .. session_id .. " as " .. forked)
+    return true
+  end
+
+  if live then
     -- A server we did not start: never kill it, just say what to run.
     notify(
       "opencode for "
         .. key
         .. " is already running on port "
         .. port
-        .. " but it was not started here.\nRun this in a split to fork the session:\n  opencode --port "
-        .. port
-        .. " -s "
-        .. session_id
-        .. " --fork",
+        .. " but it was not started here.\nRun this in a split to continue the session:\n  opencode --server "
+        .. oc_url(port)
+        .. " --session "
+        .. session_id,
       vim.log.levels.WARN
     )
     return false
-  else
-    entry.mux = mux_kind()
-    if not spawn_tui(entry, cwd, args) then
-      notify("could not start an opencode TUI for " .. key, vim.log.levels.ERROR)
-      return false
-    end
   end
 
-  if not vim.wait(20000, function()
-    return probe(port, cwd) ~= nil
-  end, 300) then
-    notify("no opencode server answered on port " .. port, vim.log.levels.ERROR)
+  -- No server at all: bring one up, fork via the API, then open the TUI on the fork.
+  entry.mux = mux_kind()
+  if not start_server(entry, cwd) then
+    notify("could not start an opencode server for " .. key, vim.log.levels.ERROR)
+    return false
+  end
+  local forked = fork_session(entry, cwd, session_id)
+  if not forked then
+    -- Unreadable response: fall back to watching the session list for our child.
+    vim.wait(5000, function()
+      forked = find_fork(entry, key, session_id)
+      return forked ~= nil
+    end, 250)
+  end
+  if not forked then
+    notify("opencode did not fork " .. session_id, vim.log.levels.ERROR)
+    return false
+  end
+  if not start_tui(entry, cwd, { "--session", forked }) then
+    notify("could not start an opencode TUI for " .. key, vim.log.levels.ERROR)
     return false
   end
 
   entry.url = oc_url(port)
   state[key] = entry
   write_state(state)
-  adopt(entry.url)
+  adopt(entry.url, entry.password)
 
-  -- `vim.wait` only reports whether the callback returned truthy, so the id is captured
-  -- from the closure instead of from its result.
-  local forked
-  vim.wait(5000, function()
-    forked = find_fork(port, key, session_id)
-    return forked ~= nil
-  end, 250)
-
-  if type(forked) == "string" then
-    notify("forked " .. session_id .. " as " .. forked)
-    return true
-  end
-
-  notify("opencode is running, but no fork of " .. session_id .. " showed up in the session list", vim.log.levels.WARN)
+  notify("forked " .. session_id .. " as " .. forked)
   return true
 end
 
@@ -840,14 +1070,17 @@ return {
     -- before the plugin is loaded; `config()` creates the real command below.
     cmd = { "OpencodeRestore" },
     config = function()
-      -- Probe only: the TUI is started lazily by `ensure_opencode()`, not at startup.
+      -- Probe only: the server/TUI are started lazily by `ensure_opencode()`.
       local key, cwd = project()
-      local port = resolve_port(key, cwd, read_state()[key])
+      local recorded = read_state()[key]
+      local entry = type(recorded) == "table" and recorded or {}
+      local port = resolve_port(key, cwd, entry)
 
       ---@type opencode.Opts
       vim.g.opencode_opts = {
         server = {
           url = port and oc_url(port) or nil,
+          password = port and entry.password or nil,
           -- Normally unreachable, since a configured `url` makes discovery
           -- authoritative. Kept so `vsplit term://opencode` can never run.
           start = function()
@@ -873,8 +1106,9 @@ return {
         "<leader>ot",
         function()
           local key, cwd = project()
-          local entry = read_state()[key]
-          entry = type(entry) == "table" and entry or {}
+          local state = read_state()
+          local entry = type(state[key]) == "table" and state[key] or {}
+          entry.mux, entry.pane = entry.mux or "snacks", entry.pane or ""
           if pane_alive(entry.mux, entry.pane) then
             ensure_opencode()
             return
@@ -886,7 +1120,15 @@ return {
             notify("no opencode terminal available for " .. key, vim.log.levels.ERROR)
             return
           end
-          pcall(terminal.toggle, { "opencode", "--port", tostring(port) }, { cwd = cwd, win = { position = "right" } })
+          entry.port = port
+          -- v2's TUI is a client: the server must already be up for it to attach to.
+          if not probe(entry, cwd) and not start_server(entry, cwd) then
+            notify("could not start an opencode server for " .. key, vim.log.levels.ERROR)
+            return
+          end
+          state[key] = entry
+          write_state(state)
+          pcall(terminal.toggle, tui_argv(entry), { cwd = cwd, win = { position = "right" } })
         end,
         desc = "Toggle opencode TUI",
       },
