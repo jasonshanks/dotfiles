@@ -1,0 +1,8 @@
+node_modules
+package.json
+bun.lock
+# Secrets
+service.json
+*.log
+.opencode.json
+.tui.json

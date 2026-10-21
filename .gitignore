@@ -1,3 +1,11 @@
 aliases
 git/gitconfig.local.symlink
 /tmux/plugins/tmux-notify
+# OpenCode secrets
+opencode/service.json
+# OmniRoute secrets
+omniroute/.env
+# Any local .env files
+.env
+.env.local
+.env.*.local
