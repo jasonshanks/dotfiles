@@ -1,42 +1,188 @@
 {
-  "preset": "opencode",
+  "$schema": "https://unpkg.com/oh-my-opencode-slim@latest/oh-my-opencode-slim.schema.json",
+  "compactSidebar": true,
+  "preset": "opencode-free",
+  "disabled_agents": [],
+  "image_routing": "auto",
+  "autoUpdate": true,
+  "setDefaultAgent": true,
+  "multiplexer": {
+    "type": "auto",
+    "layout": "main-vertical",
+    "main_pane_size": 60
+  },
+  "scoringEngineVersion": "v2",
+  "companion": {
+    "enabled": false,
+    "position": "bottom-left",
+    "size": "small",
+    "loopStyle": "smooth"
+  },
   "presets": {
-    "opencode": {
+    "balanced-free": {
       "orchestrator": {
-        "model": "opencode/big-pickle",
-        "skills": ["*"],
-        "mcps": ["websearch"]
+        "model": [
+          "opencode/muse-spark-1.3-contributor-free",
+          "omniroute/orchestrator"
+        ],
+        "temperature": 0.4,
+        "skills": ["*", "!make-interfaces-feel-better"],
+        "mcps": ["*", "!context7", "!gh_app"]
       },
       "oracle": {
-        "model": "opencode/big-pickle",
+        "model": [
+          "opencode/muse-spark-1.3-contributor-free",
+          "omniroute/oracle"
+        ],
+        "temperature": 0.4,
         "variant": "high",
-        "skills": [],
-        "mcps": []
-      },
-      "librarian": {
-        "model": "opencode/big-pickle",
-        "variant": "low",
-        "skills": [],
-        "mcps": ["websearch", "context7", "grep_app"]
+        "skills": [
+          "simplify",
+          "ce-brainstorm",
+          "workers-best-practices",
+          "web-perf"
+        ],
+        "mcps": ["codegraph", "searxng", "crawl4ai"]
       },
       "explorer": {
-        "model": "opencode/big-pickle",
-        "variant": "low",
+        "model": ["opencode/nemotron-3.5-lightning-free", "omniroute/explorer"],
+        "temperature": 0.2,
+        "skills": [],
+        "mcps": ["systemone", "*"]
+      },
+      "librarian": {
+        "model": ["opencode/mimo-v2.6-flash-free", "omniroute/librarian"],
+        "temperature": 0.2,
         "skills": [],
         "mcps": []
       },
       "designer": {
-        "model": "opencode/big-pickle",
-        "variant": "medium",
-        "skills": ["agent-browser"],
-        "mcps": []
+        "model": ["opencode/mimo-v2.6-flash-free", "omniroute/designer"],
+        "temperature": 0.3,
+        "variant": "xhigh",
+        "skills": [
+          "agent-browser",
+          "frontend-design",
+          "make-interfaces-feel-better",
+          "better-icons",
+          "vue",
+          "nuxt",
+          "motion",
+          "image",
+          "marketing-psychology",
+          "video"
+        ],
+        "mcps": ["codegraph"]
       },
       "fixer": {
-        "model": "opencode/big-pickle",
-        "variant": "low",
+        "model": [
+          "opencode/muse-spark-1.3-contributor-free",
+          "omniroute/fixer"
+        ],
+        "temperature": 0.2,
+        "skills": ["vitest", "pnpm", "vite", "tsdown"],
+        "mcps": ["codegraph", "searxng", "crawl4ai", "systemone"]
+      },
+      "observer": {
+        "model": [
+          "opencode/muse-spark-1.3-contributor-free",
+          "omniroute/observer"
+        ],
+        "temperature": 0.2,
         "skills": [],
-        "mcps": []
+        "mcps": ["systemone", "*"]
+      },
+      "council": {
+        "model": ["opencode/mimo-v2.6-flash-free", "omniroute/orchestrator"]
+      },
+      "skeptic": {
+        "model": ["opencode/nemotron-3-ultra-free", "omniroute/skeptic"],
+        "variant": "max"
+      }
+    },
+    "opencode-free": {
+      "orchestrator": {
+        "model": [
+          "opencode/muse-spark-1.3-contributor-free",
+          "opencode/nemotron-3-ultra-free",
+          "opencode/big-pickle"
+        ],
+        "temperature": 0.4,
+        "skills": ["*", "!make-interfaces-feel-better"],
+        "mcps": ["*", "!context7", "!gh_app"]
+      },
+      "oracle": {
+        "model": [
+          "opencode/muse-spark-1.3-contributor-free",
+          "opencode/big-pickle"
+        ],
+        "temperature": 0.4,
+        "variant": "high",
+        "skills": [
+          "simplify",
+          "ce-brainstorm",
+          "workers-best-practices",
+          "web-perf"
+        ],
+        "mcps": ["codegraph", "searxng", "crawl4ai"]
+      },
+      "explorer": {
+        "model": ["opencode/mimo-v2.6-flash-free", "opencode/big-pickle"],
+        "temperature": 0.2,
+        "skills": [],
+        "mcps": ["codegraph", "systemone"]
+      },
+      "librarian": {
+        "model": ["opencode/mimo-v2.6-flash-free", "opencode/big-pickle"],
+        "temperature": 0.2,
+        "mcps": ["websearch", "context7", "gh_app", "searxng", "crawl4ai"]
+      },
+      "designer": {
+        "model": [
+          "opencode/mimo-v2.6-flash-free",
+          "opencode/muse-spark-1.3-free"
+        ],
+        "temperature": 0.3,
+        "skills": [
+          "agent-browser",
+          "frontend-design",
+          "make-interfaces-feel-better",
+          "better-icons",
+          "vue",
+          "nuxt",
+          "motion",
+          "image",
+          "marketing-psychology",
+          "video"
+        ],
+        "mcps": ["codegraph"]
+      },
+      "fixer": {
+        "model": ["opencode/mimo-v2.6-flash-free", "opencode/big-pickle"],
+        "temperature": 0.2,
+        "skills": ["vitest", "pnpm", "vite", "tsdown"],
+        "mcps": ["codegraph", "searxng", "crawl4ai", "systemone"]
+      },
+      "observer": {
+        "model": ["opencode/mimo-v2.6-flash-free", "opencode/big-pickle"],
+        "temperature": 0.2
+      },
+      "council": {
+        "model": ["opencode/mimo-v2.6-flash-free", "opencode/big-pickle"]
+      },
+      "skeptic": {
+        "model": [
+          "opencode/muse-spark-1.3-contributor-free",
+          "opencode/nemotron-3-ultra-free",
+          "opencode/big-pickle"
+        ]
       }
     }
+  },
+  "todoContinuation": {
+    "maxContinuations": 5,
+    "cooldownMs": 3000,
+    "autoEnable": true,
+    "autoEnableThreshold": 3
   }
 }

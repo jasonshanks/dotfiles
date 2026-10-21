@@ -1,49 +1,195 @@
 #!/usr/bin/env node
 /**
- * ollama-systemone-mcp
+ * local-first-systemone-mcp
  *
- * Exposes local Ollama System One decision models (TypeSafe / Jev API) as MCP
+ * Exposes System One decision models (TypeSafe / Jev API) as MCP
  * tools. Decision models do not generate text: they score one-token answer
  * codes and return calibrated probabilities. This server is a thin, typed
- * transport over POST {OLLAMA_HOST}/v1/systemone.
+ * transport over POST {HOST}/v1/systemone.
  *
  * Transport: newline-delimited JSON-RPC 2.0 over stdio. No dependencies.
  *
+ * Fallback chain
+ * --------------
+ * Every tool call tries an ordered list of candidates and returns the first
+ * success. Default order:
+ *   1. local  - SYSTEMONE_MODEL           at {OLLAMA_HOST}/v1/systemone (nimble:latest)
+ *   2. hosted - SYSTEMONE_FALLBACK_MODELS at SYSTEMONE_FALLBACK_URL    (jev-1.13-free)
+ *   3. hosted - SYSTEMONE_FALLBACK_MODELS at SYSTEMONE_FALLBACK_URL    (jev-1.13, paid)
+ *
+ * The hosted fallback models come from SYSTEMONE_FALLBACK_MODELS, an ordered
+ * comma-separated list of bare model IDs. OPENCODE_API_KEY, when set, is sent
+ * as a bearer token on every hosted attempt (harmless for the keyless model);
+ * when unset, hosted attempts are still made and a paid-only model simply
+ * returns an auth error that is aggregated with the rest. Later candidates are
+ * attempted after any failure: network error, per-attempt timeout, non-2xx
+ * status, unparseable body, or an {error} payload. Each attempt gets its own
+ * timeout. When every candidate fails, the errors are aggregated into a single
+ * message. Secrets are never logged or returned.
+ *
+ * The hosted endpoint expects bare model names (no `opencode/` prefix) and the
+ * same typed System One request/response shape as Ollama.
+ *
+ * A tool-level `model` argument overrides the primary (local) model. If the
+ * override names a hosted fallback model, that candidate is promoted to the
+ * front and the local attempt is skipped, since a hosted-only model cannot be
+ * served by local Ollama.
+ *
  * Environment:
- *   OLLAMA_HOST        Base URL of the Ollama server. Default http://localhost:11434
- *   SYSTEMONE_MODEL    Default model. Default nimble:latest
- *   SYSTEMONE_TIMEOUT  Per-request timeout in ms. Default 30000
+ *   OLLAMA_HOST                Base URL of the local Ollama server. Default http://localhost:11434
+ *   SYSTEMONE_MODEL            Primary (local) model. Default nimble:latest
+ *   SYSTEMONE_TIMEOUT          Per-attempt timeout in ms. Default 30000
+ *   SYSTEMONE_FALLBACK_URL     Full hosted System One endpoint.
+ *                              Default https://opencode.ai/inference/systemone/v1/systemone
+ *   SYSTEMONE_FALLBACK_MODELS  Ordered, comma-separated bare model IDs for the hosted
+ *                              fallback chain. Default jev-1.13-free,jev-1.13. An empty
+ *                              string disables hosted fallbacks.
+ *   OPENCODE_API_KEY           Optional bearer token for the hosted fallback attempts.
+ *                              Its format is not validated here.
  */
 
 import { createInterface } from "node:readline";
+import { pathToFileURL } from "node:url";
 
-const OLLAMA_HOST = (process.env.OLLAMA_HOST ?? "http://localhost:11434").replace(/\/+$/, "");
-const DEFAULT_MODEL = process.env.SYSTEMONE_MODEL ?? "nimble:latest";
 const CONFIDENCE_GATE = 0.7;
-const TIMEOUT_MS = Number.parseInt(process.env.SYSTEMONE_TIMEOUT ?? "30000", 10);
-const SYSTEMONE_URL = `${OLLAMA_HOST}/v1/systemone`;
 
-const SERVER_INFO = { name: "ollama-systemone", version: "1.0.0" };
+const SERVER_INFO = { name: "local-first-systemone", version: "1.0.1" };
 const SUPPORTED_PROTOCOLS = ["2025-06-18", "2025-03-26", "2024-11-05"];
+
+/* ------------------------------------------------------------------ *
+ * Configuration
+ * ------------------------------------------------------------------ */
+
+function parseTimeout(raw) {
+  const parsed = Number.parseInt(raw ?? "30000", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 30000;
+}
+
+function stripTrailingSlash(url) {
+  return url.replace(/\/+$/, "");
+}
+
+/**
+ * Resolve runtime configuration from an environment map.
+ * @param {NodeJS.ProcessEnv} [env]
+ */
+function readConfig(env = process.env) {
+  const host = stripTrailingSlash(env.OLLAMA_HOST ?? "http://localhost:11434");
+  return {
+    primaryUrl: `${host}/v1/systemone`,
+    defaultModel: env.SYSTEMONE_MODEL ?? "nimble:latest",
+    timeoutMs: parseTimeout(env.SYSTEMONE_TIMEOUT),
+    fallbackModelsRaw: env.SYSTEMONE_FALLBACK_MODELS,
+    fallbackUrl: stripTrailingSlash(
+      env.SYSTEMONE_FALLBACK_URL ??
+        "https://opencode.ai/inference/systemone/v1/systemone",
+    ),
+    apiKey: env.OPENCODE_API_KEY ?? "",
+  };
+}
+
+const DEFAULT_FALLBACK_MODELS = ["jev-1.13-free", "jev-1.13"];
+
+/**
+ * Build the ordered hosted fallback candidates from SYSTEMONE_FALLBACK_MODELS.
+ *
+ * The value is an ordered, comma-separated list of bare model IDs. When unset,
+ * DEFAULT_FALLBACK_MODELS is used; an explicitly empty value disables hosted
+ * fallbacks. All candidates share SYSTEMONE_FALLBACK_URL.
+ *
+ * @returns {Array<{url: string, model: string, source: "hosted"}>}
+ */
+function buildFallbackCandidates(config) {
+  const models =
+    typeof config.fallbackModelsRaw === "string"
+      ? config.fallbackModelsRaw
+          .split(",")
+          .map((model) => model.trim())
+          .filter((model) => model !== "")
+      : DEFAULT_FALLBACK_MODELS;
+
+  return models.map((model) => ({
+    url: config.fallbackUrl,
+    model,
+    source: "hosted",
+  }));
+}
+
+/**
+ * Resolve the ordered candidate list for one call.
+ *
+ * @param {ReturnType<typeof readConfig>} config
+ * @param {string|null|undefined} overrideModel tool-level `model` argument
+ */
+function resolveCandidates(config, overrideModel) {
+  const override =
+    typeof overrideModel === "string" && overrideModel.trim() !== ""
+      ? overrideModel.trim()
+      : null;
+  const fallbacks = buildFallbackCandidates(config);
+
+  const promoted = override
+    ? fallbacks.findIndex((candidate) => candidate.model === override)
+    : -1;
+  let chain;
+  if (promoted !== -1) {
+    chain = [
+      { ...fallbacks[promoted] },
+      ...fallbacks.filter((_, index) => index !== promoted),
+    ];
+  } else {
+    chain = [
+      {
+        url: config.primaryUrl,
+        model: override ?? config.defaultModel,
+        source: "local",
+      },
+      ...fallbacks,
+    ];
+  }
+
+  const seen = new Set();
+  const deduped = [];
+  for (const candidate of chain) {
+    const key = `${candidate.url}::${candidate.model}`;
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    deduped.push(candidate);
+  }
+
+  return deduped;
+}
 
 /* ------------------------------------------------------------------ *
  * Upstream call
  * ------------------------------------------------------------------ */
 
 /**
- * POST a System One request to Ollama.
- * @param {{model?: string, state: unknown, questions: Record<string, object>}} payload
+ * Perform a single candidate attempt with its own timeout.
+ *
+ * @param {{url: string, model: string, source: "local"|"hosted"}} candidate
+ * @param {object} body
+ * @param {{timeoutMs: number, fetchImpl: typeof fetch, apiKey: string}} options
  * @returns {Promise<{ok: true, data: object} | {ok: false, error: string}>}
  */
-async function callSystemOne(payload) {
+async function attemptSystemOne(candidate, body, options) {
+  const { timeoutMs, fetchImpl, apiKey } = options;
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(SYSTEMONE_URL, {
+    const headers = { "Content-Type": "application/json" };
+    // The bearer is only ever sent to the hosted fallback endpoint.
+    if (apiKey) {
+      headers.Authorization = `Bearer ${apiKey}`;
+    }
+
+    const response = await fetchImpl(candidate.url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      headers,
+      body: JSON.stringify(body),
       signal: controller.signal,
     });
 
@@ -54,31 +200,99 @@ async function callSystemOne(payload) {
     } catch {
       return {
         ok: false,
-        error: `Ollama returned non-JSON (HTTP ${response.status}): ${text.slice(0, 300)}`,
+        error: `non-JSON response (HTTP ${response.status}): ${text.slice(0, 300)}`,
       };
     }
 
-    // Ollama reports model and validation failures as {error: "..."} with a
+    // Upstream reports model and validation failures as {error: "..."} with a
     // 4xx/5xx status, but occasionally with 200. Treat any `error` key as fatal.
-    if (parsed && typeof parsed === "object" && typeof parsed.error === "string") {
-      return { ok: false, error: parsed.error };
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      typeof parsed.error === "string"
+    ) {
+      return { ok: false, error: `upstream error: ${parsed.error}` };
     }
     if (!response.ok) {
-      return { ok: false, error: `Ollama HTTP ${response.status}: ${text.slice(0, 300)}` };
+      return {
+        ok: false,
+        error: `HTTP ${response.status}: ${text.slice(0, 300)}`,
+      };
     }
     return { ok: true, data: parsed };
   } catch (error) {
     if (error?.name === "AbortError") {
-      return { ok: false, error: `Request timed out after ${TIMEOUT_MS}ms at ${SYSTEMONE_URL}` };
+      return { ok: false, error: `timed out after ${timeoutMs}ms` };
     }
     const message = error instanceof Error ? error.message : String(error);
-    return {
-      ok: false,
-      error: `Could not reach Ollama at ${SYSTEMONE_URL}: ${message}. Is \`ollama serve\` running?`,
-    };
+    return { ok: false, error: `network error: ${message}` };
   } finally {
     clearTimeout(timer);
   }
+}
+
+/**
+ * POST a System One request, walking the candidate chain until one succeeds.
+ *
+ * @param {{model?: string, state: unknown, questions: Record<string, object>}} payload
+ * @param {{config?: object, fetchImpl?: typeof fetch}} [options]
+ * @returns {Promise<
+ *   | {ok: true, data: object, meta: {model: string, source: string, url: string, attempts: number}}
+ *   | {ok: false, error: string, attempts: Array<object>}
+ * >}
+ */
+async function callSystemOne(payload, options = {}) {
+  const config = options.config ?? readConfig(process.env);
+  const fetchImpl = options.fetchImpl ?? fetch;
+  const override =
+    typeof payload?.model === "string" && payload.model.trim() !== ""
+      ? payload.model.trim()
+      : null;
+  const candidates = resolveCandidates(config, override);
+
+  const attempts = [];
+  for (const candidate of candidates) {
+    const body = { ...payload, model: candidate.model };
+    const outcome = await attemptSystemOne(candidate, body, {
+      timeoutMs: config.timeoutMs,
+      fetchImpl,
+      // Only the hosted fallback endpoint receives the bearer token.
+      apiKey: candidate.source === "hosted" ? config.apiKey : "",
+    });
+
+    if (outcome.ok) {
+      return {
+        ok: true,
+        data: outcome.data,
+        meta: {
+          model: candidate.model,
+          source: candidate.source,
+          url: candidate.url,
+          attempts: attempts.length + 1,
+        },
+        attempts,
+      };
+    }
+
+    attempts.push({
+      source: candidate.source,
+      model: candidate.model,
+      url: candidate.url,
+      error: outcome.error,
+    });
+  }
+
+  const details = attempts
+    .map(
+      (attempt) =>
+        `- ${attempt.source} ${attempt.model} at ${attempt.url}: ${attempt.error}`,
+    )
+    .join("\n");
+  return {
+    ok: false,
+    error: `System One failed on all ${attempts.length} candidate(s):\n${details}`,
+    attempts,
+  };
 }
 
 /* ------------------------------------------------------------------ *
@@ -108,16 +322,25 @@ function normaliseQuestion(id, raw) {
     let resolved;
     if (Array.isArray(criteria)) {
       if (criteria.length !== 2) {
-        return { error: `question "${id}": noul criteria array must have exactly 2 entries` };
+        return {
+          error: `question "${id}": noul criteria array must have exactly 2 entries`,
+        };
       }
       resolved = { true: String(criteria[0]), false: String(criteria[1]) };
     } else if (typeof criteria === "object") {
-      if (typeof criteria.true !== "string" || typeof criteria.false !== "string") {
-        return { error: `question "${id}": noul criteria must have "true" and "false" strings` };
+      if (
+        typeof criteria.true !== "string" ||
+        typeof criteria.false !== "string"
+      ) {
+        return {
+          error: `question "${id}": noul criteria must have "true" and "false" strings`,
+        };
       }
       resolved = { true: criteria.true, false: criteria.false };
     } else {
-      return { error: `question "${id}": noul criteria must be an object or a 2-element array` };
+      return {
+        error: `question "${id}": noul criteria must be an object or a 2-element array`,
+      };
     }
     return { question: { type, instructions, criteria: resolved } };
   }
@@ -125,7 +348,9 @@ function normaliseQuestion(id, raw) {
   if (type === "choice") {
     // Ollama requires an object map {option: description}.
     if (!criteria || typeof criteria !== "object" || Array.isArray(criteria)) {
-      return { error: `question "${id}": choice criteria must be an object map of {option: description}` };
+      return {
+        error: `question "${id}": choice criteria must be an object map of {option: description}`,
+      };
     }
     const entries = Object.entries(criteria);
     if (entries.length < 2) {
@@ -136,7 +361,9 @@ function normaliseQuestion(id, raw) {
     }
     for (const [option, description] of entries) {
       if (typeof description !== "string" || description.trim() === "") {
-        return { error: `question "${id}": option "${option}" needs a non-empty description` };
+        return {
+          error: `question "${id}": option "${option}" needs a non-empty description`,
+        };
       }
     }
     return { question: { type, instructions, criteria } };
@@ -145,7 +372,9 @@ function normaliseQuestion(id, raw) {
   if (type === "score") {
     // Ollama requires an ARRAY of ordered level descriptions, lowest first.
     if (!Array.isArray(criteria)) {
-      return { error: `question "${id}": score criteria must be an array of descriptions, lowest first` };
+      return {
+        error: `question "${id}": score criteria must be an array of descriptions, lowest first`,
+      };
     }
     if (criteria.length < 2) {
       return { error: `question "${id}": score requires at least 2 levels` };
@@ -155,7 +384,9 @@ function normaliseQuestion(id, raw) {
     }
     for (const level of criteria) {
       if (typeof level !== "string" || level.trim() === "") {
-        return { error: `question "${id}": every score level needs a non-empty description` };
+        return {
+          error: `question "${id}": every score level needs a non-empty description`,
+        };
       }
     }
     return { question: { type, instructions, criteria } };
@@ -167,6 +398,9 @@ function normaliseQuestion(id, raw) {
 /* ------------------------------------------------------------------ *
  * Tool definitions
  * ------------------------------------------------------------------ */
+
+const DEFAULT_CONFIG = readConfig(process.env);
+const DEFAULT_MODEL = DEFAULT_CONFIG.defaultModel;
 
 const QUESTION_SCHEMA = {
   type: "object",
@@ -213,16 +447,18 @@ const TOOLS = [
           type: "object",
           minProperties: 2,
           maxProperties: 255,
-          description: "Map of {label: description}. The model picks exactly one label.",
+          description:
+            "Map of {label: description}. The model picks exactly one label.",
         },
         instructions: {
           type: "string",
-          description: "The routing question, e.g. 'Which lane should handle this task?'",
+          description:
+            "The routing question, e.g. 'Which lane should handle this task?'",
           default: "Which option best fits this state?",
         },
         model: {
           type: "string",
-          description: `Ollama decision model to use. Defaults to ${DEFAULT_MODEL}.`,
+          description: `Decision model to use. Defaults to the primary local model ${DEFAULT_MODEL}, with hosted fallbacks.`,
         },
       },
     },
@@ -251,14 +487,17 @@ const TOOLS = [
               instructions: { type: "string" },
               criteria: {
                 type: "object",
-                properties: { true: { type: "string" }, false: { type: "string" } },
+                properties: {
+                  true: { type: "string" },
+                  false: { type: "string" },
+                },
               },
             },
           },
         },
         model: {
           type: "string",
-          description: `Ollama decision model to use. Defaults to ${DEFAULT_MODEL}.`,
+          description: `Decision model to use. Defaults to the primary local model ${DEFAULT_MODEL}, with hosted fallbacks.`,
         },
       },
     },
@@ -283,12 +522,13 @@ const TOOLS = [
         },
         instructions: {
           type: "string",
-          description: "What is being rated, e.g. 'Rate the severity of this issue.'",
+          description:
+            "What is being rated, e.g. 'Rate the severity of this issue.'",
           default: "Rate this state against the ordered levels.",
         },
         model: {
           type: "string",
-          description: `Ollama decision model to use. Defaults to ${DEFAULT_MODEL}.`,
+          description: `Decision model to use. Defaults to the primary local model ${DEFAULT_MODEL}, with hosted fallbacks.`,
         },
       },
     },
@@ -307,7 +547,7 @@ const TOOLS = [
         questions: QUESTION_SCHEMA,
         model: {
           type: "string",
-          description: `Ollama decision model to use. Defaults to ${DEFAULT_MODEL}.`,
+          description: `Decision model to use. Defaults to the primary local model ${DEFAULT_MODEL}, with hosted fallbacks.`,
         },
       },
     },
@@ -329,13 +569,23 @@ function errorResult(message) {
   return textResult({ error: message }, true);
 }
 
+/** Non-secret provenance of the candidate that served a successful call. */
+function servedBy(result) {
+  return {
+    model: result.meta?.model ?? null,
+    provider: result.meta?.source ?? null,
+  };
+}
+
 async function handleRouteDecision(args) {
   const { state, options, instructions, model } = args ?? {};
   if (state === undefined || state === null) {
     return errorResult("`state` is required");
   }
   if (!options || typeof options !== "object" || Array.isArray(options)) {
-    return errorResult("`options` must be an object map of {label: description}");
+    return errorResult(
+      "`options` must be an object map of {label: description}",
+    );
   }
 
   const built = normaliseQuestion("route", {
@@ -348,7 +598,7 @@ async function handleRouteDecision(args) {
   }
 
   const result = await callSystemOne({
-    model: model ?? DEFAULT_MODEL,
+    model,
     state,
     questions: { route: built.question },
   });
@@ -357,15 +607,22 @@ async function handleRouteDecision(args) {
   }
 
   const answer = result.data?.answers?.route ?? {};
-  const confidence = typeof answer.confidence === "number" ? answer.confidence : null;
+  const confidence =
+    typeof answer.confidence === "number" ? answer.confidence : null;
   return textResult({
     choice: answer.choice ?? null,
     probabilities: answer.probabilities ?? {},
     confidence,
     // Surface the gate decision so the caller does not have to re-derive it.
-    gate: confidence === null ? "unknown" : confidence >= CONFIDENCE_GATE ? "act" : "escalate",
+    gate:
+      confidence === null
+        ? "unknown"
+        : confidence >= CONFIDENCE_GATE
+          ? "act"
+          : "escalate",
     threshold: CONFIDENCE_GATE,
     usage: result.data?.usage ?? null,
+    ...servedBy(result),
   });
 }
 
@@ -375,7 +632,9 @@ async function handleCheckCondition(args) {
     return errorResult("`state` is required");
   }
   if (!questions || typeof questions !== "object" || Array.isArray(questions)) {
-    return errorResult("`questions` must be an object map of {questionId: {instructions}}");
+    return errorResult(
+      "`questions` must be an object map of {questionId: {instructions}}",
+    );
   }
 
   const built = {};
@@ -387,7 +646,7 @@ async function handleCheckCondition(args) {
     built[id] = normalised.question;
   }
 
-  const result = await callSystemOne({ model: model ?? DEFAULT_MODEL, state, questions: built });
+  const result = await callSystemOne({ model, state, questions: built });
   if (!result.ok) {
     return errorResult(result.error);
   }
@@ -403,7 +662,11 @@ async function handleCheckCondition(args) {
       margin: probability === null ? null : Math.abs(probability - 0.5) * 2,
     };
   }
-  return textResult({ answers: out, usage: result.data?.usage ?? null });
+  return textResult({
+    answers: out,
+    usage: result.data?.usage ?? null,
+    ...servedBy(result),
+  });
 }
 
 async function handleScoreRubric(args) {
@@ -412,7 +675,9 @@ async function handleScoreRubric(args) {
     return errorResult("`state` is required");
   }
   if (!Array.isArray(levels)) {
-    return errorResult("`levels` must be an array of ordered descriptions, lowest first");
+    return errorResult(
+      "`levels` must be an array of ordered descriptions, lowest first",
+    );
   }
 
   const built = normaliseQuestion("score", {
@@ -425,7 +690,7 @@ async function handleScoreRubric(args) {
   }
 
   const result = await callSystemOne({
-    model: model ?? DEFAULT_MODEL,
+    model,
     state,
     questions: { score: built.question },
   });
@@ -441,8 +706,10 @@ async function handleScoreRubric(args) {
     level: score === null ? null : Math.round(score),
     legend: answer.legend ?? {},
     probabilities: answer.probabilities ?? {},
-    confidence: typeof answer.confidence === "number" ? answer.confidence : null,
+    confidence:
+      typeof answer.confidence === "number" ? answer.confidence : null,
     usage: result.data?.usage ?? null,
+    ...servedBy(result),
   });
 }
 
@@ -452,14 +719,18 @@ async function handleDecide(args) {
     return errorResult("`state` is required");
   }
   if (!questions || typeof questions !== "object" || Array.isArray(questions)) {
-    return errorResult("`questions` must be an object map of question ID to question");
+    return errorResult(
+      "`questions` must be an object map of question ID to question",
+    );
   }
   const ids = Object.keys(questions);
   if (ids.length === 0) {
     return errorResult("`questions` must contain at least one question");
   }
   if (ids.length > 64) {
-    return errorResult(`System One supports at most 64 questions per call; got ${ids.length}`);
+    return errorResult(
+      `System One supports at most 64 questions per call; got ${ids.length}`,
+    );
   }
 
   const built = {};
@@ -471,11 +742,11 @@ async function handleDecide(args) {
     built[id] = normalised.question;
   }
 
-  const result = await callSystemOne({ model: model ?? DEFAULT_MODEL, state, questions: built });
+  const result = await callSystemOne({ model, state, questions: built });
   if (!result.ok) {
     return errorResult(result.error);
   }
-  return textResult(result.data);
+  return textResult({ ...result.data, ...servedBy(result) });
 }
 
 const HANDLERS = {
@@ -498,7 +769,11 @@ function reply(id, result) {
 }
 
 function replyError(id, code, message, data) {
-  send({ jsonrpc: "2.0", id, error: { code, message, ...(data ? { data } : {}) } });
+  send({
+    jsonrpc: "2.0",
+    id,
+    error: { code, message, ...(data ? { data } : {}) },
+  });
 }
 
 async function handleMessage(message) {
@@ -557,6 +832,8 @@ async function handleMessage(message) {
   }
 }
 
+let queue = Promise.resolve();
+
 function main() {
   const rl = createInterface({ input: process.stdin, crlfDelay: Infinity });
 
@@ -573,14 +850,30 @@ function main() {
       return;
     }
     // Serialise handling so responses stay ordered and errors cannot interleave.
-    queue = queue.then(() => handleMessage(message)).catch((error) => {
-      const text = error instanceof Error ? error.message : String(error);
-      replyError(message?.id ?? null, -32603, `Internal error: ${text}`);
-    });
+    queue = queue
+      .then(() => handleMessage(message))
+      .catch((error) => {
+        const text = error instanceof Error ? error.message : String(error);
+        replyError(message?.id ?? null, -32603, `Internal error: ${text}`);
+      });
   });
 
   rl.on("close", () => process.exit(0));
 }
 
-let queue = Promise.resolve();
-main();
+// Only start the stdio loop when executed directly, so the module stays
+// importable for tests.
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  main();
+}
+
+export {
+  callSystemOne,
+  readConfig,
+  buildFallbackCandidates,
+  resolveCandidates,
+  normaliseQuestion,
+};
