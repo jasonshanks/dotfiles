@@ -1,0 +1,496 @@
+[
+  {
+    "name": "static-best-free",
+    "models": [
+      {
+        "id": "static-best-free-model-1-opencode-zen-glm-5-3-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "static-best-free-model-2-opencode-zen-deepseek-v4-1-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/deepseek-v4.1-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "static-best-free-model-3-opencode-zen-space-bunny-free",
+        "kind": "model",
+        "model": "opencode-zen/space-bunny-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "static-best-free-model-4-opencode-zen-mimo-v2-6-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/mimo-v2.6-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "static-best-free-model-5-openrouter-nvidia-nemotron-3-ultra-550b-a55b-free",
+        "kind": "model",
+        "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "static-best-free-model-6-oc-big-pickle",
+        "kind": "model",
+        "model": "oc/big-pickle",
+        "providerId": "opencode",
+        "weight": 0
+      }
+    ],
+    "strategy": "weighted",
+    "config": {},
+    "id": "c90dd5ab-6f99-4504-819e-6ce055ee7d81",
+    "isHidden": false,
+    "sortOrder": 9,
+    "createdAt": "2026-09-03T19:35:14.100Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "observer",
+    "models": [
+      {
+        "id": "observer-model-1-opencode-zen-mimo-v2-6-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/mimo-v2.6-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "observer-model-2-opencode-zen-glm-5-3-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "observer-model-3-opencode-zen-nemotron-3-5-super-vl-free",
+        "kind": "model",
+        "model": "opencode-zen/nemotron-3.5-super-vl-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "observer-model-4-openrouter-nvidia-nemotron-3-5-super-vl-free",
+        "kind": "model",
+        "model": "openrouter/nvidia/nemotron-3.5-super-vl:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "observer-model-5-openrouter-google-gemma-4-31b-it-free",
+        "kind": "model",
+        "model": "openrouter/google/gemma-4-31b-it:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "observer-model-6-oc-mimo-v2-5-free",
+        "kind": "model",
+        "model": "oc/mimo-v2.5-free",
+        "providerId": "opencode",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "6bc6c5e2-e47c-409a-a8a6-050f39e70146",
+    "isHidden": false,
+    "sortOrder": 29,
+    "createdAt": "2026-09-19T21:19:11.387Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "designer",
+    "models": [
+      {
+        "id": "designer-model-1-opencode-zen-claude-haiku-5-5",
+        "kind": "model",
+        "model": "opencode-zen/claude-haiku-5-5",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "designer-model-2-opencode-zen-space-bunny-free",
+        "kind": "model",
+        "model": "opencode-zen/space-bunny-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "designer-model-3-opencode-zen-mimo-v2-6-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/mimo-v2.6-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "designer-model-4-opencode-zen-glm-5-3-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "designer-model-5-openrouter-google-gemma-4-31b-it-free",
+        "kind": "model",
+        "model": "openrouter/google/gemma-4-31b-it:free",
+        "providerId": "openrouter",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "6e9abf0b-d1c5-4b5a-9e16-f8ddc5eac179",
+    "isHidden": false,
+    "sortOrder": 35,
+    "createdAt": "2026-09-19T22:44:39.216Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "orchestrator",
+    "models": [
+      {
+        "id": "orchestrator-model-1-opencode-zen-gpt-6-luna",
+        "kind": "model",
+        "model": "opencode-zen/gpt-6-luna",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "orchestrator-model-2-opencode-zen-glm-5-3-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "orchestrator-model-3-opencode-zen-beam-free",
+        "kind": "model",
+        "model": "opencode-zen/beam-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "orchestrator-model-4-openrouter-nvidia-nemotron-3-super-120b-a12b-free",
+        "kind": "model",
+        "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "orchestrator-model-5-oc-big-pickle",
+        "kind": "model",
+        "model": "oc/big-pickle",
+        "providerId": "opencode",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "8fb44adc-6f91-47ec-a6b3-290d66212ab6",
+    "isHidden": false,
+    "sortOrder": 36,
+    "createdAt": "2026-09-19T23:02:35.040Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "oracle",
+    "models": [
+      {
+        "id": "oracle-model-1-opencode-zen-gpt-6-1-sol",
+        "kind": "model",
+        "model": "opencode-zen/gpt-6.1-sol",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "oracle-model-2-opencode-zen-glm-5-3",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "oracle-model-3-opencode-zen-nemotron-3-ultra-free",
+        "kind": "model",
+        "model": "opencode-zen/nemotron-3-ultra-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "oracle-model-4-openrouter-nvidia-nemotron-3-ultra-550b-a55b-free",
+        "kind": "model",
+        "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "oracle-model-5-opencode-zen-longcat-2-5-preview-free",
+        "kind": "model",
+        "model": "opencode-zen/longcat-2.5-preview-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "2fa284d5-ae0d-4e40-9532-d1f42dff435c",
+    "isHidden": false,
+    "sortOrder": 37,
+    "createdAt": "2026-09-19T23:26:26.644Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "explorer",
+    "models": [
+      {
+        "id": "explorer-model-1-opencode-zen-claude-haiku-5-5",
+        "kind": "model",
+        "model": "opencode-zen/claude-haiku-5-5",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "explorer-model-2-opencode-zen-nemotron-3-5-lightning-free",
+        "kind": "model",
+        "model": "opencode-zen/nemotron-3.5-lightning-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "explorer-model-3-openrouter-cohere-north-mini-code-free",
+        "kind": "model",
+        "model": "openrouter/cohere/north-mini-code:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "explorer-model-4-openrouter-nvidia-nemotron-3-5-lightning-free",
+        "kind": "model",
+        "model": "openrouter/nvidia/nemotron-3.5-lightning:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "explorer-model-5-opencode-zen-beam-free",
+        "kind": "model",
+        "model": "opencode-zen/beam-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "7dc779dd-9b72-4348-b488-dd8cce00eba4",
+    "isHidden": false,
+    "sortOrder": 39,
+    "createdAt": "2026-09-19T23:26:35.462Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "librarian",
+    "models": [
+      {
+        "id": "librarian-model-1-opencode-zen-longcat-2-5-preview-free",
+        "kind": "model",
+        "model": "opencode-zen/longcat-2.5-preview-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "librarian-model-2-opencode-zen-glm-5-3-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "librarian-model-3-opencode-zen-mimo-v2-6-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/mimo-v2.6-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "librarian-model-4-openrouter-dots-studio-dots-3-note-preview-free",
+        "kind": "model",
+        "model": "openrouter/dots-studio/dots-3-note-preview:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "librarian-model-5-openrouter-thinkingmachines-inkling-free",
+        "kind": "model",
+        "model": "openrouter/thinkingmachines/inkling:free",
+        "providerId": "openrouter",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "a8581934-2285-4daf-bd25-19b1871dcaf7",
+    "isHidden": false,
+    "sortOrder": 40,
+    "createdAt": "2026-09-19T23:26:43.555Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "fixer",
+    "models": [
+      {
+        "id": "fixer-model-1-opencode-zen-deepseek-v4-1-flash",
+        "kind": "model",
+        "model": "opencode-zen/deepseek-v4.1-flash",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "fixer-model-2-opencode-zen-deepseek-v4-1-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/deepseek-v4.1-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "fixer-model-3-opencode-zen-qwen3-8-flash",
+        "kind": "model",
+        "model": "opencode-zen/qwen3.8-flash",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "fixer-model-4-openrouter-cohere-north-mini-code-free",
+        "kind": "model",
+        "model": "openrouter/cohere/north-mini-code:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "fixer-model-5-opencode-zen-glm-5-3-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "f3e9466c-bd86-431e-8d89-d399355b79df",
+    "isHidden": false,
+    "sortOrder": 41,
+    "createdAt": "2026-09-19T23:40:00.562Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "skeptic",
+    "models": [
+      {
+        "id": "skeptic-model-1-opencode-zen-kimi-k3",
+        "kind": "model",
+        "model": "opencode-zen/kimi-k3",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "skeptic-model-2-opencode-zen-glm-5-3",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "skeptic-model-3-opencode-zen-nemotron-3-ultra-free",
+        "kind": "model",
+        "model": "opencode-zen/nemotron-3-ultra-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "skeptic-model-4-opencode-zen-beam-free",
+        "kind": "model",
+        "model": "opencode-zen/beam-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "skeptic-model-5-openrouter-thinkingmachines-inkling-free",
+        "kind": "model",
+        "model": "openrouter/thinkingmachines/inkling:free",
+        "providerId": "openrouter",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "472bc186-b102-4f85-a20e-1acbaa323c08",
+    "isHidden": false,
+    "sortOrder": 42,
+    "createdAt": "2026-09-19T23:40:02.818Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 4
+  },
+  {
+    "name": "council",
+    "models": [
+      {
+        "id": "council-model-1-opencode-zen-glm-5-3",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "council-model-2-opencode-zen-glm-5-3-flash-free",
+        "kind": "model",
+        "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "council-model-3-opencode-zen-nemotron-3-ultra-free",
+        "kind": "model",
+        "model": "opencode-zen/nemotron-3-ultra-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "council-model-4-openrouter-nvidia-nemotron-3-ultra-550b-a55b-free",
+        "kind": "model",
+        "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "council-model-5-opencode-zen-beam-free",
+        "kind": "model",
+        "model": "opencode-zen/beam-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      }
+    ],
+    "strategy": "priority",
+    "config": {},
+    "id": "b7e4c1a9-2d58-4f0b-9c3e-8a1f6d4e2b90",
+    "isHidden": false,
+    "sortOrder": 43,
+    "createdAt": "2026-10-17T01:54:30.000Z",
+    "updatedAt": "2026-10-17T10:38:46.000Z",
+    "version": 3
+  }
+]
