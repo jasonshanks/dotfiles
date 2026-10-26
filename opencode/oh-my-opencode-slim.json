@@ -70,7 +70,7 @@
           "openrouter/nvidia/nemotron-3.5-lightning:free",
           "opencode/beam-free"
         ],
-        "temperature": 0.2,
+        "temperature": 1,
         "skills": [],
         "mcps": [
           "local-first-systemone-mcp",
@@ -124,7 +124,7 @@
           "opencode/flint-40b-free",
           "openrouter/google/gemma-4-31b-it:free"
         ],
-        "temperature": 0.3,
+        "temperature": 1,
         "skills": [
           "agent-browser",
           "frontend-design",
