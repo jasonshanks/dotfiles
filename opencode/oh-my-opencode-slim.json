@@ -30,8 +30,15 @@
           "opencode/big-pickle"
         ],
         "temperature": 0.4,
-        "skills": ["*", "!make-interfaces-feel-better"],
-        "mcps": ["*", "!context7", "!gh_app"]
+        "skills": [
+          "*",
+          "!make-interfaces-feel-better"
+        ],
+        "mcps": [
+          "*",
+          "!context7",
+          "!gh_app"
+        ]
       },
       "oracle": {
         "model": [
@@ -39,7 +46,7 @@
           "opencode/glm-5.3",
           "opencode/nemotron-3-ultra-free",
           "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-          "opencode/longcat-2.5-preview-free"
+          "opencode/glm-5.3-flash-free"
         ],
         "temperature": 0.4,
         "variant": "high",
@@ -49,7 +56,11 @@
           "workers-best-practices",
           "web-perf"
         ],
-        "mcps": ["codegraph", "searxng", "crawl4ai"]
+        "mcps": [
+          "codegraph",
+          "searxng",
+          "crawl4ai"
+        ]
       },
       "explorer": {
         "model": [
@@ -61,18 +72,27 @@
         ],
         "temperature": 0.2,
         "skills": [],
-        "mcps": ["local-first-systemone-mcp", "*"]
+        "mcps": [
+          "local-first-systemone-mcp",
+          "*"
+        ]
       },
       "librarian": {
         "model": [
-          "opencode/longcat-2.5-preview-free",
           "opencode/glm-5.3-flash-free",
           "opencode/mimo-v2.6-flash-free",
           "openrouter/dots-studio/dots-3-note-preview:free",
-          "openrouter/thinkingmachines/inkling:free"
+          "openrouter/thinkingmachines/inkling:free",
+          "opencode/flint-40b-free"
         ],
         "temperature": 0.2,
-        "mcps": ["websearch", "context7", "gh_app", "searxng", "crawl4ai"]
+        "mcps": [
+          "websearch",
+          "context7",
+          "gh_app",
+          "searxng",
+          "crawl4ai"
+        ]
       },
       "fixer": {
         "model": [
@@ -83,15 +103,25 @@
           "opencode/glm-5.3-flash-free"
         ],
         "temperature": 0.2,
-        "skills": ["vitest", "pnpm", "vite", "tsdown"],
-        "mcps": ["codegraph", "searxng", "crawl4ai", "local-first-systemone-mcp"]
+        "skills": [
+          "vitest",
+          "pnpm",
+          "vite",
+          "tsdown"
+        ],
+        "mcps": [
+          "codegraph",
+          "searxng",
+          "crawl4ai",
+          "local-first-systemone-mcp"
+        ]
       },
       "designer": {
         "model": [
           "opencode/claude-haiku-5-5",
-          "opencode/space-bunny-free",
           "opencode/mimo-v2.6-flash-free",
           "opencode/glm-5.3-flash-free",
+          "opencode/flint-40b-free",
           "openrouter/google/gemma-4-31b-it:free"
         ],
         "temperature": 0.3,
@@ -107,7 +137,9 @@
           "marketing-psychology",
           "video"
         ],
-        "mcps": ["codegraph"]
+        "mcps": [
+          "codegraph"
+        ]
       },
       "observer": {
         "model": [
@@ -119,7 +151,10 @@
         ],
         "temperature": 0.2,
         "skills": [],
-        "mcps": ["local-first-systemone-mcp", "*"]
+        "mcps": [
+          "local-first-systemone-mcp",
+          "*"
+        ]
       },
       "council": {
         "model": [
@@ -151,15 +186,22 @@
           "opencode/big-pickle"
         ],
         "temperature": 0.4,
-        "skills": ["*", "!make-interfaces-feel-better"],
-        "mcps": ["*", "!context7", "!gh_app"]
+        "skills": [
+          "*",
+          "!make-interfaces-feel-better"
+        ],
+        "mcps": [
+          "*",
+          "!context7",
+          "!gh_app"
+        ]
       },
       "oracle": {
         "model": [
           "opencode/glm-5.3-flash-free",
           "opencode/nemotron-3-ultra-free",
           "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-          "opencode/longcat-2.5-preview-free"
+          "opencode/glm-5.3-flash-free"
         ],
         "temperature": 0.4,
         "variant": "high",
@@ -169,7 +211,11 @@
           "workers-best-practices",
           "web-perf"
         ],
-        "mcps": ["codegraph", "searxng", "crawl4ai"]
+        "mcps": [
+          "codegraph",
+          "searxng",
+          "crawl4ai"
+        ]
       },
       "explorer": {
         "model": [
@@ -180,18 +226,27 @@
         ],
         "temperature": 0.2,
         "skills": [],
-        "mcps": ["local-first-systemone-mcp", "*"]
+        "mcps": [
+          "local-first-systemone-mcp",
+          "*"
+        ]
       },
       "librarian": {
         "model": [
-          "opencode/longcat-2.5-preview-free",
           "opencode/glm-5.3-flash-free",
           "opencode/mimo-v2.6-flash-free",
           "openrouter/dots-studio/dots-3-note-preview:free",
-          "openrouter/thinkingmachines/inkling:free"
+          "openrouter/thinkingmachines/inkling:free",
+          "opencode/flint-40b-free"
         ],
         "temperature": 0.2,
-        "mcps": ["websearch", "context7", "gh_app", "searxng", "crawl4ai"]
+        "mcps": [
+          "websearch",
+          "context7",
+          "gh_app",
+          "searxng",
+          "crawl4ai"
+        ]
       },
       "fixer": {
         "model": [
@@ -201,14 +256,24 @@
           "opencode/glm-5.3-flash-free"
         ],
         "temperature": 0.2,
-        "skills": ["vitest", "pnpm", "vite", "tsdown"],
-        "mcps": ["codegraph", "searxng", "crawl4ai", "local-first-systemone-mcp"]
+        "skills": [
+          "vitest",
+          "pnpm",
+          "vite",
+          "tsdown"
+        ],
+        "mcps": [
+          "codegraph",
+          "searxng",
+          "crawl4ai",
+          "local-first-systemone-mcp"
+        ]
       },
       "designer": {
         "model": [
-          "opencode/space-bunny-free",
           "opencode/mimo-v2.6-flash-free",
           "opencode/glm-5.3-flash-free",
+          "opencode/flint-40b-free",
           "openrouter/google/gemma-4-31b-it:free"
         ],
         "temperature": 0.3,
@@ -224,7 +289,9 @@
           "marketing-psychology",
           "video"
         ],
-        "mcps": ["codegraph"]
+        "mcps": [
+          "codegraph"
+        ]
       },
       "observer": {
         "model": [
@@ -236,7 +303,10 @@
         ],
         "temperature": 0.2,
         "skills": [],
-        "mcps": ["local-first-systemone-mcp", "*"]
+        "mcps": [
+          "local-first-systemone-mcp",
+          "*"
+        ]
       },
       "council": {
         "model": [
@@ -266,14 +336,21 @@
           "opencode/big-pickle"
         ],
         "temperature": 0.4,
-        "skills": ["*", "!make-interfaces-feel-better"],
-        "mcps": ["*", "!context7", "!gh_app"]
+        "skills": [
+          "*",
+          "!make-interfaces-feel-better"
+        ],
+        "mcps": [
+          "*",
+          "!context7",
+          "!gh_app"
+        ]
       },
       "oracle": {
         "model": [
           "opencode/glm-5.3-flash-free",
           "opencode/nemotron-3-ultra-free",
-          "opencode/longcat-2.5-preview-free"
+          "opencode/flint-40b-free"
         ],
         "temperature": 0.4,
         "variant": "high",
@@ -283,22 +360,38 @@
           "workers-best-practices",
           "web-perf"
         ],
-        "mcps": ["codegraph", "searxng", "crawl4ai"]
+        "mcps": [
+          "codegraph",
+          "searxng",
+          "crawl4ai"
+        ]
       },
       "explorer": {
-        "model": ["opencode/nemotron-3.5-lightning-free", "opencode/beam-free"],
+        "model": [
+          "opencode/nemotron-3.5-lightning-free",
+          "opencode/beam-free"
+        ],
         "temperature": 0.2,
         "skills": [],
-        "mcps": ["local-first-systemone-mcp", "*"]
+        "mcps": [
+          "local-first-systemone-mcp",
+          "*"
+        ]
       },
       "librarian": {
         "model": [
-          "opencode/longcat-2.5-preview-free",
           "opencode/glm-5.3-flash-free",
-          "opencode/mimo-v2.6-flash-free"
+          "opencode/mimo-v2.6-flash-free",
+          "opencode/flint-40b-free"
         ],
         "temperature": 0.2,
-        "mcps": ["websearch", "context7", "gh_app", "searxng", "crawl4ai"]
+        "mcps": [
+          "websearch",
+          "context7",
+          "gh_app",
+          "searxng",
+          "crawl4ai"
+        ]
       },
       "fixer": {
         "model": [
@@ -307,12 +400,21 @@
           "opencode/glm-5.3-flash-free"
         ],
         "temperature": 0.2,
-        "skills": ["vitest", "pnpm", "vite", "tsdown"],
-        "mcps": ["codegraph", "searxng", "crawl4ai", "local-first-systemone-mcp"]
+        "skills": [
+          "vitest",
+          "pnpm",
+          "vite",
+          "tsdown"
+        ],
+        "mcps": [
+          "codegraph",
+          "searxng",
+          "crawl4ai",
+          "local-first-systemone-mcp"
+        ]
       },
       "designer": {
         "model": [
-          "opencode/space-bunny-free",
           "opencode/mimo-v2.6-flash-free",
           "opencode/glm-5.3-flash-free"
         ],
@@ -329,7 +431,9 @@
           "marketing-psychology",
           "video"
         ],
-        "mcps": ["codegraph"]
+        "mcps": [
+          "codegraph"
+        ]
       },
       "observer": {
         "model": [
@@ -339,7 +443,10 @@
         ],
         "temperature": 0.2,
         "skills": [],
-        "mcps": ["local-first-systemone-mcp", "*"]
+        "mcps": [
+          "local-first-systemone-mcp",
+          "*"
+        ]
       },
       "council": {
         "model": [
@@ -360,13 +467,24 @@
     },
     "omniroute": {
       "orchestrator": {
-        "model": ["omniroute/orchestrator"],
+        "model": [
+          "omniroute/orchestrator"
+        ],
         "temperature": 0.4,
-        "skills": ["*", "!make-interfaces-feel-better"],
-        "mcps": ["*", "!context7", "!gh_app"]
+        "skills": [
+          "*",
+          "!make-interfaces-feel-better"
+        ],
+        "mcps": [
+          "*",
+          "!context7",
+          "!gh_app"
+        ]
       },
       "oracle": {
-        "model": ["omniroute/oracle"],
+        "model": [
+          "omniroute/oracle"
+        ],
         "temperature": 0.4,
         "variant": "high",
         "skills": [
@@ -375,22 +493,35 @@
           "workers-best-practices",
           "web-perf"
         ],
-        "mcps": ["codegraph", "searxng", "crawl4ai"]
+        "mcps": [
+          "codegraph",
+          "searxng",
+          "crawl4ai"
+        ]
       },
       "explorer": {
-        "model": ["omniroute/explorer"],
+        "model": [
+          "omniroute/explorer"
+        ],
         "temperature": 0.2,
         "skills": [],
-        "mcps": ["local-first-systemone-mcp", "*"]
+        "mcps": [
+          "local-first-systemone-mcp",
+          "*"
+        ]
       },
       "librarian": {
-        "model": ["omniroute/librarian"],
+        "model": [
+          "omniroute/librarian"
+        ],
         "temperature": 0.2,
         "skills": [],
         "mcps": []
       },
       "designer": {
-        "model": ["omniroute/designer"],
+        "model": [
+          "omniroute/designer"
+        ],
         "temperature": 0.3,
         "variant": "xhigh",
         "skills": [
@@ -405,25 +536,48 @@
           "marketing-psychology",
           "video"
         ],
-        "mcps": ["codegraph"]
+        "mcps": [
+          "codegraph"
+        ]
       },
       "fixer": {
-        "model": ["omniroute/fixer"],
+        "model": [
+          "omniroute/fixer"
+        ],
         "temperature": 0.2,
-        "skills": ["vitest", "pnpm", "vite", "tsdown"],
-        "mcps": ["codegraph", "searxng", "crawl4ai", "local-first-systemone-mcp"]
+        "skills": [
+          "vitest",
+          "pnpm",
+          "vite",
+          "tsdown"
+        ],
+        "mcps": [
+          "codegraph",
+          "searxng",
+          "crawl4ai",
+          "local-first-systemone-mcp"
+        ]
       },
       "observer": {
-        "model": ["omniroute/observer"],
+        "model": [
+          "omniroute/observer"
+        ],
         "temperature": 0.2,
         "skills": [],
-        "mcps": ["local-first-systemone-mcp", "*"]
+        "mcps": [
+          "local-first-systemone-mcp",
+          "*"
+        ]
       },
       "council": {
-        "model": ["omniroute/orchestrator"]
+        "model": [
+          "omniroute/orchestrator"
+        ]
       },
       "skeptic": {
-        "model": ["omniroute/skeptic"],
+        "model": [
+          "omniroute/skeptic"
+        ],
         "variant": "max"
       }
     }

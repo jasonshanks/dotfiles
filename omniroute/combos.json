@@ -17,9 +17,9 @@
         "weight": 0
       },
       {
-        "id": "static-best-free-model-3-opencode-zen-space-bunny-free",
+        "id": "static-best-free-model-3-opencode-zen-flint-40b-free",
         "kind": "model",
-        "model": "opencode-zen/space-bunny-free",
+        "model": "opencode-zen/flint-40b-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
@@ -51,8 +51,8 @@
     "isHidden": false,
     "sortOrder": 9,
     "createdAt": "2026-09-03T19:35:14.100Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 4
+    "updatedAt": "2026-10-26T03:49:26.000Z",
+    "version": 5
   },
   {
     "name": "observer",
@@ -120,23 +120,23 @@
         "weight": 0
       },
       {
-        "id": "designer-model-2-opencode-zen-space-bunny-free",
-        "kind": "model",
-        "model": "opencode-zen/space-bunny-free",
-        "providerId": "opencode-zen",
-        "weight": 0
-      },
-      {
-        "id": "designer-model-3-opencode-zen-mimo-v2-6-flash-free",
+        "id": "designer-model-2-opencode-zen-mimo-v2-6-flash-free",
         "kind": "model",
         "model": "opencode-zen/mimo-v2.6-flash-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "designer-model-4-opencode-zen-glm-5-3-flash-free",
+        "id": "designer-model-3-opencode-zen-glm-5-3-flash-free",
         "kind": "model",
         "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "designer-model-4-opencode-zen-flint-40b-free",
+        "kind": "model",
+        "model": "opencode-zen/flint-40b-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
@@ -154,8 +154,8 @@
     "isHidden": false,
     "sortOrder": 35,
     "createdAt": "2026-09-19T22:44:39.216Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 4
+    "updatedAt": "2026-10-26T03:49:26.000Z",
+    "version": 5
   },
   {
     "name": "orchestrator",
@@ -237,9 +237,9 @@
         "weight": 0
       },
       {
-        "id": "oracle-model-5-opencode-zen-longcat-2-5-preview-free",
+        "id": "oracle-model-5-opencode-zen-flint-40b-free",
         "kind": "model",
-        "model": "opencode-zen/longcat-2.5-preview-free",
+        "model": "opencode-zen/flint-40b-free",
         "providerId": "opencode-zen",
         "weight": 0
       }
@@ -250,8 +250,8 @@
     "isHidden": false,
     "sortOrder": 37,
     "createdAt": "2026-09-19T23:26:26.644Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 4
+    "updatedAt": "2026-10-26T03:38:58.000Z",
+    "version": 5
   },
   {
     "name": "explorer",
@@ -305,38 +305,38 @@
     "name": "librarian",
     "models": [
       {
-        "id": "librarian-model-1-opencode-zen-longcat-2-5-preview-free",
-        "kind": "model",
-        "model": "opencode-zen/longcat-2.5-preview-free",
-        "providerId": "opencode-zen",
-        "weight": 0
-      },
-      {
-        "id": "librarian-model-2-opencode-zen-glm-5-3-flash-free",
+        "id": "librarian-model-1-opencode-zen-glm-5-3-flash-free",
         "kind": "model",
         "model": "opencode-zen/glm-5.3-flash-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "librarian-model-3-opencode-zen-mimo-v2-6-flash-free",
+        "id": "librarian-model-2-opencode-zen-mimo-v2-6-flash-free",
         "kind": "model",
         "model": "opencode-zen/mimo-v2.6-flash-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "librarian-model-4-openrouter-dots-studio-dots-3-note-preview-free",
+        "id": "librarian-model-3-openrouter-dots-studio-dots-3-note-preview-free",
         "kind": "model",
         "model": "openrouter/dots-studio/dots-3-note-preview:free",
         "providerId": "openrouter",
         "weight": 0
       },
       {
-        "id": "librarian-model-5-openrouter-thinkingmachines-inkling-free",
+        "id": "librarian-model-4-openrouter-thinkingmachines-inkling-free",
         "kind": "model",
         "model": "openrouter/thinkingmachines/inkling:free",
         "providerId": "openrouter",
+        "weight": 0
+      },
+      {
+        "id": "librarian-model-5-opencode-zen-flint-40b-free",
+        "kind": "model",
+        "model": "opencode-zen/flint-40b-free",
+        "providerId": "opencode-zen",
         "weight": 0
       }
     ],
@@ -346,8 +346,8 @@
     "isHidden": false,
     "sortOrder": 40,
     "createdAt": "2026-09-19T23:26:43.555Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 4
+    "updatedAt": "2026-10-26T03:38:58.000Z",
+    "version": 5
   },
   {
     "name": "fixer",
