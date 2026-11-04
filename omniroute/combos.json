@@ -3,45 +3,52 @@
     "name": "static-best-free",
     "models": [
       {
-        "id": "static-best-free-model-1-opencode-zen-glm-5-3-flash-free",
+        "id": "static-best-free-model-1-opencode-zen-pulse-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/pulse-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "static-best-free-model-2-opencode-zen-crouton-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/crouton-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "static-best-free-model-3-opencode-zen-glm-5-3-flash-free",
         "kind": "model",
         "model": "opencode-zen/glm-5.3-flash-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "static-best-free-model-2-opencode-zen-deepseek-v4-1-flash-free",
+        "id": "static-best-free-model-4-opencode-zen-deepseek-v4-1-flash-free",
         "kind": "model",
         "model": "opencode-zen/deepseek-v4.1-flash-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "static-best-free-model-3-opencode-zen-flint-40b-free",
+        "id": "static-best-free-model-5-opencode-zen-flint-40b-free",
         "kind": "model",
         "model": "opencode-zen/flint-40b-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "static-best-free-model-4-opencode-zen-mimo-v2-6-flash-free",
+        "id": "static-best-free-model-6-opencode-zen-mimo-v2-6-flash-free",
         "kind": "model",
         "model": "opencode-zen/mimo-v2.6-flash-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "static-best-free-model-5-openrouter-nvidia-nemotron-3-ultra-550b-a55b-free",
+        "id": "static-best-free-model-7-opencode-zen-big-pickle",
         "kind": "model",
-        "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "providerId": "openrouter",
-        "weight": 0
-      },
-      {
-        "id": "static-best-free-model-6-oc-big-pickle",
-        "kind": "model",
-        "model": "oc/big-pickle",
-        "providerId": "opencode",
+        "model": "opencode-zen/big-pickle",
+        "providerId": "opencode-zen",
         "weight": 0
       }
     ],
@@ -51,8 +58,8 @@
     "isHidden": false,
     "sortOrder": 9,
     "createdAt": "2026-09-03T19:35:14.100Z",
-    "updatedAt": "2026-10-26T03:49:26.000Z",
-    "version": 5
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 7
   },
   {
     "name": "observer",
@@ -65,38 +72,38 @@
         "weight": 0
       },
       {
-        "id": "observer-model-2-opencode-zen-glm-5-3-flash-free",
+        "id": "observer-model-2-opencode-zen-crouton-alpha-free",
         "kind": "model",
-        "model": "opencode-zen/glm-5.3-flash-free",
+        "model": "opencode-zen/crouton-alpha-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "observer-model-3-opencode-zen-nemotron-3-5-super-vl-free",
+        "id": "observer-model-3-opencode-zen-pulse-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/pulse-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "observer-model-4-opencode-zen-nemotron-3-5-super-vl-free",
         "kind": "model",
         "model": "opencode-zen/nemotron-3.5-super-vl-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "observer-model-4-openrouter-nvidia-nemotron-3-5-super-vl-free",
+        "id": "observer-model-5-openrouter-nvidia-nemotron-3-5-super-vl-free",
         "kind": "model",
         "model": "openrouter/nvidia/nemotron-3.5-super-vl:free",
         "providerId": "openrouter",
         "weight": 0
       },
       {
-        "id": "observer-model-5-openrouter-google-gemma-4-31b-it-free",
+        "id": "observer-model-6-openrouter-google-gemma-4-31b-it-free",
         "kind": "model",
         "model": "openrouter/google/gemma-4-31b-it:free",
         "providerId": "openrouter",
-        "weight": 0
-      },
-      {
-        "id": "observer-model-6-oc-mimo-v2-5-free",
-        "kind": "model",
-        "model": "oc/mimo-v2.5-free",
-        "providerId": "opencode",
         "weight": 0
       }
     ],
@@ -106,8 +113,8 @@
     "isHidden": false,
     "sortOrder": 29,
     "createdAt": "2026-09-19T21:19:11.387Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 4
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 6
   },
   {
     "name": "designer",
@@ -127,21 +134,28 @@
         "weight": 0
       },
       {
-        "id": "designer-model-3-opencode-zen-glm-5-3-flash-free",
+        "id": "designer-model-3-opencode-zen-crouton-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/crouton-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "designer-model-4-opencode-zen-pulse-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/pulse-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "designer-model-5-opencode-zen-glm-5-3-flash-free",
         "kind": "model",
         "model": "opencode-zen/glm-5.3-flash-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "designer-model-4-opencode-zen-flint-40b-free",
-        "kind": "model",
-        "model": "opencode-zen/flint-40b-free",
-        "providerId": "opencode-zen",
-        "weight": 0
-      },
-      {
-        "id": "designer-model-5-openrouter-google-gemma-4-31b-it-free",
+        "id": "designer-model-6-openrouter-google-gemma-4-31b-it-free",
         "kind": "model",
         "model": "openrouter/google/gemma-4-31b-it:free",
         "providerId": "openrouter",
@@ -154,8 +168,8 @@
     "isHidden": false,
     "sortOrder": 35,
     "createdAt": "2026-09-19T22:44:39.216Z",
-    "updatedAt": "2026-10-26T03:49:26.000Z",
-    "version": 5
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 7
   },
   {
     "name": "orchestrator",
@@ -175,24 +189,38 @@
         "weight": 0
       },
       {
-        "id": "orchestrator-model-3-opencode-zen-beam-free",
+        "id": "orchestrator-model-3-opencode-zen-pulse-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/pulse-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "orchestrator-model-4-opencode-zen-crouton-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/crouton-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "orchestrator-model-5-opencode-zen-beam-free",
         "kind": "model",
         "model": "opencode-zen/beam-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "orchestrator-model-4-openrouter-nvidia-nemotron-3-super-120b-a12b-free",
+        "id": "orchestrator-model-6-openrouter-nvidia-nemotron-3-super-120b-a12b-free",
         "kind": "model",
         "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
         "providerId": "openrouter",
         "weight": 0
       },
       {
-        "id": "orchestrator-model-5-oc-big-pickle",
+        "id": "orchestrator-model-7-opencode-zen-big-pickle",
         "kind": "model",
-        "model": "oc/big-pickle",
-        "providerId": "opencode",
+        "model": "opencode-zen/big-pickle",
+        "providerId": "opencode-zen",
         "weight": 0
       }
     ],
@@ -202,8 +230,8 @@
     "isHidden": false,
     "sortOrder": 36,
     "createdAt": "2026-09-19T23:02:35.040Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 4
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 6
   },
   {
     "name": "oracle",
@@ -223,21 +251,28 @@
         "weight": 0
       },
       {
-        "id": "oracle-model-3-opencode-zen-nemotron-3-ultra-free",
+        "id": "oracle-model-3-opencode-zen-pulse-alpha-free",
         "kind": "model",
-        "model": "opencode-zen/nemotron-3-ultra-free",
+        "model": "opencode-zen/pulse-alpha-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "oracle-model-4-openrouter-nvidia-nemotron-3-ultra-550b-a55b-free",
+        "id": "oracle-model-4-opencode-zen-crouton-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/crouton-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "oracle-model-5-openrouter-nvidia-nemotron-3-ultra-550b-a55b-free",
         "kind": "model",
         "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "providerId": "openrouter",
         "weight": 0
       },
       {
-        "id": "oracle-model-5-opencode-zen-flint-40b-free",
+        "id": "oracle-model-6-opencode-zen-flint-40b-free",
         "kind": "model",
         "model": "opencode-zen/flint-40b-free",
         "providerId": "opencode-zen",
@@ -250,8 +285,8 @@
     "isHidden": false,
     "sortOrder": 37,
     "createdAt": "2026-09-19T23:26:26.644Z",
-    "updatedAt": "2026-10-26T03:38:58.000Z",
-    "version": 5
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 7
   },
   {
     "name": "explorer",
@@ -312,28 +347,42 @@
         "weight": 0
       },
       {
-        "id": "librarian-model-2-opencode-zen-mimo-v2-6-flash-free",
+        "id": "librarian-model-2-opencode-zen-crouton-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/crouton-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "librarian-model-3-opencode-zen-pulse-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/pulse-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "librarian-model-4-opencode-zen-mimo-v2-6-flash-free",
         "kind": "model",
         "model": "opencode-zen/mimo-v2.6-flash-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "librarian-model-3-openrouter-dots-studio-dots-3-note-preview-free",
+        "id": "librarian-model-5-openrouter-dots-studio-dots-3-note-preview-free",
         "kind": "model",
         "model": "openrouter/dots-studio/dots-3-note-preview:free",
         "providerId": "openrouter",
         "weight": 0
       },
       {
-        "id": "librarian-model-4-openrouter-thinkingmachines-inkling-free",
+        "id": "librarian-model-6-openrouter-thinkingmachines-inkling-free",
         "kind": "model",
         "model": "openrouter/thinkingmachines/inkling:free",
         "providerId": "openrouter",
         "weight": 0
       },
       {
-        "id": "librarian-model-5-opencode-zen-flint-40b-free",
+        "id": "librarian-model-7-opencode-zen-flint-40b-free",
         "kind": "model",
         "model": "opencode-zen/flint-40b-free",
         "providerId": "opencode-zen",
@@ -346,8 +395,8 @@
     "isHidden": false,
     "sortOrder": 40,
     "createdAt": "2026-09-19T23:26:43.555Z",
-    "updatedAt": "2026-10-26T03:38:58.000Z",
-    "version": 5
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 7
   },
   {
     "name": "fixer",
@@ -367,23 +416,37 @@
         "weight": 0
       },
       {
-        "id": "fixer-model-3-opencode-zen-qwen3-8-flash",
+        "id": "fixer-model-3-opencode-zen-crouton-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/crouton-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "fixer-model-4-opencode-zen-pulse-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/pulse-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "fixer-model-5-opencode-zen-qwen3-8-flash",
         "kind": "model",
         "model": "opencode-zen/qwen3.8-flash",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "fixer-model-4-openrouter-cohere-north-mini-code-free",
+        "id": "fixer-model-6-opencode-zen-glm-5-3-flash-free",
         "kind": "model",
-        "model": "openrouter/cohere/north-mini-code:free",
-        "providerId": "openrouter",
+        "model": "opencode-zen/glm-5.3-flash-free",
+        "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "fixer-model-5-opencode-zen-glm-5-3-flash-free",
+        "id": "fixer-model-7-opencode-zen-big-pickle",
         "kind": "model",
-        "model": "opencode-zen/glm-5.3-flash-free",
+        "model": "opencode-zen/big-pickle",
         "providerId": "opencode-zen",
         "weight": 0
       }
@@ -394,8 +457,8 @@
     "isHidden": false,
     "sortOrder": 41,
     "createdAt": "2026-09-19T23:40:00.562Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 4
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 6
   },
   {
     "name": "skeptic",
@@ -415,16 +478,16 @@
         "weight": 0
       },
       {
-        "id": "skeptic-model-3-opencode-zen-nemotron-3-ultra-free",
+        "id": "skeptic-model-3-opencode-zen-crouton-alpha-free",
         "kind": "model",
-        "model": "opencode-zen/nemotron-3-ultra-free",
+        "model": "opencode-zen/crouton-alpha-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "skeptic-model-4-opencode-zen-beam-free",
+        "id": "skeptic-model-4-opencode-zen-pulse-alpha-free",
         "kind": "model",
-        "model": "opencode-zen/beam-free",
+        "model": "opencode-zen/pulse-alpha-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
@@ -442,8 +505,8 @@
     "isHidden": false,
     "sortOrder": 42,
     "createdAt": "2026-09-19T23:40:02.818Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 4
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 6
   },
   {
     "name": "council",
@@ -463,23 +526,30 @@
         "weight": 0
       },
       {
-        "id": "council-model-3-opencode-zen-nemotron-3-ultra-free",
+        "id": "council-model-3-opencode-zen-pulse-alpha-free",
         "kind": "model",
-        "model": "opencode-zen/nemotron-3-ultra-free",
+        "model": "opencode-zen/pulse-alpha-free",
         "providerId": "opencode-zen",
         "weight": 0
       },
       {
-        "id": "council-model-4-openrouter-nvidia-nemotron-3-ultra-550b-a55b-free",
+        "id": "council-model-4-opencode-zen-crouton-alpha-free",
+        "kind": "model",
+        "model": "opencode-zen/crouton-alpha-free",
+        "providerId": "opencode-zen",
+        "weight": 0
+      },
+      {
+        "id": "council-model-5-openrouter-nvidia-nemotron-3-ultra-550b-a55b-free",
         "kind": "model",
         "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
         "providerId": "openrouter",
         "weight": 0
       },
       {
-        "id": "council-model-5-opencode-zen-beam-free",
+        "id": "council-model-6-opencode-zen-big-pickle",
         "kind": "model",
-        "model": "opencode-zen/beam-free",
+        "model": "opencode-zen/big-pickle",
         "providerId": "opencode-zen",
         "weight": 0
       }
@@ -490,7 +560,7 @@
     "isHidden": false,
     "sortOrder": 43,
     "createdAt": "2026-10-17T01:54:30.000Z",
-    "updatedAt": "2026-10-17T10:38:46.000Z",
-    "version": 3
+    "updatedAt": "2026-11-04T02:52:30.000Z",
+    "version": 5
   }
 ]
