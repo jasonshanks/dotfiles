@@ -51,8 +51,13 @@
       "models": {
         "deepseek-v4.1-flash-free": {
           "limit": {
-            "context": 1000000,
-            "output": 384000,
+            "context": 200000,
+            "output": 32000,
+          },
+        },
+        "crouton-alpha-free": {
+          "body": {
+            "safety_identifier": "opencode",
           },
         },
       },
