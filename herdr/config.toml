@@ -3,6 +3,7 @@ onboarding = false
 [ui.toast]
 delivery = "system"
 
+# Keybindings
 [keys]
 prefix = "ctrl+s"
 toggle_sidebar = ["prefix+b", "cmd+alt+s"]
@@ -39,3 +40,11 @@ key = ["prefix+space"]
 type = "plugin_action"
 command = "herdr-workspacer.open"
 description = "open workspace picker"
+
+# Appearance
+[theme]
+name = "catppuccin-mocha"
+
+[theme.custom]
+overlay0 = "#585b70" # dimmed from default #6c7086
+overlay1 = "#6c7086"   # shift the brighter overlay down a notch too
