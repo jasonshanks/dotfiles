@@ -37,6 +37,11 @@ return {
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
         default = { "lsp", "buffer", "snippets", "path", "codeium" },
+        -- OpenCode Ask provides its own context-placeholder LSP completion. Avoid
+        -- sending every prompt character to Codeium (its blink source is global).
+        per_filetype = {
+          opencode_ask = { "lsp", "buffer" },
+        },
         providers = {
           codeium = { name = "Codeium", module = "codeium.blink", async = true },
         },

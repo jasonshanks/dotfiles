@@ -57,6 +57,7 @@ return {
     },
   },
 
+  -- Tmux/Nvim Navigation
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -95,6 +96,21 @@ return {
         socket_timeout_ms = 150,
       })
     end,
+  },
+
+  -- TUIOS NVIM Navigator
+  {
+    "Tim4c/tuios-nvim-navigator",
+    config = function()
+      require("tuios-nvim-navigator").setup()
+    end,
+  },
+
+  -- REX NVIM Navigator
+  {
+    "wassimk/rex-navigator.nvim",
+    version = "*",
+    config = true,
   },
 
   -- Create annotations with one keybind, and jump your cursor in the inserted annotation

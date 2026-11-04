@@ -11,10 +11,13 @@ local unpack = unpack or table.unpack
 ---@field port? integer
 ---@field password? string basic-auth password printed by our `opencode serve`
 ---@field server_pid? integer pid of our detached `opencode serve` (survives nvim)
----@field mux? "tmux"|"herdr"|"snacks"
----@field pane? string
+---@field mux? "rex"|"tmux"|"herdr"|"snacks"
+---@field pane? string rex: block ID of the TUI split
 ---@field src? string herdr only: the pane the TUI was split from
 ---@field dir? string herdr only: the direction it was split in
+---@field rex_session? string rex only: session the TUI block belongs to
+---@field rex_source? string rex only: anchor block the TUI split was created beside
+---@field rex_split? string rex only: split direction ("right")
 ---@field url? string
 
 ---@param msg string
@@ -163,8 +166,47 @@ local function resolve_port(key, cwd, entry)
   return nil
 end
 
----@return "tmux"|"herdr"|"snacks"
+---Resolve and record this project's port. Credentials and pid belong to the old
+---port's server, so a changed port invalidates them.
+---@param key string
+---@param cwd string
+---@param entry ai.OpencodeEntry
+---@return integer? port nil when every slot is taken by another project
+local function assign_port(key, cwd, entry)
+  local port = resolve_port(key, cwd, entry)
+  if not port then
+    return nil
+  end
+  if port ~= tonumber(entry.port) then
+    entry.password, entry.server_pid = nil, nil
+  end
+  entry.port = port
+  return port
+end
+
+---Rex exports both IDs into every process running in one of its blocks. Treat that
+---pair as authoritative: it is an explicit "run inside Rex" contract, unlike the
+---incidental tmux/herdr variables a Rex session may also inherit.
+---@return string? session
+---@return string? block
+local function rex_env()
+  local session, block = vim.env.REX_SESSION, vim.env.REX_BLOCK
+  if
+    type(session) == "string"
+    and session ~= ""
+    and type(block) == "string"
+    and block ~= ""
+    and vim.fn.executable("rex") == 1
+  then
+    return session, block
+  end
+end
+
+---@return "rex"|"tmux"|"herdr"|"snacks"
 local function mux_kind()
+  if rex_env() then
+    return "rex"
+  end
   if vim.env.TMUX ~= nil and vim.env.TMUX ~= "" and vim.fn.executable("tmux") == 1 then
     return "tmux"
   end
@@ -174,12 +216,56 @@ local function mux_kind()
   return "snacks"
 end
 
+---Inside Rex, all OpenCode UI must live in Rex. Retarget an entry recorded from
+---another multiplexer by dropping its pane id; that backend's pane/session is left
+---untouched. Returns false when this nvim is not running inside Rex.
+---@param entry ai.OpencodeEntry
+---@return boolean in_rex
+local function prefer_rex(entry)
+  local session, block = rex_env()
+  if not session then
+    return false
+  end
+  if entry.mux ~= "rex" or entry.rex_session ~= session then
+    entry.mux, entry.pane = "rex", ""
+    entry.rex_source = nil
+  end
+  entry.rex_session, entry.rex_split = session, "right"
+  entry.rex_source = entry.rex_source or block
+  return true
+end
+
 ---Does the recorded multiplexer split still exist?
 ---@param kind string?
 ---@param pane string?
+---@param session? string rex only: session to scope the block lookup to
 ---@return boolean
-local function pane_alive(kind, pane)
+local function pane_alive(kind, pane, session)
   if type(pane) ~= "string" or pane == "" then
+    return false
+  end
+  if kind == "rex" then
+    local scope = session
+    if type(scope) ~= "string" or scope == "" then
+      scope = vim.env.REX_SESSION
+    end
+    if type(scope) ~= "string" or scope == "" then
+      return false
+    end
+    local ok, out = pcall(vim.fn.system, { "rex", "block", "ls", "-s", scope, "--json" })
+    if not ok or type(out) ~= "string" or vim.trim(out) == "" or vim.v.shell_error ~= 0 then
+      return false
+    end
+    local decoded_ok, decoded = pcall(vim.json.decode, out)
+    local blocks = decoded_ok and type(decoded) == "table" and decoded.blocks
+    if type(blocks) ~= "table" then
+      return false
+    end
+    for _, block in ipairs(blocks) do
+      if type(block) == "table" and block.block_id == pane then
+        return true
+      end
+    end
     return false
   end
   if kind == "tmux" then
@@ -191,6 +277,230 @@ local function pane_alive(kind, pane)
     return ok and vim.v.shell_error == 0
   end
   return false
+end
+
+---First still-live Rex block among the candidates, or nil when none survive.
+---@param session string
+---@param ... string? preferred first
+---@return string?
+local function rex_anchor(session, ...)
+  for i = 1, select("#", ...) do
+    local block = select(i, ...)
+    if type(block) == "string" and block ~= "" and pane_alive("rex", block, session) then
+      return block
+    end
+  end
+  return nil
+end
+
+---One shell command line for argv. Rex types the text into the block's shell, so
+---every token is quoted; passwords and paths are data, not shell syntax.
+---@param argv string[]
+---@return string
+local function shell_line(argv)
+  local parts = {}
+  for _, token in ipairs(argv) do
+    parts[#parts + 1] = vim.fn.shellescape(token)
+  end
+  return table.concat(parts, " ")
+end
+
+---Decoded `rex block call ... process` reply, or nil when the block is gone.
+---@param session string
+---@param block string
+---@return table?
+local function rex_process(session, block)
+  local ok, out = pcall(vim.fn.system, { "rex", "block", "call", "-s", session, "-b", block, "process" })
+  if not ok or type(out) ~= "string" or vim.trim(out) == "" or vim.v.shell_error ~= 0 then
+    return nil
+  end
+  local decoded_ok, decoded = pcall(vim.json.decode, out)
+  return (decoded_ok and type(decoded) == "table") and decoded or nil
+end
+
+---@param value any
+---@return string?
+local function basename(value)
+  if type(value) ~= "string" or value == "" then
+    return nil
+  end
+  return value:match("([^/]+)$") or value
+end
+
+---Is this foreground process the OpenCode TUI? Process metadata is authoritative;
+---terminal text is not. The v2 TUI's `foreground` reports name/path/argv0
+---`opencode`, while a block back at a prompt reports its shell (fish/zsh/login).
+---@param fg table?
+---@return boolean
+local function fg_is_opencode(fg)
+  if type(fg) ~= "table" then
+    return false
+  end
+  return fg.name == "opencode" or basename(fg.path) == "opencode" or basename(fg.argv0) == "opencode"
+end
+
+---Login shells are commonly reported as `-fish`/`-zsh` in argv0.
+---@param value any
+---@return string?
+local function process_name(value)
+  local name = basename(value)
+  if name and name:sub(1, 1) == "-" then
+    return name:sub(2)
+  end
+  return name
+end
+
+---Interactive shells we may safely type into. `login` is what Rex reports before
+---the login shell has exec'd, so it counts as a prompt too.
+local SHELL_NAMES = {
+  login = true,
+  fish = true,
+  zsh = true,
+  bash = true,
+  sh = true,
+  dash = true,
+  ash = true,
+  ksh = true,
+  mksh = true,
+  yash = true,
+  tcsh = true,
+  csh = true,
+  nu = true,
+  nushell = true,
+  pwsh = true,
+  powershell = true,
+  xonsh = true,
+  elvish = true,
+  ion = true,
+}
+
+---Is this foreground process a known interactive shell prompt? Anything else
+---(nvim, top, a pager, ...) must never receive typed text.
+---@param fg table?
+---@return boolean
+local function fg_is_shell(fg)
+  if type(fg) ~= "table" then
+    return false
+  end
+  for _, value in ipairs({ fg.name, fg.path, fg.argv0 }) do
+    local name = process_name(value)
+    if name and SHELL_NAMES[name] then
+      return true
+    end
+  end
+  return false
+end
+
+---Classify what currently owns the recorded block's foreground. `nil` means the
+---block or its process metadata is unavailable, which is never safe to type into.
+---@param entry ai.OpencodeEntry
+---@param session string?
+---@return "tui"|"shell"|"other"|nil
+local function rex_block_state(entry, session)
+  if type(session) ~= "string" or session == "" or type(entry.pane) ~= "string" or entry.pane == "" then
+    return nil
+  end
+  local process = rex_process(session, entry.pane)
+  local fg = type(process) == "table" and process.foreground
+  if type(fg) ~= "table" then
+    return nil
+  end
+  if fg_is_opencode(fg) then
+    return "tui"
+  end
+  if fg_is_shell(fg) then
+    return "shell"
+  end
+  return "other"
+end
+
+---A live Rex block is not a live TUI: our block is a persistent shell, so ask the
+---block what currently owns the foreground.
+---@param entry ai.OpencodeEntry
+---@param session string?
+---@return boolean
+local function rex_tui_running(entry, session)
+  return rex_block_state(entry, session) == "tui"
+end
+
+---Is the recorded block sitting at a recognized shell prompt?
+---@param entry ai.OpencodeEntry
+---@param session string?
+---@return boolean
+local function rex_shell_ready(entry, session)
+  return rex_block_state(entry, session) == "shell"
+end
+
+---Create a persistent Rex shell block and record its ID. No command is attached:
+---the block stays at a prompt after the TUI exits, ready for the next launch.
+---@param entry ai.OpencodeEntry
+---@param cwd string
+---@param session string
+---@param anchor string? block to split beside; nil splits the focused block
+---@param focus? boolean focus the new block (default true)
+---@return boolean created
+local function rex_shell_split(entry, cwd, session, anchor, focus)
+  local cmd = { "rex", "split", "-s", session }
+  if anchor then
+    vim.list_extend(cmd, { "-b", anchor })
+  end
+  vim.list_extend(cmd, { "--split=" .. (entry.rex_split or "right"), "-c", cwd })
+  if focus == false then
+    cmd[#cmd + 1] = "--focus=false"
+  end
+  cmd[#cmd + 1] = "--json"
+
+  local ok, out = pcall(vim.fn.system, cmd)
+  if not ok or type(out) ~= "string" or vim.trim(out) == "" or vim.v.shell_error ~= 0 then
+    return false
+  end
+  local decoded_ok, decoded = pcall(vim.json.decode, out)
+  local ids = decoded_ok and type(decoded) == "table" and decoded.block_ids
+  local id = type(ids) == "table" and ids[1] or nil
+  if type(id) ~= "string" or id == "" then
+    return false
+  end
+  entry.pane = id
+  return true
+end
+
+---Type argv into an existing Rex shell block and run it. Used both for the first
+---launch and every relaunch, so the split itself is never recreated.
+---@param entry ai.OpencodeEntry
+---@param session string
+---@param argv string[]
+---@return boolean sent
+local function rex_run_in_block(entry, session, argv)
+  if type(entry.pane) ~= "string" or entry.pane == "" then
+    return false
+  end
+  local ok = pcall(vim.fn.system, { "rex", "send", "-s", session, "-b", entry.pane, shell_line(argv) })
+  if not ok or vim.v.shell_error ~= 0 then
+    return false
+  end
+  local key_ok = pcall(vim.fn.system, { "rex", "send-key", "-s", session, "-b", entry.pane, "enter" })
+  return key_ok and vim.v.shell_error == 0
+end
+
+---Interrupt the TUI only when it is actually in the foreground, then wait for the
+---block to return to its shell. OpenCode v2 often needs a second interrupt, so
+---retry while the foreground still reports opencode (never send to a bare prompt).
+---@param entry ai.OpencodeEntry
+---@param session string
+---@return boolean shell_ready
+local function rex_stop_tui(entry, session)
+  for _ = 1, 3 do
+    if not rex_tui_running(entry, session) then
+      return true
+    end
+    pcall(vim.fn.system, { "rex", "send-key", "-s", session, "-b", entry.pane, "ctrl+c" })
+    if vim.wait(1500, function()
+      return not rex_tui_running(entry, session)
+    end, 100) then
+      return true
+    end
+  end
+  return not rex_tui_running(entry, session)
 end
 
 ---Herdr wraps replies in `{ id, result }`, so a pane id can land at any depth.
@@ -253,14 +563,27 @@ end
 
 ---Focus this project's opencode pane.
 ---
----Tmux addresses panes absolutely. Herdr cannot: `pane focus` only moves to a
----*neighbour* of a source pane, so we re-issue the split we originally made — "the
----right neighbour of the pane we split from" — which lands on the TUI no matter
----where the user currently sits in the layout.
+---Rex and tmux address panes absolutely (`rex focus` / `select-pane`). Herdr cannot:
+---`pane focus` only moves to a *neighbour* of a source pane, so we re-issue the split
+---we originally made — "the right neighbour of the pane we split from" — which lands
+---on the TUI no matter where the user currently sits in the layout.
 ---@param entry ai.OpencodeEntry
 local function focus_pane(entry)
   local pane = entry.pane
   if type(pane) ~= "string" or pane == "" then
+    return
+  end
+  if entry.mux == "rex" then
+    local session = (type(entry.rex_session) == "string" and entry.rex_session ~= "") and entry.rex_session
+      or vim.env.REX_SESSION
+    if type(session) ~= "string" or session == "" then
+      notify("no rex session recorded to focus opencode block " .. pane, vim.log.levels.WARN)
+      return
+    end
+    local ok = pcall(vim.fn.system, { "rex", "focus", "-s", session, pane })
+    if not ok or vim.v.shell_error ~= 0 then
+      notify("could not focus opencode block " .. pane .. " in " .. session, vim.log.levels.WARN)
+    end
     return
   end
   if entry.mux == "tmux" then
@@ -400,30 +723,98 @@ local function start_server(entry, cwd)
   return true
 end
 
----Stop the detached server this entry owns, if it is still ours to stop.
+---Launch the TUI into this project's persistent Rex block, reusing it when the
+---foreground is a TUI (interrupt it back to a prompt) or a recognized shell.
+---Anything else — an unrelated program or unreadable metadata — is left untouched
+---and gets exactly one fresh split beside the current/stored anchor.
 ---@param entry ai.OpencodeEntry
-local function stop_server(entry)
-  local pid = tonumber(entry.server_pid)
-  entry.server_pid = nil
-  if pid then
-    -- SIGTERM lets opencode shut down cleanly; a stale pid just errors into pcall.
-    local ok, proc = pcall(vim.system, { "kill", "-TERM", tostring(pid) })
-    if ok then
-      pcall(proc.wait, proc, 3000)
-    end
+---@param cwd string
+---@param session string
+---@param argv string[]|fun():string[] command to type, or a builder run after `before_send`
+---@param focus boolean
+---@param known_state? "tui"|"shell"|"other"|nil precomputed foreground; nil classifies here
+---@param opts? {focus_reused_only?: boolean, before_send?: fun(): boolean, run_error_prefix?: string}
+---@return boolean ok
+local function rex_launch(entry, cwd, session, argv, focus, known_state, opts)
+  opts = opts or {}
+  entry.rex_session = session
+  entry.rex_split = entry.rex_split or "right"
+
+  local state = known_state
+  if state == nil then
+    state = pane_alive("rex", entry.pane, session) and rex_block_state(entry, session) or nil
   end
+  local reused = state == "tui" or state == "shell"
+
+  local function fresh_split()
+    -- Prefer the block this nvim runs in, so a fresh split lands beside the user's
+    -- current work; the stored anchor is the fallback when the environment moved.
+    local _, current = rex_env()
+    local anchor = rex_anchor(session, current, entry.rex_source)
+    entry.rex_source = anchor
+    entry.pane = ""
+    return rex_shell_split(entry, cwd, session, anchor, focus)
+  end
+
+  if not reused and not fresh_split() then
+    notify("could not create a rex split for opencode", vim.log.levels.ERROR)
+    return false
+  end
+  if state == "tui" and not rex_stop_tui(entry, session) then
+    notify("could not return rex block " .. entry.pane .. " to a shell", vim.log.levels.ERROR)
+    return false
+  end
+  -- Only type into a confirmed shell; if the interrupt left another program (or
+  -- the block vanished), leave it untouched and use a fresh split.
+  if reused and not rex_shell_ready(entry, session) then
+    if not fresh_split() then
+      notify("could not create a rex split for opencode", vim.log.levels.ERROR)
+      return false
+    end
+    reused = false
+  end
+
+  if opts.before_send and not opts.before_send() then
+    return false
+  end
+  local command = type(argv) == "function" and argv() or argv
+  if not command then
+    return false
+  end
+  if not rex_run_in_block(entry, session, command) then
+    local prefix = opts.run_error_prefix or "could not start opencode in rex block "
+    notify(prefix .. entry.pane, vim.log.levels.ERROR)
+    return false
+  end
+  if focus and (reused or not opts.focus_reused_only) then
+    focus_pane(entry)
+  end
+  return true
 end
 
----Open this project's opencode TUI in a multiplexer split, degrading to a Snacks
----terminal split when no multiplexer CLI is usable. The server must already be up.
+---Open this project's opencode TUI in a Rex/tmux/herdr split, degrading to a Snacks
+---terminal split when no multiplexer CLI is usable. A detected Rex session never
+---degrades to Snacks: a failed split returns false. The server must already be up.
 ---@param entry ai.OpencodeEntry
 ---@param cwd string
 ---@param extra? string[] extra CLI args appended after `--server <url>`
+---@param focus? boolean focus/reveal the TUI (default true)
 ---@return boolean started
-local function start_tui(entry, cwd, extra)
+local function start_tui(entry, cwd, extra, focus)
+  focus = focus ~= false
   local argv = tui_argv(entry, extra)
-  entry.pane = ""
 
+  if entry.mux == "rex" then
+    local session = rex_env()
+    session = session or (type(entry.rex_session) == "string" and entry.rex_session ~= "" and entry.rex_session) or nil
+    if not session then
+      notify("no rex session available to split opencode into", vim.log.levels.WARN)
+      return false
+    end
+    return rex_launch(entry, cwd, session, argv, focus, nil, { focus_reused_only = true })
+  end
+
+  entry.pane = ""
   if entry.mux == "tmux" then
     local ok, current = pcall(vim.fn.system, { "tmux", "display-message", "-p", "#{pane_id}" })
     local target = ok and vim.trim(current) or ""
@@ -454,8 +845,8 @@ local function start_tui(entry, cwd, extra)
       end, 100)
     if ready then
       -- `herdr pane run` parses global flags (like --session) before the command,
-      -- so we use send-text + send-keys to send the raw command line.
-      local cmd_line = table.concat(argv, " ")
+      -- so send the shell-quoted line with send-text + send-keys instead.
+      local cmd_line = shell_line(argv)
       pcall(vim.fn.system, { "herdr", "--session", "default", "pane", "send-text", entry.pane, cmd_line })
       pcall(vim.fn.system, { "herdr", "--session", "default", "pane", "send-keys", entry.pane, "enter" })
       return true
@@ -471,17 +862,18 @@ local function start_tui(entry, cwd, extra)
 end
 
 ---Start this project's opencode server in the background and its TUI in a
----multiplexer split, degrading to a Snacks terminal split when no multiplexer CLI
----is usable.
+---Rex/tmux/herdr split, degrading to a Snacks terminal split when no multiplexer
+---CLI is usable. A detected Rex session never degrades to Snacks.
 ---@param entry ai.OpencodeEntry
 ---@param cwd string
 ---@param extra? string[] extra CLI args appended after `--server <url>`
+---@param focus? boolean focus/reveal the TUI (default true)
 ---@return boolean started
-local function spawn_tui(entry, cwd, extra)
+local function spawn_tui(entry, cwd, extra, focus)
   if not start_server(entry, cwd) then
     return false
   end
-  return start_tui(entry, cwd, extra)
+  return start_tui(entry, cwd, extra, focus)
 end
 
 ---Point the plugin at `url`, authenticating with `password` when the server
@@ -513,37 +905,108 @@ local function adopt(url, password)
   return url
 end
 
+---Persist this project's entry and point the plugin at it.
+---@param key string
+---@param state table<string, ai.OpencodeEntry>
+---@param entry ai.OpencodeEntry
+---@return string url
+local function commit_entry(key, state, entry)
+  entry.url = oc_url(entry.port)
+  state[key] = entry
+  write_state(state)
+  return adopt(entry.url, entry.password)
+end
+
 ---Resolve this project's opencode server and point the plugin at it, reusing an
 ---existing split or server rather than spawning a duplicate.
 ---
 ---One server per project is mandatory: opencode 1.18 writes no `service.json` (so the
 ---plugin's own discovery can never succeed) and `/api/event` is global and ignores
 ---`x-opencode-directory`, so a shared server bleeds permission prompts between projects.
+---@param opts? {focus?: boolean} focus/reveal the TUI (default true)
 ---@return string? url nil when no server could be resolved
-local function ensure_opencode()
+local function ensure_opencode(opts)
+  local focus = not opts or opts.focus ~= false
   local key, cwd = project()
   local state = read_state()
   local entry = type(state[key]) == "table" and state[key] or {}
   entry.mux, entry.pane = entry.mux or "snacks", entry.pane or ""
+  prefer_rex(entry)
 
-  -- A live pane is not proof of a live server: the pane outlives its opencode child when
-  -- opencode crashes or the user quits it, leaving a shell behind that answers no probe.
-  -- Trust the recorded pane only once the recorded port actually answers our password.
-  if pane_alive(entry.mux, entry.pane) then
-    local recorded = tonumber(entry.port)
-    if recorded and probe(entry, cwd) then
+  local session ---@type string?
+  if entry.mux == "rex" then
+    local detected = rex_env()
+    session = (type(entry.rex_session) == "string" and entry.rex_session ~= "") and entry.rex_session or detected
+    entry.rex_session = session
+  end
+
+  local recorded = tonumber(entry.port)
+  local pane_up = pane_alive(entry.mux, entry.pane, entry.rex_session)
+  ---@type "tui"|"shell"|"other"|nil
+  local rex_state = (entry.mux == "rex" and pane_up) and rex_block_state(entry, session) or nil
+  local tui_up = rex_state == "tui"
+  local shell_up = rex_state == "shell"
+
+  -- Reuse is only safe when the recorded pane is genuinely serving this project: the
+  -- pane outlives its opencode child when opencode crashes or the user quits it.
+  if pane_up and recorded and (entry.mux ~= "rex" or tui_up) and probe(entry, cwd) then
+    if focus then
       focus_pane(entry)
-      entry.port, entry.url = recorded, oc_url(recorded)
-      state[key] = entry
-      write_state(state)
-      return adopt(entry.url, entry.password)
+    end
+    entry.port = recorded
+    return commit_entry(key, state, entry)
+  end
+
+  -- Rex blocks are persistent shells. If the block survived but the TUI exited,
+  -- relaunch in that *same* block (fresh password/server when needed) rather than
+  -- focusing a bare prompt or splitting a second pane beside Neovim.
+  if entry.mux == "rex" and session and pane_up and (tui_up or shell_up) then
+    local port = assign_port(key, cwd, entry)
+    if not port then
+      notify("no free port for " .. key, vim.log.levels.ERROR)
+      return nil
     end
 
-    -- Stale pane: forget it so a fresh TUI is spawned instead of a second one.
+    local ok = rex_launch(
+      entry,
+      cwd,
+      session,
+      function()
+        return tui_argv(entry)
+      end,
+      focus,
+      rex_state,
+      {
+        before_send = function()
+          -- A TUI may still front a server that just died: start one before typing.
+          if not probe(entry, cwd) and not start_server(entry, cwd) then
+            notify("could not start an opencode server for " .. key, vim.log.levels.ERROR)
+            return false
+          end
+          return true
+        end,
+        run_error_prefix = "could not start an opencode TUI in rex block ",
+      }
+    )
+    if not ok then
+      return nil
+    end
+    return commit_entry(key, state, entry)
+  end
+
+  -- A live Rex block running something else (nvim, a pager, ...) or whose process
+  -- metadata is unreadable must never receive typed text. Leave it untouched and
+  -- record a fresh split instead; the old block is not closed.
+  if entry.mux == "rex" and pane_up and not (tui_up or shell_up) then
     entry.pane = ""
   end
 
-  local port = resolve_port(key, cwd, entry)
+  -- Non-Rex stale pane: forget it so a fresh TUI is spawned instead of a second one.
+  if pane_up and entry.mux ~= "rex" then
+    entry.pane = ""
+  end
+
+  local port = assign_port(key, cwd, entry)
   if not port then
     local candidate = hash_port(key)
     notify(
@@ -552,31 +1015,29 @@ local function ensure_opencode()
     )
     return nil
   end
-  if port ~= tonumber(entry.port) then
-    -- Credentials/pid belong to the old port's server, not this one.
-    entry.password, entry.server_pid = nil, nil
-  end
-  entry.port = port
 
   -- Server already answering with our credentials: adopt it.
   local server_live = probe(entry, cwd)
   if server_live then
     -- Server is up, but we need a TUI pane if we don't have one.
-    if entry.pane == "" or not pane_alive(entry.mux, entry.pane) then
+    if entry.pane == "" or not pane_alive(entry.mux, entry.pane, entry.rex_session) then
       entry.mux = mux_kind()
-      if not start_tui(entry, cwd) then
+      if not start_tui(entry, cwd, nil, focus) then
         notify("could not start an opencode TUI for " .. key, vim.log.levels.ERROR)
         return nil
       end
-      -- Wait briefly for TUI to attach
-      vim.wait(3000, function()
-        return pane_alive(entry.mux, entry.pane)
-      end, 100)
+      -- Only tmux reports its pane asynchronously after the detached split returns;
+      -- herdr already waited inside start_tui and Snacks has no pane to await.
+      if entry.mux == "tmux" then
+        vim.wait(3000, function()
+          return pane_alive(entry.mux, entry.pane, entry.rex_session)
+        end, 100)
+      end
     end
   else
     -- No server: start server + TUI
     entry.mux = mux_kind()
-    if not spawn_tui(entry, cwd) then
+    if not spawn_tui(entry, cwd, nil, focus) then
       notify("could not start an opencode server/TUI for " .. key, vim.log.levels.ERROR)
       return nil
     end
@@ -588,175 +1049,52 @@ local function ensure_opencode()
     end
   end
 
-  entry.url = oc_url(port)
-  state[key] = entry
-  write_state(state)
-  return adopt(entry.url, entry.password)
+  return commit_entry(key, state, entry)
+end
+
+---Resolve/start this project's detached OpenCode server without starting or
+---focusing a TUI. Ask uses this so cancelling the input never leaves a blank root.
+---@return boolean ready
+local function ensure_server()
+  local key, cwd = project()
+  local state = read_state()
+  local entry = type(state[key]) == "table" and state[key] or {}
+  entry.mux, entry.pane = entry.mux or mux_kind(), entry.pane or ""
+  prefer_rex(entry)
+
+  local port = assign_port(key, cwd, entry)
+  if not port then
+    local candidate = hash_port(key)
+    notify(
+      "no free port for " .. key .. " in " .. candidate .. "-" .. (candidate + OC_PORT_SLOTS - 1),
+      vim.log.levels.ERROR
+    )
+    return false
+  end
+
+  if not probe(entry, cwd) and not start_server(entry, cwd) then
+    notify("could not start an opencode server for " .. key, vim.log.levels.ERROR)
+    return false
+  end
+
+  commit_entry(key, state, entry)
+  return true
 end
 
 local M = {}
 
----Restart the opencode child inside a pane recorded in *our* state file: the TUI is
----interrupted, the background server is stopped so the replacement can rebind the
----freed port, then a fresh server + TUI pair is started with the given extra args.
----Manually started opencode instances have no entry here and are never touched.
----@param entry ai.OpencodeEntry
----@param cwd string
----@param args string[] extra CLI args appended after `--server <url>`
----@return boolean restarted
-local function restart_pane(entry, cwd, args)
-  -- The TUI's terminal/pane identity is tied to the *old* argv (its env carries the
-  -- old password), so capture it before the server rotates it below.
-  local old_term
-  if entry.mux == "snacks" then
-    local ok, terminal = pcall(require, "snacks.terminal")
-    if ok then
-      old_term = terminal.get(tui_argv(entry), { cwd = cwd, win = { position = "right" } })
-    end
-  end
-
-  -- Interrupt the TUI where the pane outlives it (tmux respawn -k does this itself).
-  if entry.mux == "herdr" then
-    pcall(vim.fn.system, { "herdr", "pane", "send-keys", entry.pane, "ctrl+c" })
-  elseif old_term then
-    pcall(old_term.send_keys, old_term, "C-c")
-  end
-
-  stop_server(entry)
-  if not vim.wait(5000, function()
-    return select(2, probe(entry, cwd)) == false
-  end, 100) then
-    return false
-  end
-
-  if not start_server(entry, cwd) then
-    return false
-  end
-
-  local argv = tui_argv(entry, args)
-  local line = table.concat(argv, " ")
-
-  if entry.mux == "tmux" then
-    -- `-k` kills the lingering shell so the fresh TUI takes the pane back.
-    local ok = pcall(vim.fn.system, { "tmux", "respawn-pane", "-k", "-t", entry.pane, "-c", cwd, line })
-    return ok and vim.v.shell_error == 0
-  end
-
-  if entry.mux == "herdr" then
-    -- herdr pane run doesn't work if the pane is running nvim/vim.
-    -- Close the old pane and create a fresh split (same as start_tui).
-    local old_src = entry.src
-    local old_dir = entry.dir
-    pcall(vim.fn.system, { "herdr", "pane", "close", entry.pane })
-    entry.pane = ""
-    local current = herdr_json({ "herdr", "pane", "current", "--current" })
-    local src = current and extract_field(current, "pane_id") or old_src
-    local dir = old_dir or "right"
-    entry.src, entry.dir = src, dir
-    local split_cmd = { "herdr", "pane", "split" }
-    if src then
-      table.insert(split_cmd, "--pane")
-      table.insert(split_cmd, src)
-    else
-      table.insert(split_cmd, "--current")
-    end
-    vim.list_extend(split_cmd, { "--direction", dir, "--cwd", cwd, "--no-focus" })
-    local split = detach(split_cmd, entry, true)
-    local ready = split
-      and vim.wait(10000, function()
-        return entry.pane ~= "" and pane_alive("herdr", entry.pane)
-      end, 100)
-    if ready then
-      local cmd_line = table.concat(argv, " ")
-      pcall(vim.fn.system, { "herdr", "--session", "default", "pane", "send-text", entry.pane, cmd_line })
-      pcall(vim.fn.system, { "herdr", "--session", "default", "pane", "send-keys", entry.pane, "enter" })
-      return true
-    end
-    return false
-  end
-
-  if entry.mux == "snacks" then
-    if not old_term then
-      return false
-    end
-    -- The TUI exited on C-c; type the replacement argv into the same terminal's shell.
-    pcall(old_term.send_keys, old_term, line, "enter")
-    return true
-  end
-
-  return false
-end
-
----POST /api/session with `parentID` forks a session server-side; the new session's
----id comes straight back in the response body.
----@param entry ai.OpencodeEntry
----@param cwd string
----@param session_id string
----@return string? new_id
-local function fork_session(entry, cwd, session_id)
-  local cmd = { "curl", "-s", "-m", "5", "-X", "POST", "-H", "Content-Type: application/json" }
-  if type(entry.password) == "string" and entry.password ~= "" then
-    vim.list_extend(cmd, { "-u", "opencode:" .. entry.password })
-  end
-  vim.list_extend(cmd, {
-    "-H",
-    "x-opencode-directory: " .. vim.uri_encode(cwd),
-    "-d",
-    vim.json.encode({ parentID = session_id }),
-    oc_url(entry.port) .. "/api/session",
-  })
-  local ok, reply = pcall(vim.fn.system, cmd)
-  if not ok or type(reply) ~= "string" or vim.trim(reply) == "" then
-    return nil
-  end
-  local decoded_ok, decoded = pcall(vim.json.decode, reply)
-  local data = decoded_ok and type(decoded) == "table" and (decoded.data or decoded)
-  local id = type(data) == "table" and data.id or nil
-  return type(id) == "string" and id or nil
-end
-
----Fallback confirmation: poll the project's session list for a child of
----`session_id` (`parentID == session_id`) rather than matching forked titles.
----@param entry ai.OpencodeEntry
----@param key string
----@param session_id string
----@return string? new_id
-local function find_fork(entry, key, session_id)
-  local dir = vim.uri_encode(realpath(key))
-  local cmd = { "curl", "-s", "-m", "2" }
-  if type(entry.password) == "string" and entry.password ~= "" then
-    vim.list_extend(cmd, { "-u", "opencode:" .. entry.password })
-  end
-  vim.list_extend(cmd, {
-    "-H",
-    "x-opencode-directory: " .. dir,
-    oc_url(entry.port) .. "/api/session?directory=" .. dir .. "&order=desc&parentID=" .. session_id,
-  })
-  local ok, reply = pcall(vim.fn.system, cmd)
-  if not ok or type(reply) ~= "string" or vim.trim(reply) == "" then
-    return nil
-  end
-  local decoded_ok, decoded = pcall(vim.json.decode, reply)
-  local list = decoded_ok and type(decoded) == "table" and (decoded.data or decoded)
-  if type(list) ~= "table" then
-    return nil
-  end
-  for _, session in ipairs(list) do
-    if type(session) == "table" and type(session.id) == "string" and session.parentID == session_id then
-      return session.id
-    end
-  end
-  return nil
-end
-
----Restore a session into this project's opencode as a *fork*.
+---Resume an existing root session in this project's opencode TUI.
 ---
----v2 forks through the API (`POST /api/session` with `parentID`) instead of the
----removed `--fork` CLI flag, then reopens the TUI on the new session with
----`--session <new_id>` so `:Opencode`/`ask` follow it.
+---The selected ID is passed unchanged as `--session <id>`; no fork and no child
+---session is created. The detached server is a shared service, so an authenticating
+---server is kept alive and only the TUI client is reopened. Rex reuses its persistent
+---shell block (interrupting only a foreground TUI), so switching session never opens
+---an embedded Neovim terminal/tab.
 ---@param session_id string
+---@param opts? {focus?: boolean} focus/reveal the TUI (default true)
 ---@return boolean restored
-function M.restore_session(session_id)
+function M.restore_session(session_id, opts)
+  local focus = not opts or opts.focus ~= false
   session_id = vim.trim(session_id or "")
   if not session_id:match("^ses_%w+$") then
     notify("not an opencode session id: `" .. session_id .. "` (expected `ses_...`)", vim.log.levels.ERROR)
@@ -771,55 +1109,22 @@ function M.restore_session(session_id)
   -- has no pane id to check — so an entry we cannot tie to a pane is never ours.
   local recorded_mux = recorded and recorded.mux or nil
   entry.mux, entry.pane = entry.mux or "snacks", entry.pane or ""
+  prefer_rex(entry)
 
-  local port = resolve_port(key, cwd, entry)
+  local port = assign_port(key, cwd, entry)
   if not port then
     notify("no free port for " .. key, vim.log.levels.ERROR)
     return false
   end
-  if port ~= tonumber(entry.port) then
-    -- Credentials/pid belong to the old port's server, not this one.
-    entry.password, entry.server_pid = nil, nil
-  end
-  entry.port = port
 
-  local _, live = probe(entry, cwd)
-  -- We own the server if probe succeeds with our credentials (even if pane died).
-  -- For Snacks, we also consider it ours if the server is live (no pane to check).
-  local server_ours = probe(entry, cwd) ~= nil
-  local owned = server_ours or (recorded_mux == "snacks" and live)
+  local dir, live = probe(entry, cwd)
+  -- We own the server when it authenticates with our password. A Snacks entry with
+  -- anything listening counts too (there is no pane to check), matching ensure_opencode.
+  local owned = dir ~= nil or (recorded_mux == "snacks" and live)
 
-  if owned then
-    if not live and not start_server(entry, cwd) then
-      notify("could not start an opencode server for " .. key, vim.log.levels.ERROR)
-      return false
-    end
-    local forked = fork_session(entry, cwd, session_id)
-    if not forked then
-      vim.wait(5000, function()
-        forked = find_fork(entry, key, session_id)
-        return forked ~= nil
-      end, 250)
-    end
-    if not forked then
-      notify("opencode did not fork " .. session_id, vim.log.levels.ERROR)
-      return false
-    end
-    notify("reloading this project's opencode from " .. session_id .. "…")
-    if not restart_pane(entry, cwd, { "--session", forked }) then
-      notify("could not restart the opencode in " .. entry.mux .. " pane " .. entry.pane, vim.log.levels.ERROR)
-      return false
-    end
-    entry.url = oc_url(port)
-    state[key] = entry
-    write_state(state)
-    adopt(entry.url, entry.password)
-    notify("forked " .. session_id .. " as " .. forked)
-    return true
-  end
-
-  if live then
-    -- A server we did not start: never kill it, just say what to run.
+  if live and not owned then
+    -- A server we did not start: never stop it or mutate its sessions, just say what
+    -- to run. Other clients and their active tasks stay untouched.
     notify(
       "opencode for "
         .. key
@@ -834,36 +1139,90 @@ function M.restore_session(session_id)
     return false
   end
 
-  -- No server at all: bring one up, fork via the API, then open the TUI on the fork.
-  entry.mux = mux_kind()
-  if not start_server(entry, cwd) then
-    notify("could not start an opencode server for " .. key, vim.log.levels.ERROR)
-    return false
-  end
-  local forked = fork_session(entry, cwd, session_id)
-  if not forked then
-    -- Unreadable response: fall back to watching the session list for our child.
-    vim.wait(5000, function()
-      forked = find_fork(entry, key, session_id)
-      return forked ~= nil
-    end, 250)
-  end
-  if not forked then
-    notify("opencode did not fork " .. session_id, vim.log.levels.ERROR)
-    return false
-  end
-  if not start_tui(entry, cwd, { "--session", forked }) then
-    notify("could not start an opencode TUI for " .. key, vim.log.levels.ERROR)
-    return false
+  local args = { "--session", session_id }
+  if not live then
+    -- No listener at all: start the server this flow owns, then the TUI client.
+    entry.mux = mux_kind()
+    if not spawn_tui(entry, cwd, args, focus) then
+      notify("could not start an opencode server/TUI for " .. key, vim.log.levels.ERROR)
+      return false
+    end
+    if not vim.wait(15000, function()
+      return probe(entry, cwd) ~= nil
+    end, 300) then
+      notify("no opencode server answered on port " .. port, vim.log.levels.ERROR)
+      return false
+    end
+  else
+    -- Keep the shared server alive: only the TUI client is reopened on the selected
+    -- session. Rex reuses/relaunches its persistent block; other mux paths split anew.
+    if not start_tui(entry, cwd, args, focus) then
+      notify("could not open opencode in " .. entry.mux, vim.log.levels.ERROR)
+      return false
+    end
   end
 
-  entry.url = oc_url(port)
-  state[key] = entry
-  write_state(state)
-  adopt(entry.url, entry.password)
-
-  notify("forked " .. session_id .. " as " .. forked)
+  commit_entry(key, state, entry)
+  notify("resumed " .. session_id)
   return true
+end
+
+---Ask OpenCode in a fresh root session that is created only after the input is
+---submitted.
+---
+---This intentionally bypasses `resolve_session()` for the first prompt: the rendered
+---cursor/selection context must land in the root created by this call, not whichever
+---session happened to be newest before the dialog opened. The TUI is switched to that
+---root without focus so the Ask input keeps the keyboard. Later plugin actions use
+---normal newest-root resolution, and the new root is newest.
+---@param default string
+function M.ask_new_session(default)
+  if not ensure_server() then
+    return
+  end
+
+  local Promise = require("opencode.promise")
+  local discovery = require("opencode.server.discovery")
+  local Context = require("opencode.context")
+  local ui = require("opencode.ui.ask")
+
+  local context ---@type opencode.context.Context?
+  local server ---@type opencode.server.Server?
+  local submitted = false
+
+  return discovery
+    .get()
+    :next(function(found)
+      server = found
+      context = Context.new(server)
+      return ui.ask(default, context)
+    end)
+    :next(function(input)
+      submitted = true
+      local plaintext = context:render(input).output:plaintext()
+      return server:request("/api/session", "POST", {}):next(function(response)
+        local data = type(response) == "table" and response.data
+        local id = type(data) == "table" and data.id
+        if type(id) ~= "string" or id == "" then
+          return Promise.reject("OpenCode did not return a session id")
+        end
+        -- Switch the persistent TUI before prompting. No focus: the Ask input owns
+        -- the keyboard. `restore_session` still passes this exact id unchanged.
+        if not M.restore_session(id, { focus = false }) then
+          return Promise.reject("could not open opencode session " .. id)
+        end
+        return server:prompt(id, plaintext):next(function()
+          context:clear()
+        end)
+      end)
+    end)
+    :catch(function(err)
+      -- `ui.ask` already resumes on cancellation; only resume failures after submit.
+      if submitted and context then
+        context:resume()
+      end
+      notify(tostring(err), vim.log.levels.ERROR)
+    end)
 end
 
 ---@param ms number?
@@ -941,7 +1300,60 @@ function M.complete_session(lead)
   return ids
 end
 
----Pick one of this project's recent sessions and fork it.
+---Delete a session (and its child sessions) after an explicit confirmation.
+---@param picker snacks.Picker
+---@param item snacks.picker.Item
+local function delete_session(picker, item)
+  if type(item) ~= "table" or type(item.id) ~= "string" or item.id == "" then
+    return
+  end
+
+  local ok, util = pcall(require, "snacks.picker.util")
+  if not ok or type(util.confirm) ~= "function" then
+    notify("cannot confirm session deletion — snacks.picker is unavailable", vim.log.levels.ERROR)
+    return
+  end
+
+  local id = item.id
+  local prompt = table.concat({
+    "Delete opencode session " .. id .. "?",
+    "",
+    "This permanently removes the session history and all child sessions, including active subagents.",
+    "There is no undo.",
+  }, "\n")
+
+  util.confirm(prompt, function()
+    local _, cwd = project()
+    local started = pcall(
+      vim.system,
+      { "opencode", "session", "delete", id },
+      { cwd = cwd, text = true },
+      function(result)
+        vim.schedule(function()
+          if type(result) ~= "table" or result.code ~= 0 then
+            local detail = type(result) == "table" and (result.stderr or result.stdout) or ""
+            detail = vim.trim(detail or "")
+            notify(
+              "could not delete opencode session " .. id .. (detail ~= "" and (": " .. detail) or ""),
+              vim.log.levels.ERROR
+            )
+            return
+          end
+          pcall(function()
+            picker:close()
+          end)
+          notify("deleted opencode session " .. id)
+          M.pick_session()
+        end)
+      end
+    )
+    if not started then
+      notify("could not delete opencode session " .. id, vim.log.levels.ERROR)
+    end
+  end)
+end
+
+---Pick one of this project's recent sessions and resume it in the persistent TUI.
 function M.pick_session()
   local key, cwd = project()
   fetch_sessions(cwd, function(sessions)
@@ -978,6 +1390,21 @@ function M.pick_session()
       title = "Opencode sessions — " .. key,
       format = "text",
       layout = { preset = "select" },
+      actions = {
+        delete_session = delete_session,
+      },
+      win = {
+        input = {
+          keys = {
+            ["<C-x>"] = { "delete_session", mode = { "n", "i" }, desc = "Delete session" },
+          },
+        },
+        list = {
+          keys = {
+            ["<C-x>"] = { "delete_session", mode = { "n" }, desc = "Delete session" },
+          },
+        },
+      },
       confirm = function(picker, item)
         picker:close()
         M.restore_session(item.id)
@@ -997,6 +1424,14 @@ return {
     config = function()
       require("codeium").setup({
         enable_cmp_source = false,
+        -- Blink owns completion; stop Codeium's own virtual-text requests in
+        -- transient inputs (OpenCode Ask) where they only produce errors.
+        virtual_text = {
+          filetypes = {
+            opencode_ask = false,
+            snacks_input = false,
+          },
+        },
       })
     end,
   },
@@ -1093,7 +1528,7 @@ return {
         M.restore_session(args.args)
       end, {
         nargs = 1,
-        desc = "Fork an opencode session into this project's TUI",
+        desc = "Resume an opencode session in this project's TUI",
         complete = M.complete_session,
       })
 
@@ -1109,7 +1544,17 @@ return {
           local state = read_state()
           local entry = type(state[key]) == "table" and state[key] or {}
           entry.mux, entry.pane = entry.mux or "snacks", entry.pane or ""
-          if pane_alive(entry.mux, entry.pane) then
+
+          -- Inside Rex the split *is* the terminal. Persist the detected session so
+          -- `ensure_opencode()` reuses/focuses the block instead of falling back to Snacks.
+          if prefer_rex(entry) then
+            state[key] = entry
+            write_state(state)
+            ensure_opencode()
+            return
+          end
+
+          if pane_alive(entry.mux, entry.pane, entry.rex_session) then
             ensure_opencode()
             return
           end
@@ -1135,9 +1580,7 @@ return {
       {
         "<leader>oa",
         function()
-          if ensure_opencode() then
-            require("opencode").ask("@cursor: ")
-          end
+          M.ask_new_session("@cursor: ")
         end,
         desc = "Ask opencode",
         mode = "n",
@@ -1145,9 +1588,7 @@ return {
       {
         "<leader>oa",
         function()
-          if ensure_opencode() then
-            require("opencode").ask("@selection: ")
-          end
+          M.ask_new_session("@selection: ")
         end,
         desc = "Ask opencode about selection",
         mode = "v",
