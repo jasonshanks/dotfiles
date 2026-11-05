@@ -22,7 +22,8 @@
     "balanced": {
       "orchestrator": {
         "model": [
-          "opencode/gpt-6-luna",
+          "opencode-go/gpt-6-luna",
+          "opencode-go/glm-5.3-flash",
           "opencode/glm-5.3-flash-free",
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
@@ -35,8 +36,8 @@
       },
       "oracle": {
         "model": [
-          "opencode/gpt-6.1-sol",
-          "opencode/glm-5.3",
+          "opencode-go/gemini-4-argon",
+          "opencode-go/glm-5.3",
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
           "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -54,7 +55,7 @@
       },
       "explorer": {
         "model": [
-          "opencode/claude-haiku-5-5",
+          "opencode-go/claude-haiku-5-5",
           "opencode/nemotron-3.5-lightning-free",
           "openrouter/cohere/north-mini-code:free",
           "openrouter/nvidia/nemotron-3.5-lightning:free",
@@ -79,11 +80,11 @@
       },
       "fixer": {
         "model": [
-          "opencode/deepseek-v4.1-flash",
+          "opencode-go/deepseek-v4.1-flash",
           "opencode/deepseek-v4.1-flash-free",
           "opencode/crouton-alpha-free",
           "opencode/pulse-alpha-free",
-          "opencode/qwen3.8-flash",
+          "opencode-go/qwen3.8-flash",
           "opencode/glm-5.3-flash-free",
           "opencode/big-pickle"
         ],
@@ -98,7 +99,7 @@
       },
       "designer": {
         "model": [
-          "opencode/claude-haiku-5-5",
+          "opencode-go/claude-haiku-5-5",
           "opencode/mimo-v2.6-flash-free",
           "opencode/crouton-alpha-free",
           "opencode/pulse-alpha-free",
@@ -135,7 +136,7 @@
       },
       "council": {
         "model": [
-          "opencode/glm-5.3",
+          "opencode-go/glm-5.3",
           "opencode/glm-5.3-flash-free",
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
@@ -145,8 +146,8 @@
       },
       "skeptic": {
         "model": [
-          "opencode/kimi-k3",
-          "opencode/glm-5.3",
+          "opencode-go/kimi-k3.1-pro",
+          "opencode-go/kimi-k3",
           "opencode/crouton-alpha-free",
           "opencode/pulse-alpha-free",
           "openrouter/thinkingmachines/inkling:free"
@@ -161,6 +162,8 @@
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
           "opencode/beam-free",
+          "opencode-go/beam-free",
+          "opencode-go/iceman-contributor-free",
           "opencode/big-pickle"
         ],
         "temperature": 0.4,
@@ -172,6 +175,7 @@
           "opencode/glm-5.3-flash-free",
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
+          "opencode-go/beam-free",
           "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
           "opencode/flint-40b-free"
         ],
@@ -190,7 +194,8 @@
           "opencode/nemotron-3.5-lightning-free",
           "openrouter/cohere/north-mini-code:free",
           "openrouter/nvidia/nemotron-3.5-lightning:free",
-          "opencode/beam-free"
+          "opencode/beam-free",
+          "opencode-go/beam-free"
         ],
         "temperature": 0.2,
         "skills": [],
@@ -212,10 +217,12 @@
       "fixer": {
         "model": [
           "opencode/deepseek-v4.1-flash-free",
+          "opencode-go/iceman-contributor-free",
           "opencode/crouton-alpha-free",
           "opencode/pulse-alpha-free",
           "openrouter/cohere/north-mini-code:free",
           "opencode/glm-5.3-flash-free",
+          "opencode-go/beam-free",
           "opencode/big-pickle"
         ],
         "temperature": 0.2,
@@ -269,6 +276,8 @@
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
           "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+          "opencode-go/iceman-contributor-free",
+          "opencode-go/beam-free",
           "opencode/big-pickle"
         ]
       },
@@ -277,6 +286,7 @@
           "opencode/glm-5.3-flash-free",
           "opencode/crouton-alpha-free",
           "opencode/pulse-alpha-free",
+          "opencode-go/iceman-contributor-free",
           "openrouter/thinkingmachines/inkling:free"
         ],
         "variant": "max"
@@ -289,6 +299,8 @@
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
           "opencode/beam-free",
+          "opencode-go/beam-free",
+          "opencode-go/iceman-contributor-free",
           "opencode/big-pickle"
         ],
         "temperature": 0.4,
@@ -300,6 +312,7 @@
           "opencode/glm-5.3-flash-free",
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
+          "opencode-go/beam-free",
           "opencode/flint-40b-free"
         ],
         "temperature": 0.4,
@@ -313,7 +326,11 @@
         "mcps": ["codegraph", "searxng", "crawl4ai"]
       },
       "explorer": {
-        "model": ["opencode/nemotron-3.5-lightning-free", "opencode/beam-free"],
+        "model": [
+          "opencode/nemotron-3.5-lightning-free",
+          "opencode/beam-free",
+          "opencode-go/beam-free"
+        ],
         "temperature": 0.2,
         "skills": [],
         "mcps": ["local-first-systemone-mcp", "*"]
@@ -332,9 +349,11 @@
       "fixer": {
         "model": [
           "opencode/deepseek-v4.1-flash-free",
+          "opencode-go/iceman-contributor-free",
           "opencode/crouton-alpha-free",
           "opencode/pulse-alpha-free",
           "opencode/glm-5.3-flash-free",
+          "opencode-go/beam-free",
           "opencode/big-pickle"
         ],
         "temperature": 0.2,
@@ -384,6 +403,8 @@
           "opencode/glm-5.3-flash-free",
           "opencode/pulse-alpha-free",
           "opencode/crouton-alpha-free",
+          "opencode-go/iceman-contributor-free",
+          "opencode-go/beam-free",
           "opencode/big-pickle"
         ]
       },
@@ -391,7 +412,8 @@
         "model": [
           "opencode/glm-5.3-flash-free",
           "opencode/crouton-alpha-free",
-          "opencode/pulse-alpha-free"
+          "opencode/pulse-alpha-free",
+          "opencode-go/iceman-contributor-free"
         ],
         "variant": "max"
       }
