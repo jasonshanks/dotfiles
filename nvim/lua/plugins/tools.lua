@@ -1,4 +1,5 @@
 -- 🛠️ Tools: productivity integrations — file management, fuzzy finding, and external app bridges
+local detail = false
 
 return {
   {
@@ -36,17 +37,17 @@ return {
       })
     end,
   },
-
   {
     "stevearc/oil.nvim",
-    -- "barrettruth/canola.nvim", -- NOTE: trying Canola fork with more recent updates.
-
     ---@module 'oil'
     ---@type oil.SetupOpts
     keys = {
       { "-", "<cmd>Oil<cr>", desc = "Open Oil" },
     },
     opts = {
+      win_options = {
+        signcolumn = "yes:2",
+      },
       keymaps = {
         ["gd"] = {
           desc = "Toggle file detail view",
@@ -61,11 +62,19 @@ return {
         },
       },
     },
-    -- Optional dependencies
-    dependencies = { { "nvim-mini/mini.icons", opts = {} } },
-    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+    dependencies = {
+      { "nvim-mini/mini.icons", opts = {} },
+    },
   },
+  {
+    "refractalize/oil-git-status.nvim",
 
+    dependencies = {
+      "stevearc/oil.nvim",
+    },
+
+    config = true,
+  },
   {
     "hedyhli/outline.nvim",
     lazy = true,

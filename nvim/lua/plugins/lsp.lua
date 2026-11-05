@@ -5,6 +5,7 @@ return {
     "saghen/blink.cmp",
     dependencies = {
       "rafamadriz/friendly-snippets",
+      "mikavilpas/blink-ripgrep.nvim",
       "Exafunction/windsurf.nvim",
     },
     ---@module 'blink.cmp'
@@ -36,7 +37,7 @@ return {
       -- Default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
-        default = { "lsp", "buffer", "snippets", "path", "codeium" },
+        default = { "lsp", "buffer", "ripgrep", "snippets", "path", "codeium" },
         -- OpenCode Ask provides its own context-placeholder LSP completion. Avoid
         -- sending every prompt character to Codeium (its blink source is global).
         per_filetype = {
@@ -44,16 +45,27 @@ return {
         },
         providers = {
           codeium = { name = "Codeium", module = "codeium.blink", async = true },
+          ripgrep = {
+            module = "blink-ripgrep",
+            name = "Ripgrep",
+            ---@module "blink-ripgrep"
+            ---@type blink-ripgrep.Options
+            opts = {
+              backend = {
+                use = "gitgrep-or-ripgrep",
+              },
+            },
+          },
         },
+        -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+        -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+        -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+        --
+        -- See the fuzzy documentation for more information
+        fuzzy = { implementation = "prefer_rust_with_warning" },
       },
-      -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-      -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-      -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-      --
-      -- See the fuzzy documentation for more information
-      fuzzy = { implementation = "prefer_rust_with_warning" },
+      opts_extend = { "sources.default" },
     },
-    opts_extend = { "sources.default" },
   },
 
   {
@@ -106,8 +118,16 @@ return {
         "ts_ls", -- TypeScript
       })
 
-      vim.diagnostic.config({ virtual_text = true })
+      vim.diagnostic.config({ virtual_text = false })
     end,
+  },
+
+  -- Tiny Inline Diagnostics
+  {
+    "rachartier/tiny-inline-diagnostic.nvim",
+    event = "VeryLazy",
+    priority = 1000,
+    opts = {},
   },
 
   -- Incremental rename
