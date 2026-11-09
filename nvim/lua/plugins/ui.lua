@@ -1,195 +1,112 @@
 --------------------------------------------------------------------------------
--- 🎨 UI: visual presentation, aesthetics, and navigational feedback
+-- UI: colorscheme, statusline, pickers, notifications and other presentation.
 --------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------
--- Colorscheme plugin specs + background/transparency toggle utilities
---------------------------------------------------------------------------------
+-- Active colorscheme: catppuccin-mocha. The VimEnter workaround below clears the
+-- background of Normal/NonText so the terminal background shows through.
+require("catppuccin").setup({})
+vim.cmd.colorscheme("catppuccin-mocha")
 
--- Background Toggle Module
-local M = {}
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.cmd("highlight Normal guibg=NONE ctermbg=NONE")
+    vim.cmd("highlight NonText guibg=NONE ctermbg=NONE")
+  end,
+})
 
--- Single source of truth for background state: "transparent" | "black" | "default"
-local bg_state = "default"
+-- Colorscheme picker + transparency / black background toggles.
+require("utils.colorscheme")
 
--- Highlight groups that receive a background override
-local BG_HIGHLIGHT_GROUPS = {
-  "Normal",
-  "NormalFloat",
-  "NormalNC",
-  "SignColumn",
-  "EndOfBuffer",
-}
+-- Icons
+require("mini.icons").setup()
+require("mini.icons").mock_nvim_web_devicons()
 
--- Colorschemes excluded from the custom picker
-local EXCLUDED_COLORSCHEMES = {
-  -- Vim built-ins
-  "blue",
-  "darkblue",
-  "default",
-  "delek",
-  "desert",
-  "elflord",
-  "evening",
-  "habamax",
-  "industry",
-  "koehler",
-  "lunaperche",
-  "morning",
-  "murphy",
-  "pablo",
-  "peachpuff",
-  "quiet",
-  "retrobox",
-  "ron",
-  "shine",
-  "slate",
-  "sorbet",
-  "torte",
-  "unokai",
-  "vim",
-  "zaibatsu",
-  "zellner",
-  -- Light / unwanted variants of installed themes
-  "bamboo-light",
-  "bamboo-multiplex",
-  "bamboo-vulgaris",
-  "bluloco-dark",
-  "bluloco-light",
-  "dawnfox",
-  "dayfox",
-  "kanso-ink",
-  "kanso-zen",
-  "kanso-mist",
-  "kanso-pearl",
-  "kanagawa-dragon",
-  "kanagawa-lotus",
-  "kanagawa-wave",
-  "material-lighter",
-  "material-darker",
-  "material-oceanic",
-  "material-palenight",
-  "ofirkai-darkblue",
-  "onedark",
-  "onelight",
-  "rose-pine-dawn",
-  "rose-pine-main",
-  "solarized-osaka-day",
-}
+-- Picker, notifications, dashboard, terminal, ...
+require("snacks").setup({
+  input = { enabled = true },
+  image = {},
+  picker = {
+    enabled = true,
+    matcher = {
+      frecency = true,
+    },
+    sources = {
+      files = { hidden = true },
+      grep = { hidden = true },
+    },
+  },
+  notifier = { enabled = true },
+  statuscolumn = { enabled = true },
+  words = { enabled = true },
+  lazygit = {},
+  terminal = {
+    win = {
+      position = "float", -- "float", "bottom", "top", "left", "right"
+      height = 0.8, -- 80% of screen height
+      width = 0.8, -- 80% of screen width
+    },
+  },
 
---- Apply highlight groups for a given background colour value.
---- Pass "NONE" for transparent or a hex string (e.g. "#000000") for a solid colour.
----@param bg string
-local function set_bg_highlights(bg)
-  for _, group in ipairs(BG_HIGHLIGHT_GROUPS) do
-    vim.api.nvim_set_hl(0, group, { bg = bg })
-  end
-  vim.api.nvim_set_hl(0, "CursorLine", { blend = 50 })
-end
+  -- convenience
+  quickfile = {},
 
---- Apply the current bg_state to Neovim highlight groups.
-local function apply_background_state()
-  if bg_state == "transparent" then
-    set_bg_highlights("NONE")
-  elseif bg_state == "black" then
-    set_bg_highlights("#000000")
-  else
-    -- Restore the active colorscheme's default background
-    local current_scheme = vim.g.colors_name or "default"
-    if current_scheme ~= "default" then
-      pcall(vim.cmd, "colorscheme " .. current_scheme)
-    end
-    -- Reset CursorLine to theme default
-    vim.api.nvim_set_hl(0, "CursorLine", {})
-  end
-end
+  ---@class snacks.zen.Config
+  zen = {
+    ---@type table<string, boolean>
+    toggles = {
+      dim = true,
+      git_signs = false,
+      mini_diff_signs = false,
+      diagnostics = false,
+      inlay_hints = false,
+      line_number = false,
+    },
+    show = {
+      statusline = false, -- can only be shown when using the global statusline
+      tabline = false,
+    },
+    ---@type snacks.win.Config
+    win = { style = "zen" },
+    enabled = true,
+    enter = true,
+    fixbuf = false,
+    minimal = false,
+    width = 140,
+    height = 0,
+    backdrop = { transparent = true, blend = 0 },
+    keys = { q = false },
+    zindex = 40,
+    wo = {
+      winhighlight = "NormalFloat:Normal",
+    },
+    w = {
+      snacks_main = true,
+    },
+    --- Options for the `Snacks.zen.zoom()`
+    ---@type snacks.zen.Config
+    zoom = {
+      toggles = {},
+      show = {
+        statusline = true,
+        tabline = true,
+      },
+      win = {
+        backdrop = false,
+        width = 0, -- full width
+      },
+    },
+  },
+})
 
---- Return only user-installed colorschemes, filtering out built-ins and light variants.
----@return string[]
-M.get_custom_colorschemes = function()
-  local filtered = {}
-  for _, color in ipairs(vim.fn.getcompletion("", "color")) do
-    if not vim.tbl_contains(EXCLUDED_COLORSCHEMES, color) then
-      table.insert(filtered, color)
-    end
-  end
-  return filtered
-end
+-- Install the vim.ui adapters now instead of waiting for Snacks' UIEnter hook.
+require("snacks.input").enable()
+require("snacks.picker").setup()
 
---- Open a picker for user-installed colorschemes and apply the selection.
-M.pick_colorscheme = function()
-  vim.ui.select(M.get_custom_colorschemes(), { prompt = "Select colorscheme:" }, function(choice)
-    if choice then
-      vim.cmd("colorscheme " .. choice)
-      apply_background_state()
-      vim.notify("Colorscheme changed to " .. choice, vim.log.levels.INFO)
-    end
-  end)
-end
+-- Cellular Automaton: a totally frivolous animation of current buffer contents. Like a fidget toy for your code!
+vim.keymap.set("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>")
+vim.keymap.set("n", "<leader>fmg", "<cmd>CellularAutomaton game_of_life<CR>")
 
---- Toggle transparent background on/off.
-M.toggle_transparency = function()
-  bg_state = (bg_state == "transparent") and "default" or "transparent"
-  apply_background_state()
-  vim.notify("Background set to " .. bg_state, vim.log.levels.INFO)
-end
-
---- Toggle solid black background on/off.
-M.toggle_black_background = function()
-  bg_state = (bg_state == "black") and "default" or "black"
-  apply_background_state()
-  vim.notify("Background set to " .. bg_state, vim.log.levels.INFO)
-end
-
---- Reset background to the active colorscheme's default.
-M.reset_background = function()
-  bg_state = "default"
-  apply_background_state()
-  vim.notify("Background reset to default", vim.log.levels.INFO)
-end
-
---- Initialise the module: reset state after colorscheme loading completes.
-M.init = function()
-  bg_state = "default"
-  vim.schedule(apply_background_state)
-end
-
--- Keymaps
-local keymap_opts = { noremap = true, silent = true }
-
-vim.keymap.set(
-  "n",
-  "<leader>ct",
-  M.toggle_transparency,
-  vim.tbl_extend("force", keymap_opts, { desc = "Toggle transparency" })
-)
-vim.keymap.set(
-  "n",
-  "<leader>cb",
-  M.toggle_black_background,
-  vim.tbl_extend("force", keymap_opts, { desc = "Toggle black background" })
-)
-vim.keymap.set(
-  "n",
-  "<leader>cr",
-  M.reset_background,
-  vim.tbl_extend("force", keymap_opts, { desc = "Reset to default background" })
-)
-vim.keymap.set(
-  "n",
-  "<leader>cp",
-  M.pick_colorscheme,
-  vim.tbl_extend("force", keymap_opts, { desc = "Pick colorscheme (filtered)" })
-)
-
--- Global accessor (intentional — allows access from other config files)
-_G.ColorschemeTransparency = M
-
-M.init()
-
--- ---------------------------------------------------------------------------
--- Helper: LSP client list for lualine
--- ---------------------------------------------------------------------------
+-- LSP client list for lualine
 local clients_lsp = function()
   local clients = vim.lsp.get_clients()
   if next(clients) == nil then
@@ -200,231 +117,112 @@ local clients_lsp = function()
   for _, client in pairs(clients) do
     table.insert(c, client.name)
   end
-  return " " .. table.concat(c, "|")
+  return "\239\128\147 " .. table.concat(c, "|")
 end
 
---------------------------------------------------------------------------------
--- Colorschemes
---------------------------------------------------------------------------------
-return {
-  "ofirgall/ofirkai.nvim",
-  "craftzdog/solarized-osaka.nvim",
-  "bluz71/vim-moonfly-colors",
-  "marko-cerovac/material.nvim",
-  "EdenEast/nightfox.nvim",
-  "ayu-theme/ayu-vim",
-  "bluz71/vim-nightfly-colors",
-  "folke/tokyonight.nvim",
-  "rose-pine/neovim",
-  "Mofiqul/dracula.nvim",
-  "ribru17/bamboo.nvim",
-  {
-    "uloco/bluloco.nvim",
-    lazy = false,
-    priority = 1000,
-    dependencies = { "rktjmp/lush.nvim" },
+require("lualine").setup({
+  options = {
+    theme = "auto",
+    globalstatus = true,
+    component_separators = { left = "", right = "" },
+    section_separators = { left = "\238\130\180", right = "\238\130\182" },
   },
-  "rebelot/kanagawa.nvim",
-  "vague2k/vague.nvim",
-  "tyrannicaltoucan/vim-deep-space",
-  "webhooked/kanso.nvim",
-  "olimorris/onedarkpro.nvim",
-  "NLKNguyen/papercolor-theme",
-  "sainnhe/sonokai",
-  "kamwitsta/vinyl.nvim",
-
-  --------------------------------------------------------------------------------
-  -- Buffer line
-  --------------------------------------------------------------------------------
-  {
-    "akinsho/bufferline.nvim",
-    event = "VeryLazy",
-    keys = {
-      { "<Tab>", "<Cmd>BufferLineCycleNext<CR>", desc = "Next tab" },
-      { "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", desc = "Prev tab" },
+  sections = {
+    lualine_a = {
+      { "mode" },
     },
-    opts = {
-      options = {
-        mode = "tabs",
-        show_buffer_close_icons = false,
-        show_close_icon = false,
-      },
-    },
-  },
-
-  --------------------------------------------------------------------------------
-  -- Cellular Automaton: a totally frivolous animation of current buffer contents. Like a fidget toy for your code!
-  --------------------------------------------------------------------------------
-  {
-    "eandrju/cellular-automaton.nvim",
-
-    vim.keymap.set("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>"),
-    vim.keymap.set("n", "<leader>fmg", "<cmd>CellularAutomaton game_of_life<CR>"),
-  },
-
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function(_, opts)
-      opts.options = {
-        theme = "auto",
-        globalstatus = true,
-        component_separators = { left = "", right = "" },
-        section_separators = { left = "", right = "" },
-      }
-
-      opts.sections.lualine_a = {
-        { "mode" },
-      }
-
-      opts.sections.lualine_b = {
-        { "diagnostics" },
-        { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-        {
-          "filename",
-          file_status = true,
-          path = 1,
-          symbols = { modified = "", readonly = " 󰌾 " },
-          padding = { left = 0, right = 1 },
-        },
-      }
-
-      opts.sections.lualine_c = {}
-
-      opts.sections.lualine_x = { clients_lsp }
-
-      opts.sections.lualine_y = {
-        { "branch", icon = "" },
-        {
-          "diff",
-          symbols = {
-            added = "+",
-            modified = "~",
-            removed = "-",
-          },
-          padding = { left = 0, right = 2 },
-        },
-      }
-
-      opts.sections.lualine_z = {
-        { "progress", icon = "", padding = { left = 0, right = 0 } },
-        { "location" },
-      }
-    end,
-  },
-
-  -- animations
-  {
-    "nvim-mini/mini.animate",
-    event = "VeryLazy",
-    opts = function(_, opts)
-      opts.scroll = {
-        enable = false,
-      }
-    end,
-  },
-
-  {
-    "folke/noice.nvim",
-    opts = function(_, opts)
-      opts.views = vim.tbl_deep_extend("force", opts.views or {}, {
-        cmdline_popup = {
-          position = {
-            row = "40%",
-            col = "50%",
-          },
-          size = {
-            width = 60,
-            height = "auto",
-          },
-          border = {
-            style = "none",
-            padding = { 1, 2 },
-          },
-          filter_options = {},
-          win_options = {
-            winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
-          },
-        },
-      })
-
-      table.insert(opts.routes, {
-        filter = {
-          event = "notify",
-          find = "No information available",
-        },
-        opts = { skip = true },
-      })
-
-      local focused = true
-      vim.api.nvim_create_autocmd("FocusGained", {
-        callback = function()
-          focused = true
-        end,
-      })
-      vim.api.nvim_create_autocmd("FocusLost", {
-        callback = function()
-          focused = false
-        end,
-      })
-      table.insert(opts.routes, 1, {
-        filter = {
-          cond = function()
-            return not focused
-          end,
-        },
-        view = "notify_send",
-        opts = { stop = false },
-      })
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "markdown",
-        callback = function(event)
-          vim.schedule(function()
-            require("noice.text.markdown").keys(event.buf)
-          end)
-        end,
-      })
-    end,
-  },
-
-  {
-    "folke/twilight.nvim",
-    opts = {
-      dimming = {
-        alpha = 0.25,
-        color = { "Normal", "#ffffff" },
-        term_bg = "#000000",
-        inactive = false,
-      },
-      context = 10,
-      treesitter = true,
-      expand = {
-        "function",
-        "method",
-        "table",
-        "if_statement",
-      },
-      exclude = {},
-    },
-  },
-
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-    },
-    keys = {
+    lualine_b = {
+      { "diagnostics" },
+      { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
       {
-        "<leader>?",
-        function()
-          require("which-key").show({ global = false })
-        end,
-        desc = "Buffer Local Keymaps (which-key)",
+        "filename",
+        file_status = true,
+        path = 1,
+        symbols = { modified = "", readonly = " \243\176\140\190 " },
+        padding = { left = 0, right = 1 },
       },
     },
+    lualine_c = {},
+    lualine_x = { clients_lsp },
+    lualine_y = {
+      { "branch", icon = "\238\156\165" },
+      {
+        "diff",
+        symbols = {
+          added = "+",
+          modified = "~",
+          removed = "-",
+        },
+        padding = { left = 0, right = 2 },
+      },
+    },
+    lualine_z = {
+      { "progress", icon = "\238\152\146", padding = { left = 0, right = 0 } },
+      { "location" },
+    },
   },
-}
+})
+
+-- Animations
+require("mini.animate").setup({
+  scroll = {
+    enable = false,
+  },
+})
+
+-- Cmdline: tiny-cmdline.nvim repositions Neovim's ui2 cmdline as a centered,
+-- borderless-looking float with blank-cell padding (see cmdline_pad).
+-- Snacks still handles vim.ui.input.
+-- Breathing room: tiny-cmdline has no padding option, and its height is the
+-- input window's own line count. Instead, the frame
+-- is a full 8-part border made of blank cells. Those cells take the float's
+-- background, so the prompt looks borderless but gets one cell of space on each
+-- side. Terminals size in cells, so this is ~1 column (≈8–10px) horizontally and
+-- 1 row (≈16–22px) vertically.
+local cmdline_pad = { " ", " ", " ", " ", " ", " ", " ", " " }
+
+require("tiny-cmdline").setup({
+  width = { value = 60, min = 40, max = 80 },
+  -- Horizontally centred; vertically a little above centre (40% of the free space).
+  position = { x = "50%", y = "40%" },
+  border = cmdline_pad,
+  -- Search stays at the bottom as before.
+  native_types = { "/", "?" },
+})
+
+-- Keep the float colours tied to the active theme. Re-applied on every colorscheme change,
+-- since :colorscheme clears highlight links.
+local function tiny_cmdline_highlights()
+  vim.api.nvim_set_hl(0, "TinyCmdlineNormal", { link = "NormalFloat" })
+  vim.api.nvim_set_hl(0, "TinyCmdlineBorder", { link = "NormalFloat" })
+end
+tiny_cmdline_highlights()
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = tiny_cmdline_highlights,
+})
+
+-- Dim the inactive parts of the buffer
+require("twilight").setup({
+  dimming = {
+    alpha = 0.25,
+    color = { "Normal", "#ffffff" },
+    term_bg = "#000000",
+    inactive = false,
+  },
+  context = 10,
+  treesitter = true,
+  expand = {
+    "function",
+    "method",
+    "table",
+    "if_statement",
+  },
+  exclude = {},
+})
+
+-- Keymap hints
+require("which-key").setup({})
+
+vim.keymap.set("n", "<leader>?", function()
+  require("which-key").show({ global = false })
+end, { desc = "Buffer Local Keymaps (which-key)" })

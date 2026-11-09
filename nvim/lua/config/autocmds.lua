@@ -1,6 +1,18 @@
--- Autocmds are automatically loaded on the VeryLazy event
--- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
--- Add any additional autocmds here
+-- Autocmds are loaded after options and keymaps.
+
+local tmux = require("utils.tmux")
+
+-- ============================================================================
+-- TABLINE CUSTOM APPEAREANCE (updates on colorscheme changes)
+-- ============================================================================
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    vim.api.nvim_set_hl(0, "TabLine", { link = "StatusLineNC" })
+    vim.api.nvim_set_hl(0, "TabLineSel", { link = "StatusLine" })
+    vim.api.nvim_set_hl(0, "TabLineFill", { link = "Normal" })
+  end,
+})
 
 -- ============================================================================
 -- EDITOR BEHAVIOR AUTOCOMMANDS
@@ -85,52 +97,14 @@ vim.api.nvim_create_augroup("TmuxIntegration", { clear = true })
 -- Initialize tmux mouse state tracking
 vim.g.tmux_mouse_enabled = false
 
--- Tmux mouse and history management functions
--- These functions control tmux mouse support and history limit to prevent
--- Neovim content from scrolling out of the tmux viewport
-
-local function set_tmux_mouse(enabled)
-  -- Only proceed if we're running inside a tmux session
-  if not vim.env.TMUX then
-    return false
-  end
-
-  local mouse_option = enabled and "on" or "off"
-  local history_limit = enabled and "10000" or "1"
-
-  -- Execute tmux commands and check for errors
-  vim.fn.system("tmux set-option -g mouse " .. mouse_option)
-  local mouse_error = vim.v.shell_error
-
-  vim.fn.system("tmux set-option -g history-limit " .. history_limit)
-  local history_error = vim.v.shell_error
-
-  -- Report any errors to the user
-  if mouse_error ~= 0 or history_error ~= 0 then
-    vim.notify("Failed to configure tmux options", vim.log.levels.WARN)
-    return false
-  end
-
-  vim.g.tmux_mouse_enabled = enabled
-  return true
-end
-
-local function disable_tmux_mouse()
-  return set_tmux_mouse(false)
-end
-
-local function enable_tmux_mouse()
-  return set_tmux_mouse(true)
-end
-
 -- Disable tmux mouse when entering Neovim
 -- This prevents the Neovim session from scrolling out of view in tmux
 vim.api.nvim_create_autocmd("VimEnter", {
   group = "TmuxIntegration",
   callback = function()
-    disable_tmux_mouse()
+    tmux.disable()
     -- Schedule another call as a safety measure in case the first one fails
-    vim.schedule(disable_tmux_mouse)
+    vim.schedule(tmux.disable)
   end,
   desc = "Disable tmux mouse and reduce history limit when entering Neovim",
 })
@@ -139,12 +113,12 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- This restores normal tmux behavior after Neovim exits
 vim.api.nvim_create_autocmd("VimLeave", {
   group = "TmuxIntegration",
-  callback = enable_tmux_mouse,
+  callback = tmux.enable,
   desc = "Re-enable tmux mouse and restore history limit when leaving Neovim",
 })
 
 -- Initialize tmux settings immediately when this config loads
-disable_tmux_mouse()
+tmux.disable()
 
 -- ============================================================================
 -- USER COMMANDS
@@ -153,9 +127,9 @@ disable_tmux_mouse()
 -- Create a user command to manually toggle tmux mouse support
 -- Useful for debugging or when you need to temporarily change the behavior
 vim.api.nvim_create_user_command("ToggleTmuxMouse", function()
-  local success = set_tmux_mouse(not vim.g.tmux_mouse_enabled)
+  local success = tmux.set(not tmux.enabled())
   if success then
-    local state = vim.g.tmux_mouse_enabled and "enabled" or "disabled"
+    local state = tmux.enabled() and "enabled" or "disabled"
     vim.notify("Tmux mouse " .. state, vim.log.levels.INFO)
   end
 end, {

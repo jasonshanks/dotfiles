@@ -1,9 +1,21 @@
--- Options are automatically loaded before lazy.nvim startup
--- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
--- Add any additional options here
+-- Options are loaded before plugins.
+-- LazyVim defaults that used to be provided by the framework are intentionally not
+-- reintroduced here; this file is the user's own option set.
 
--- LazyVim root dir detection
+-- Leader keys must be set before any mapping is registered.
+vim.g.mapleader = " "
+
+-- Project root detection (kept from the previous config).
 vim.g.root_spec = { { ".git", "cwd" } }
+
+-- Builtin plugins disabled (netrw is replaced by oil.nvim).
+vim.g.loaded_gzip = 1
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_rplugin = 1
+vim.g.loaded_tarPlugin = 1
+vim.g.loaded_tohtml = 1
+vim.g.loaded_tutor = 1
+vim.g.loaded_zipPlugin = 1
 
 local opt = vim.opt -- sets an alias of opt to the full vim.opt prefix for conciseness
 
@@ -32,6 +44,8 @@ opt.shiftwidth = 2 -- 2 spaces for indent
 -- Fold configuration
 opt.foldmethod = "indent" -- fold only where code is indented by spaces/tabs (assumes code is well formatted)
 opt.foldnestmax = 1 -- folds at the first indentation level, only folding functions (not loops or conditionals inside functions)
+opt.foldlevel = 99 -- open all folds in the current window (default would be 0 = closed)
+opt.foldlevelstart = 99 -- open all folds in newly opened buffers/windows
 opt.foldopen = "" -- these block auto-folding behaviour based on code navigation such as (search, quickfix, jumps, etc.)
 opt.foldclose = ""
 
@@ -68,6 +82,9 @@ opt.splitright = true -- Put new windows right of current
 opt.splitkeep = "cursor"
 opt.mouse = ""
 
+-- Tabline
+opt.showtabline = 1
+
 -- Colors
 opt.termguicolors = true
 opt.background = "dark" -- colorschemes that are dark or light will be made dark
@@ -85,3 +102,42 @@ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,
 
 vim.cmd([[au BufNewFile,BufRead *.astro setf astro]])
 vim.cmd([[au BufNewFile,BufRead Podfile setf ruby]])
+
+-- For floating cmdline and messages
+require("vim._core.ui2").enable({
+  enable = true,
+  msg = {
+    targets = {
+      [""] = "msg",
+      empty = "cmd",
+      bufwrite = "msg",
+      confirm = "cmd",
+      emsg = "pager",
+      echo = "msg",
+      echomsg = "msg",
+      echoerr = "pager",
+      completion = "cmd",
+      list_cmd = "pager",
+      lua_error = "pager",
+      lua_print = "msg",
+      progress = "pager",
+      rpc_error = "pager",
+      quickfix = "msg",
+      search_cmd = "cmd",
+      search_count = "cmd",
+      shell_cmd = "pager",
+      shell_err = "pager",
+      shell_out = "pager",
+      shell_ret = "msg",
+      undo = "msg",
+      verbose = "pager",
+      wildlist = "cmd",
+      wmsg = "msg",
+      typed_cmd = "cmd",
+    },
+    cmd = { height = 0.5 },
+    dialog = { height = 0.5 },
+    msg = { height = 0.3, timeout = 5000 },
+    pager = { height = 0.5 },
+  },
+})
