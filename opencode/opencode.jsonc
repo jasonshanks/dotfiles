@@ -5,12 +5,15 @@
   "permission": {
     "external_directory": "allow",
   },
-  "agent": {
+  "agents": {
     "explore": {
-      "disable": true,
+      "disabled": true,
     },
     "general": {
-      "disable": true,
+      "disabled": true,
+    },
+    "compaction": {
+      "model": "opencode-go/glm-5.3-flash",
     },
   },
   "lsp": {
@@ -58,6 +61,80 @@
         "crouton-alpha-free": {
           "body": {
             "safety_identifier": "opencode",
+          },
+        },
+      },
+    },
+    "opencode-go": {
+      "models": {
+        "gpt-6-luna": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
+          },
+        },
+        "glm-5.3-flash": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
+          },
+        },
+        "deepseek-v4.1-flash": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
+          },
+        },
+        "muse-spark-1.3-contributor": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
+          },
+        },
+        "mimo-v2.6-flash": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
+          },
+        },
+        "claude-haiku-5-5": {
+          "limit": {
+            "context": 100000,
+            "input": 100000,
+            "output": 32000,
+          },
+        },
+        "glm-5.3": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
+          },
+        },
+        "gemini-4-argon": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
+          },
+        },
+        "beam-free": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
+          },
+        },
+        "iceman-contributor-free": {
+          "limit": {
+            "context": 150000,
+            "input": 150000,
+            "output": 32000,
           },
         },
       },

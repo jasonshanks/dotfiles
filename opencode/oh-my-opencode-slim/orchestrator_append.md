@@ -34,3 +34,7 @@ is a lookup against a short, enumerable list of options.
 - Treat the returned probability as _calibration_, not correctness. A confident
   wrong label is still wrong; if the chosen label contradicts obvious context,
   escalate regardless of the score.
+
+## Deepwork router head (read sparingly)
+
+Deepwork: read the router head once at session start and once after a compaction. Never re-read it between tool calls. Update it only at pass transitions.

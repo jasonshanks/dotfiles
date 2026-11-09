@@ -4,33 +4,45 @@ import { $ } from "bun"
 export default Plugin.define({
   id: "rtk",
   async setup(ctx) {
-    // Check if rtk binary is available
+    // Probe once at setup; if rtk isn't installed, this plugin does nothing.
     try {
-      await $`which rtk`.quiet()
+      const probe = await $`which rtk`.quiet().nothrow()
+      if (probe.exitCode !== 0) {
+        console.warn("[rtk] rtk binary not found in PATH — plugin disabled")
+        return
+      }
     } catch {
-      console.warn("[rtk] rtk binary not found in PATH — plugin disabled")
+      console.warn("[rtk] could not probe for rtk binary — plugin disabled")
       return
     }
 
-    // Register tool.execute.before hook (replaces V1 hook)
     await ctx.tool.hook("execute.before", async (event) => {
       const tool = String(event.tool ?? "").toLowerCase()
       if (tool !== "bash" && tool !== "shell") return
 
       const args = event.input as Record<string, unknown> | undefined
-      if (!args || typeof args !== "object") return
+      const command =
+        args && typeof args.command === "string" ? args.command : undefined
+      if (!command) return
 
-      const command = args.command
-      if (typeof command !== "string" || !command) return
-
+      let result
       try {
-        const result = await $`rtk rewrite ${command}`.quiet().nothrow()
-        const rewritten = String(result.stdout).trim()
-        if (rewritten && rewritten !== command) {
-          args.command = rewritten
-        }
+        result = await $`rtk rewrite ${command}`.quiet().nothrow()
       } catch {
-        // rtk rewrite failed — pass through unchanged
+        // rtk itself failed to run — pass the command through unchanged
+        return
+      }
+
+      const rewritten = String(result.stdout).trim()
+
+      // rtk rewrite exit codes: 0 = rewrite + auto-allow, 1 = no rewrite,
+      // 2 = deny (blocks the command), 3 = rewrite + host must ask.
+      if (result.exitCode === 2) {
+        throw new Error(rewritten || `command blocked by rtk: ${command}`)
+      }
+
+      if (rewritten && rewritten !== command) {
+        args.command = rewritten
       }
     })
   },
