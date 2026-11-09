@@ -1,1 +1,1 @@
-/Users/jason/.local/share/nvim/lazy/rex-navigator.nvim/rex/rex-navigator.lua
+/Users/jason/.local/share/nvim/site/pack/core/opt/rex-navigator.nvim/rex/rex-navigator.lua
